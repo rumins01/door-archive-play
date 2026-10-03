@@ -18,6 +18,7 @@ const fmt = n => `${num(Math.floor(n/60))}:${num(n%60)}`;
 let stories = [], state, active=null, room='r1', tab='puzzles', selected=null, input=null, feedback='', solvedNow=false, genre='전체', query='', audioContext, storageWarning=false;
 let savedNotice='이 브라우저에 자동 저장됩니다.';
 let dialogReturnFocus=null;
+let mobilePanel='explore';
 const progress = () => state.progress[active.id];
 const completed = () => stories.filter(s => state.progress[s.id]?.ending !== null && state.progress[s.id]?.ending !== undefined);
 
@@ -69,7 +70,7 @@ function start(id) {
 function route() {
   const match=location.hash.match(/^#case\/(\d+)$/);
   active=match ? stories.find(s=>s.id===Number(match[1])) : null;
-  selected=null;feedback='';tab='puzzles';room='r1';
+  selected=null;feedback='';tab='puzzles';room='r1';mobilePanel='explore';
   if (active) {
     state.progress[active.id] ??= freshProgress();state.last=active.id;
     room=active.rooms.find(r=>unlocked(r.requires,progress()) && active.puzzles.some(p=>p.room===r.id&&!progress().solved.includes(p.id)))?.id ?? 'r3';
@@ -79,6 +80,7 @@ function route() {
 }
 function render() { active ? renderGame() : renderLibrary(); }
 function renderLibrary() {
+  app.classList.remove('playing');
   const done=completed().length;
   const last=stories.find(s=>s.id===state.last && state.progress[s.id]?.ending===null);
   const featured=last || stories.find(s=>!state.progress[s.id] || state.progress[s.id].ending===null) || stories[0];
@@ -93,11 +95,23 @@ function cards() {
   }).join('');
 }
 function renderGame() {
+  app.classList.add('playing');
   const focus=focusKey();
   const p=progress(),r=active.rooms.find(r=>r.id===room),clues=active.clues.filter(c=>c.room===room&&unlocked(c.requires,p));
-  app.innerHTML=`<header class="game-header"><div class="game-title"><button class="quiet" data-action="home" aria-label="사건 목록으로">${icon('back')}</button><div><div class="eyebrow">FILE ${num(active.id)} / ${e(active.genre)}</div><h1>${e(active.title)}</h1></div></div><div class="game-tools"><span class="timer" id="timer" aria-label="플레이 시간">${fmt(p.seconds)}</span><button class="quiet sound" data-action="sound" aria-label="효과음 ${state.sound?'끄기':'켜기'}">${icon(state.sound?'sound':'mute')}</button><button class="quiet reset" data-action="reset">${icon('reset')}<span class="tool-label">처음부터</span></button><button class="quiet" data-action="help" aria-label="플레이 안내">${icon('help')}</button></div></header>${storageWarning?`<div class="save-warning">${e(savedNotice)}</div>`:''}<main id="main" class="game-shell"><section class="explore"><div class="section-line"><h2>${e(r.name)}</h2><span class="eyebrow">ROOM ${num(active.rooms.indexOf(r)+1)} / 03</span></div><nav class="room-nav" aria-label="방 이동">${active.rooms.map((r,i)=>`<button class="room-tab" data-action="room" data-id="${r.id}" aria-pressed="${room===r.id}" ${unlocked(r.requires,p)?'':'disabled'}>${icon(unlocked(r.requires,p)?'door':'lock',14)} ${num(i+1)} ${e(r.name)}</button>`).join('')}</nav><div class="scene">${sceneArt(active.scene,active.accent,active.id*3+active.rooms.indexOf(r))}${clues.map((c,i)=>`<button class="hotspot ${p.found.includes(c.id)?'found':''}" data-action="clue" data-id="${c.id}" style="left:${c.x}%;top:${c.y}%" aria-label="${e(c.name)} ${p.found.includes(c.id)?'다시 읽기':'조사하기'}">${p.found.includes(c.id)?icon('check',16):`<span>${i+1}</span>`}<span class="hotspot-label">${e(c.name)}</span></button>`).join('')}<span class="scene-caption">${p.solved.length===5?'ALL SEALS RELEASED':'INSPECT THE ROOM / FOLLOW THE EVIDENCE'}</span></div><p class="room-description">${e(r.description)}</p><div class="explore-label"><span>방 안의 조사 대상</span><span>${clues.filter(c=>p.found.includes(c.id)).length} / ${clues.length} 발견</span></div><div class="object-list">${clues.map(c=>`<button class="object ${p.found.includes(c.id)?'seen':''}" data-action="clue" data-id="${c.id}">${icon(c.kind==='object'?'box':c.kind==='record'?'book':'file',20)}<span>${e(c.name)}<small>${p.found.includes(c.id)?'수첩에 보관됨 · 다시 읽기':'아직 조사하지 않았습니다'}</small></span></button>`).join('')}</div><div class="objective">${icon('key',20)}<div><span class="eyebrow">YOUR OBJECTIVE</span><p>${e(active.mission)}</p></div></div><p class="note-help" id="save-notice" style="margin-top:20px">${e(savedNotice)}</p><button class="quiet" data-action="story">${icon('book')} 사건의 시작 다시 읽기</button></section><aside class="desk" id="desk" aria-label="조사 기록과 퍼즐"><nav class="desk-tabs" aria-label="조사 도구"><button class="desk-tab" data-action="tab" data-value="puzzles" aria-pressed="${tab==='puzzles'}">장치<span>${p.solved.length}/5</span></button><button class="desk-tab" data-action="tab" data-value="clues" aria-pressed="${tab==='clues'}">단서<span>${p.found.length}</span></button><button class="desk-tab" data-action="tab" data-value="notes" aria-pressed="${tab==='notes'}">메모</button><button class="desk-tab" data-action="tab" data-value="log" aria-pressed="${tab==='log'}">사건록</button></nav><div id="desk-content">${deskContent()}</div></aside></main>`;
+  app.innerHTML=`<header class="game-header"><div class="game-title"><button class="quiet" data-action="home" aria-label="사건 목록으로">${icon('back')}</button><div><div class="eyebrow">FILE ${num(active.id)} / ${e(active.genre)}</div><h1>${e(active.title)}</h1></div></div><div class="game-tools"><span class="timer" id="timer" aria-label="플레이 시간">${fmt(p.seconds)}</span><button class="quiet sound" data-action="sound" aria-label="효과음 ${state.sound?'끄기':'켜기'}">${icon(state.sound?'sound':'mute')}</button><button class="quiet reset" data-action="reset">${icon('reset')}<span class="tool-label">처음부터</span></button><button class="quiet" data-action="help" aria-label="플레이 안내">${icon('help')}</button></div></header>${storageWarning?`<div class="save-warning">${e(savedNotice)}</div>`:''}<main id="main" class="game-shell" data-mobile-panel="${mobilePanel}"><section class="explore" id="explore"><div class="section-line"><h2>${e(r.name)}</h2><span class="eyebrow">ROOM ${num(active.rooms.indexOf(r)+1)} / 03</span></div><nav class="room-nav" aria-label="방 이동">${active.rooms.map((r,i)=>`<button class="room-tab" data-action="room" data-id="${r.id}" aria-pressed="${room===r.id}" ${unlocked(r.requires,p)?'':'disabled'}>${icon(unlocked(r.requires,p)?'door':'lock',14)} ${num(i+1)} ${e(r.name)}</button>`).join('')}</nav><div class="scene">${sceneArt(active.scene,active.accent,active.id*3+active.rooms.indexOf(r))}${clues.map((c,i)=>`<button class="hotspot ${p.found.includes(c.id)?'found':''}" data-action="clue" data-id="${c.id}" style="left:${c.x}%;top:${c.y}%" aria-label="${e(c.name)} ${p.found.includes(c.id)?'다시 읽기':'조사하기'}">${p.found.includes(c.id)?icon('check',16):`<span>${i+1}</span>`}<span class="hotspot-label">${e(c.name)}</span></button>`).join('')}<span class="scene-caption">${p.solved.length===5?'ALL SEALS RELEASED':'INSPECT THE ROOM / FOLLOW THE EVIDENCE'}</span></div><p class="room-description">${e(r.description)}</p><div class="explore-label"><span>방 안의 조사 대상</span><span>${clues.filter(c=>p.found.includes(c.id)).length} / ${clues.length} 발견</span></div><div class="object-list">${clues.map(c=>`<button class="object ${p.found.includes(c.id)?'seen':''}" data-action="clue" data-id="${c.id}">${icon(c.kind==='object'?'box':c.kind==='record'?'book':'file',20)}<span>${e(c.name)}<small>${p.found.includes(c.id)?'수첩에 보관됨 · 다시 읽기':'아직 조사하지 않았습니다'}</small></span></button>`).join('')}</div><div class="objective">${icon('key',20)}<div><span class="eyebrow">YOUR OBJECTIVE</span><p>${e(active.mission)}</p></div></div><p class="note-help" id="save-notice" style="margin-top:20px">${e(savedNotice)}</p><button class="quiet" data-action="story">${icon('book')} 사건의 시작 다시 읽기</button></section><aside class="desk" id="desk" aria-label="조사 기록과 퍼즐"><nav class="desk-tabs" aria-label="조사 도구"><button class="desk-tab" data-action="tab" data-value="puzzles" aria-pressed="${tab==='puzzles'}">장치<span>${p.solved.length}/5</span></button><button class="desk-tab" data-action="tab" data-value="clues" aria-pressed="${tab==='clues'}">단서<span>${p.found.length}</span></button><button class="desk-tab" data-action="tab" data-value="notes" aria-pressed="${tab==='notes'}">메모</button><button class="desk-tab" data-action="tab" data-value="log" aria-pressed="${tab==='log'}">사건록</button></nav><div id="desk-content">${deskContent()}</div></aside></main>${mobileNavigation()}`;
   document.querySelector('.game-tools .reset')?.setAttribute('aria-label','이 사건 처음부터 시작');
   restoreFocus(focus);
+}
+function mobileNavigation() {
+  const items=[['explore','탐색','search'],['puzzles','장치','key'],['clues','단서','file'],['notes','메모','book'],['log','사건록','door']];
+  return `<nav class="mobile-nav" aria-label="사건 조사 메뉴">${items.map(([value,label,glyph])=>`<button data-action="mobile-tab" data-value="${value}" aria-controls="${value==='explore'?'explore':'desk'}" aria-pressed="${value==='explore'?mobilePanel==='explore':mobilePanel==='desk'&&tab===value}">${icon(glyph,20)}<span>${label}</span></button>`).join('')}</nav>`;
+}
+function switchPanel(value) {
+  rememberDraft();
+  mobilePanel=value==='explore'?'explore':'desk';
+  if(value!=='explore')tab=value;
+  renderGame();
+  window.scrollTo({top:0,behavior:'instant'});
 }
 function deskContent() {
   const p=progress();
@@ -115,7 +129,7 @@ function puzzleContent(q) {
   return `<section class="puzzle-panel fade-in"><div class="puzzle-head"><button class="quiet" data-action="puzzle-back">${icon('back',16)} 장치 목록</button><span class="eyebrow">${{code:'CIPHER',choice:'DEDUCTION',sequence:'SEQUENCE',switches:'CIRCUIT',dials:'DIAL LOCK',pairs:'CONNECTION'}[q.type]}</span></div><h2>${e(q.title)}</h2><p class="puzzle-prompt">${e(q.prompt)}</p><div class="control-label">관련 단서</div><div class="evidence-ref">${q.clueIds.map(id=>{const c=active.clues.find(c=>c.id===id);return `<button data-action="clue" data-id="${id}">${icon(p.found.includes(id)?'file':'search',12)} ${e(c.name)} ${p.found.includes(id)?'':'· 조사하기'}</button>`;}).join('')}</div>${solved?`<div class="solution"><h3>${icon('check')} 봉인 해제</h3><p>${e(q.explanation)}</p><p class="reveal">${e(q.reveal)}</p></div><button class="btn primary submit" data-action="next-step">다음 기록으로 ${icon('arrow')}</button>`:!ready?'<div class="empty"><p>관련 단서를 모두 조사하면<br>장치를 조작할 수 있습니다.</p></div>':`<form id="puzzle-form">${controls(q)}<button class="btn primary submit" type="submit">${q.type==='choice'?'추리 확인하기':'장치 작동하기'} ${icon('key',16)}</button></form><div class="feedback ${solvedNow?'success':''}" role="status">${e(feedback)}</div><div class="hint-zone"><button class="quiet" data-action="hint" ${count===3?'disabled':''}>${icon('bulb')} ${count===3?'모든 힌트를 열었습니다':`힌트 ${count+1}단계 열기`} <span class="mono">${count}/3</span></button>${count===2?'<p class="note-help">다음 힌트에는 정답이 포함됩니다.</p>':''}${q.hints.slice(0,count).map((h,i)=>`<div class="hint"><b>HINT ${i+1}</b>${e(h)}</div>`).join('')}</div>`}</section>`;
 }
 function controls(q) {
-  if (q.type==='code') return `<label class="control-label" for="answer">암호 입력</label><input class="answer-input" id="answer" name="answer" autocomplete="off" spellcheck="false" maxlength="80" value="${e(input||'')}" placeholder="단서에서 찾은 답">`;
+  if (q.type==='code') return `<label class="control-label" for="answer">암호 입력</label><input class="answer-input" id="answer" name="answer" inputmode="${q.answer.every(answer=>/^\d+$/.test(String(answer)))?'numeric':'text'}" enterkeyhint="done" autocomplete="off" spellcheck="false" maxlength="80" value="${e(input||'')}" placeholder="단서에서 찾은 답">`;
   if (q.type==='choice'||q.type==='switches') return `<div class="control-label">${q.type==='choice'?'하나를 선택하세요.':'조건에 맞는 항목을 모두 켜세요.'}</div><div class="options">${q.options.map((o,i)=>{const on=q.type==='choice'?input===o.id:input.includes(o.id);return `<button type="button" class="option" data-action="option" data-value="${e(o.id)}" aria-pressed="${on}"><span class="marker">${on?'✓':String.fromCharCode(65+i)}</span>${e(o.label)}</button>`;}).join('')}</div>`;
   if (q.type==='sequence') return `<div class="control-label">후보를 눌러 순서를 만드세요. 위의 조각을 누르면 뺄 수 있어요.</div><div class="order-slots" aria-label="선택한 순서">${input.length?input.map((id,i)=>`<button type="button" class="order-slot" data-action="remove-order" data-value="${e(id)}">${i+1}. ${e(q.options.find(o=>o.id===id).label)} ×</button>`).join(''):'<span class="muted">아직 놓은 조각이 없습니다.</span>'}</div><div class="options">${q.options.map(o=>`<button type="button" class="option" data-action="option" data-value="${e(o.id)}" ${input.includes(o.id)?'disabled':''}>${icon('plus',14)} ${e(o.label)}</button>`).join('')}</div>`;
   if (q.type==='dials') return `<div class="dials">${q.labels.map((label,i)=>`<div class="dial"><label>${e(label)}</label><button type="button" data-action="dial" data-index="${i}" data-delta="1" aria-label="${e(label)} 올리기">${icon('plus')}</button><output aria-label="${e(label)} 값">${input[i]}</output><button type="button" data-action="dial" data-index="${i}" data-delta="-1" aria-label="${e(label)} 내리기">${icon('minus')}</button></div>`).join('')}</div>`;
@@ -133,9 +147,9 @@ function showClue(id) {
 }
 function openPuzzle(id) {
   const q=active.puzzles.find(p=>p.id===id);if(!q||!unlocked(q.requires,progress()))return;
-  selected=id;tab='puzzles';feedback='';solvedNow=false;
+  rememberDraft();selected=id;tab='puzzles';mobilePanel='desk';feedback='';solvedNow=false;
   input=restoreDraft(q,progress().drafts[id]);
-  renderGame();if(innerWidth<761)document.querySelector('#desk').scrollIntoView({behavior:'smooth',block:'start'});
+  renderGame();if(innerWidth<761)window.scrollTo({top:0,behavior:'instant'});
 }
 function updateDesk() { const focus=focusKey();document.querySelector('#desk-content').innerHTML=deskContent();restoreFocus(focus); }
 function ending() {
@@ -158,15 +172,16 @@ document.addEventListener('click', event=>{
   if(a==='genre'){genre=value;renderLibrary();return;}
   if(a==='clear-filters'){genre='전체';query='';renderLibrary();return;}
   if(!active)return;
-  if(a==='room'){const r=active.rooms.find(r=>r.id===id);if(r&&unlocked(r.requires,progress())){room=id;selected=null;tab='puzzles';renderGame();}return;}
+  if(a==='room'){const r=active.rooms.find(r=>r.id===id);if(r&&unlocked(r.requires,progress())){rememberDraft();room=id;mobilePanel='explore';renderGame();}return;}
   if(a==='clue'){showClue(id);return;}
   if(a==='story'){showDialog(`${dialogHeader('사건의 시작')}<p class="dialog-copy">${e(active.intro)}</p><div class="dialog-actions"><button class="btn primary" data-action="close">조사 계속하기</button></div>`);return;}
-  if(a==='tab'){tab=value;selected=null;renderGame();return;}
+  if(a==='mobile-tab'){switchPanel(value);return;}
+  if(a==='tab'){rememberDraft();tab=value;renderGame();return;}
   if(a==='puzzle'){openPuzzle(id);return;}
   if(a==='puzzle-back'){selected=null;feedback='';updateDesk();return;}
   if(a==='next-step'){
     const next=active.puzzles.find(q=>!progress().solved.includes(q.id));selected=null;
-    if(next){room=next.room;renderGame();announce('다음 장치를 조사하세요.');}else{renderGame();ending();}return;
+    if(next){room=next.room;mobilePanel='explore';renderGame();announce('다음 장치를 조사하세요.');}else{renderGame();ending();}return;
   }
   if(a==='ending'){ending();return;}
   if(a==='choose-ending'){

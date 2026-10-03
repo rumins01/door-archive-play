@@ -1,0 +1,60 @@
+.mobile-nav{display:none}
+html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}
+dialog{overscroll-behavior:contain}
+@media(max-width:760px),(pointer:coarse){
+  button{min-width:44px;min-height:44px}
+  input,select,textarea{font-size:16px}
+  .btn.small,.evidence-ref button,.order-slot,.hotspot{min-height:44px}
+  .hotspot{min-width:44px}
+  .help-list a{display:inline-block;min-height:44px;padding-block:8px}
+}
+@media(max-width:760px){
+  body{overflow-wrap:anywhere}
+  #app.playing{display:flex;flex-direction:column;min-height:100dvh}
+  .game-shell{flex:1;min-height:0;padding-bottom:16px}
+  .game-shell[data-mobile-panel=explore]>.desk,
+  .game-shell[data-mobile-panel=desk]>.explore{display:none}
+  .desk-tabs{display:none}
+  .desk{border-top:0}
+  .explore,.desk{padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
+  .game-header{padding-top:max(8px,env(safe-area-inset-top));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));flex-wrap:wrap}
+  .game-title{flex:1;min-width:128px}
+  .game-title>div{min-width:0}
+  .game-title h1{font-size:16px}
+  .game-title .eyebrow{font-size:12px}
+  .game-tools{margin-left:auto;flex-shrink:0}
+  .game-tools .sound,.game-tools .reset{display:inline-flex}
+  .game-tools .quiet{min-width:44px;min-height:44px}
+  .timer{font-size:12px}
+  .mobile-nav{position:sticky;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:8px max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -12px 40px rgba(0,0,0,.24)}
+  .mobile-nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px;min-height:56px;min-width:0;color:var(--muted);font-size:12px}
+  .mobile-nav button[aria-pressed=true]{background:var(--raised);color:var(--ink)}
+  .mobile-nav button:focus-visible{outline-offset:-2px}
+  .playing:has(input:focus,textarea:focus,select:focus) .mobile-nav{position:static}
+  .playing:has(input:focus,textarea:focus,select:focus) .game-header{position:static}
+  .featured p,.case-copy p,.room-description,.object,.objective p,.desk-summary p,.log-entry p,.journal-clue p,.note-help,.feedback,.pair-row,.hint,.solution p{font-size:14px}
+  .object small,.puzzle-item small,.control-label,.hint b,.evidence-ref button,.room-tab,.explore-label,.case-copy .meta,.case-copy .eyebrow,.case-no,.case-status{font-size:12px}
+  .object-list{grid-template-columns:1fr}
+  .room-nav{gap:8px}
+  .room-tab{flex:1;justify-content:center}
+  .pair-row{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}
+  .pair-row>*{min-width:0}
+  .option>svg{flex-shrink:0}
+  .dialog-inner{padding:24px 16px}
+  dialog{max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto}
+  .dialog-top{align-items:flex-start}
+  .dialog-top .quiet{flex-shrink:0}
+  .clue-paper{padding:24px 16px;overflow-wrap:anywhere}
+  .dialog-actions .btn{min-width:0}
+  .answer-input{scroll-margin-block:24px}
+  textarea{scroll-margin-block:24px;min-height:200px}
+  .wrap{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+}
+@media(max-width:760px) and (max-height:500px){
+  .game-header{position:static}
+  .mobile-nav{padding-top:4px}
+  .mobile-nav button{flex-direction:row;min-height:44px}
+  .scene{max-width:480px;margin-inline:auto}
+  dialog{max-height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+  .dialog-inner{padding-block:16px}
+}
