@@ -4,11 +4,11 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-3';
-import { drawView, drawItem, roomTone, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-3';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-3';
+} from './escape-engine.js?v=escape-4';
+import { drawView, drawItem, roomTone, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-4';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-4';
 
-const VERSION = 'escape-3';
+const VERSION = 'escape-4';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -132,7 +132,7 @@ function pulseLive() {
 function focusKey() {
   const n = document.activeElement;
   if (!n || n === document.body || !n.dataset?.act) return null;
-  return `[data-act="${CSS.escape(n.dataset.act)}"]${['id', 'i', 'd', 'dir', 'sym', 'key', 'tab'].filter(k => n.dataset[k] !== undefined).map(k => `[data-${k}="${CSS.escape(n.dataset[k])}"]`).join('')}`;
+  return `[data-act="${CSS.escape(n.dataset.act)}"]${['id', 'ep', 'i', 'd', 'dir', 'sym', 'key', 'tab'].filter(k => n.dataset[k] !== undefined).map(k => `[data-${k}="${CSS.escape(n.dataset[k])}"]`).join('')}`;
 }
 function restoreFocus(selector) {
   if (!selector) return;
@@ -171,31 +171,57 @@ function hintFocus() {
   return { ...NONE, nav: stepsTo(s.view, goalWall, 'left') < stepsTo(s.view, goalWall, 'right') ? 'left' : 'right' };
 }
 
-// 방 목록: 에피소드마다 방을 이야기 순서로 보여 주고, 앞 방을 탈출해야 다음 방이 열립니다.
-function roomCard(r, ep, i) {
+// 방 목록: 에피소드를 두 칸씩 카드로 놓습니다. 에피소드의 첫 화는 다른 에피소드와 관계없이 바로 시작할 수 있고,
+// 같은 에피소드 안에서만 앞 화를 탈출해야 다음 화가 열립니다.
+const starRange = (lo, hi) => `<span class="stars" role="img" aria-label="난이도 5점 만점에 ${lo === hi ? lo : `${lo}~${hi}`}점">${Array.from({ length: 5 }, (_, i) => `<i class="${i < lo ? 'on' : i < hi ? 'part' : ''}">★</i>`).join('')}</span>`;
+function episodeState(ep) {
+  const built = ep.rooms.map(roomById).filter(Boolean);
+  const done = ep.rooms.filter(id => cleared(id)).length;
+  const levels = ep.rooms.map(id => roomById(id)?.difficulty ?? ep.upcoming?.[id]?.difficulty).filter(Number.isInteger);
+  const live = r => save.rooms[r.id]?.started && !save.rooms[r.id]?.escaped && unlocked(r.id);
+  const playing = built.find(r => r.id === save.last && live(r)) ?? built.find(live);
+  const next = built.find(r => unlocked(r.id) && !cleared(r.id));
+  const target = playing ?? next ?? built[0] ?? null;
+  const n = target ? ep.rooms.indexOf(target.id) + 1 : 0;
+  const action = !target ? null : playing ? `${n}화 이어하기` : next ? `${n}화 시작` : `${n}화 다시 보기`;
+  return { built, done, total: ep.rooms.length, lo: Math.min(...levels), hi: Math.max(...levels), target, action };
+}
+function episodeCard(ep) {
+  const st = episodeState(ep);
+  const ready = st.built.length > 0;
+  const first = st.built[0];
+  const cover = ready ? drawView(first, first.start, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true">${icon('door', 44)}<i>${num(ep.id)}</i></span>`;
+  const badge = !ready ? '<span class="ep-badge soon">준비 중</span>' : st.done === st.total ? `<span class="ep-badge done">${icon('check', 13)}완료</span>` : st.done ? `<span class="ep-badge">${st.done} / ${st.total}</span>` : '';
+  const state = !ready ? '준비 중' : st.done === st.total ? '완료' : st.done ? `${st.total}화 중 ${st.done}화 탈출` : '시작 전';
+  const label = `에피소드 ${ep.id} ${ep.title}, ${st.total}화, 난이도 5점 만점에 ${st.lo === st.hi ? st.lo : `${st.lo}~${st.hi}`}점, ${state}. 화 목록 보기`;
+  const play = ready
+    ? `<button class="btn primary ep-play" data-act="open-room" data-id="${st.target.id}" aria-label="${e(`${ep.title} ${st.action}, ${st.target.title}`)}">${icon('right', 16)}<span>${st.action}</span></button>`
+    : '<span class="ep-play is-soon">준비 중</span>';
+  return `<li class="ep-card${ready ? '' : ' is-soon'}" style="--h:${(ep.id * 47) % 360}"><button class="ep-open" data-act="episode" data-ep="${ep.id}" aria-label="${e(label)}"><span class="ep-cover">${cover}${badge}</span><span class="ep-body"><span class="kicker">EP ${ep.id}</span><b>${e(ep.title)}</b><span class="ep-meta">${starRange(st.lo, st.hi)}<span>${st.total}화</span></span></span></button>${play}</li>`;
+}
+function roomRow(r, ep, i) {
   const st = save.rooms[r.id];
   const thumb = drawView(r, r.start, freshState(r));
   const meta = `<span class="meta">${stars(r.difficulty)}<span class="mins">${icon('clock', 14)}${r.minutes}분</span></span>`;
-  const head = `<span class="no">EP${ep.id} · ${i + 1}</span><b>${e(r.title)}</b><small>${e(r.subtitle)}</small>`;
-  if (!unlocked(r.id)) return `<li><div class="room-card is-locked"><span class="thumb">${thumb}<span class="lock-mark">${icon('lock', 22)}</span></span><span class="info">${head}${meta}<small class="lock-note">${icon('lock', 13)}앞 방을 탈출하면 열려요</small></span></div></li>`;
+  const head = `<span class="no">${i + 1}화</span><b>${e(r.title)}</b><small>${e(r.subtitle)}</small>`;
+  if (!unlocked(r.id)) return `<li><div class="room-card is-locked"><span class="thumb">${thumb}<span class="lock-mark">${icon('lock', 22)}</span></span><span class="info">${head}${meta}<small class="lock-note">${icon('lock', 13)}앞 화를 탈출하면 열려요</small></span></div></li>`;
   const done = cleared(r.id);
   const marks = `${done ? `<span class="status done">${icon('check', 16)}<span class="sr-only">탈출 완료</span></span>` : st?.started ? '<span class="status play">진행 중</span>' : ''}${st?.secret ? `<span class="status mark" title="책갈피">${icon('ribbon', 15)}<span class="sr-only">책갈피 찾음</span></span>` : ''}`;
-  const label = `${r.title}, 난이도 5점 만점에 ${r.difficulty}점, ${done ? '탈출 완료' : st?.started ? '이어하기' : '시작하기'}`;
+  const label = `${i + 1}화 ${r.title}, 난이도 5점 만점에 ${r.difficulty}점, ${done ? '탈출 완료' : st?.started ? '이어하기' : '시작하기'}`;
   return `<li><button class="room-card" data-act="open-room" data-id="${r.id}" aria-label="${e(label)}"><span class="thumb">${thumb}</span><span class="info">${head}${meta}</span><span class="marks">${marks}</span></button></li>`;
 }
-function soonRow(soon, ep, i) {
+function soonRow(soon, i) {
   return `<li class="soon"><span class="step">${i + 1}</span><span class="info"><b>${e(soon.title)}</b><span class="meta">${stars(soon.difficulty)}<span class="mins">${icon('clock', 14)}${soon.minutes}분</span></span></span><span class="tag">준비 중</span></li>`;
 }
-function episodeHtml(ep) {
-  const built = ep.rooms.filter(id => roomById(id));
-  const done = built.filter(id => cleared(id)).length;
-  const list = ep.rooms.map((id, i) => (roomById(id) ? roomCard(roomById(id), ep, i) : soonRow(ep.upcoming[id], ep, i))).join('');
-  const levels = ep.rooms.map(id => roomById(id)?.difficulty ?? ep.upcoming[id]?.difficulty).filter(Boolean);
-  const range = `★${Math.min(...levels)}~${Math.max(...levels)}`;
-  if (!built.length) {
-    return `<details class="episode is-soon"><summary><span class="kicker">EPISODE ${ep.id}</span><span class="ep-title">${e(ep.title)}</span><span class="ep-meta">방 ${ep.rooms.length}개 · ${range} · 준비 중</span></summary><p class="ep-tag">${e(ep.tagline)}</p><ol class="rooms">${list}</ol></details>`;
-  }
-  return `<section class="episode" aria-labelledby="ep-${ep.id}"><header class="ep-head"><p class="kicker">EPISODE ${ep.id}</p><h2 id="ep-${ep.id}">${e(ep.title)}</h2><p class="ep-tag">${e(ep.tagline)}</p><span class="ep-count">${done} / ${ep.rooms.length}</span></header><ol class="rooms">${list}</ol></section>`;
+function showEpisode(id) {
+  const ep = episodes.find(x => x.id === id);
+  if (!ep) return;
+  const st = episodeState(ep);
+  const rows = ep.rooms.map((rid, i) => (roomById(rid) ? roomRow(roomById(rid), ep, i) : soonRow(ep.upcoming[rid], i))).join('');
+  const play = st.target
+    ? `<button class="btn primary wide" data-act="open-room" data-id="${st.target.id}">${e(st.action)} · ${e(st.target.title)} ${icon('right', 18)}</button>`
+    : '<p class="sheet-copy soon-note">이 에피소드는 준비 중이에요.</p>';
+  openSheet(`${sheetHead(ep.title, 'book')}<p class="kicker">EPISODE ${ep.id} · ${st.total}화</p><p class="ep-tag">${e(ep.tagline)}</p><ol class="rooms">${rows}</ol>${play}`);
 }
 function renderHome() {
   document.body.dataset.screen = 'home';
@@ -212,7 +238,8 @@ function renderHome() {
     <header class="home-top"><h1 class="brand">${icon('door', 26)}<span>문 너머</span></h1><button class="icon-btn" data-act="guide" aria-label="조작 안내">${icon('help')}</button></header>
     <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
     <div class="tally"><span>${icon('door', 16)}탈출 <b>${done}</b> / ${total}</span><span>${icon('ribbon', 16)}책갈피 <b>${marks}</b> / ${order.length}</span></div>
-    ${episodes.map(episodeHtml).join('')}
+    <h2 class="list-title">에피소드<span>첫 화는 바로 시작할 수 있어요</span></h2>
+    <ul class="episodes">${episodes.map(episodeCard).join('')}</ul>
     <p class="legacy"><a href="legacy.html">이전 버전 사건 기록 24개</a></p>
   </main>`;
   if (saveWarned) showSaveWarning();
@@ -666,6 +693,7 @@ document.addEventListener('click', event => {
   if (act === 'guide') { showGuide(); return; }
   if (act === 'guide-done') { save.tutorial = true; scheduleSave(); closeSheet(); return; }
   if (act === 'open-room' || act === 'next-room') { location.hash = `room/${b.dataset.id}`; return; }
+  if (act === 'episode') { showEpisode(Number(b.dataset.ep)); return; }
   if (act === 'home') { goHome(); return; }
   if (!room) return;
   if (act === 'begin') { s.started = true; scheduleSave(); paint(); if (!save.tutorial) showGuide(); else afterMove(); return; }

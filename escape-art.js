@@ -1,6 +1,6 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
 // 질감은 dist/assets/tex/의 작은 반투명 타일을 겹쳐 그립니다. 움직임은 class 이름만 붙이고 실제 애니메이션은 CSS가 맡습니다.
-import { check, cleanInput, lockControls, lockIn, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-3';
+import { check, cleanInput, lockControls, lockIn, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-4';
 
 export const COLORS = { red: '#b8483a', blue: '#3f6d9c', green: '#4d8757', yellow: '#d6ab3f' };
 export const COLOR_NAMES = { red: '빨강', blue: '파랑', green: '초록', yellow: '노랑' };

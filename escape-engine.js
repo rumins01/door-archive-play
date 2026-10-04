@@ -512,6 +512,8 @@ export function validateEpisodes(episodes, rooms) {
       if (!built.has(rid) && !(soon && typeof soon.title === 'string' && Number.isInteger(soon.difficulty))) fail(`room ${rid} is neither built nor listed as upcoming`);
     }
     ids.slice(0, -1).forEach(rid => { if (typeof ep.bridges?.[rid] !== 'string' || !ep.bridges[rid]) fail(`bridge after room ${rid} missing`); });
+    // 에피소드는 혼자 완결됩니다. 마지막 화에서 다른 에피소드로 넘어가는 다리 문장을 두지 않습니다.
+    if (ids.length && ep.bridges?.[ids[ids.length - 1]] !== undefined) fail('last room must not bridge to another episode');
     if (!list(ep.finale).length) fail('missing finale');
   }
   for (const r of rooms) if (!owner.has(r.id)) errors.push(`room ${r.id} is in no episode`);
