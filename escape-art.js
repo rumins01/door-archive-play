@@ -1,6 +1,7 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
 // 그림체 기준은 2026-10-04 18시 공개판(사서의 방)입니다. 그라데이션과 평면 그림자만 쓰고, 질감 타일과 늘 흐르는 움직임은 쓰지 않습니다.
-import { check, cleanInput, lockControls, lockIn, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-5';
+import { check, cleanInput, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-6';
+import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-6';
 
 export const COLORS = { red: '#b8483a', blue: '#3f6d9c', green: '#4d8757', yellow: '#d6ab3f' };
 export const COLOR_NAMES = { red: '빨강', blue: '파랑', green: '초록', yellow: '노랑' };
@@ -15,6 +16,19 @@ const PALETTE = {
   library: { wall: ['#2f3829', '#1a2119'], floor: ['#4b3a27', '#1e160d'] },
   darkroom: { wall: ['#2b3130', '#171b1a'], floor: ['#3a3128', '#18130e'] },
   pressroom: { wall: ['#3a332c', '#1e1a16'], floor: ['#45362a', '#1c150f'] },
+  // 생성 방(kit)의 분위기 색입니다. 모두 채도와 명도를 낮게 둡니다.
+  parlor: { wall: ['#33302a', '#1c1a16'], floor: ['#4b3a27', '#1e160d'] },
+  sea: { wall: ['#28343a', '#151c20'], floor: ['#3a3a34', '#18170f'] },
+  steel: { wall: ['#2c3133', '#16191a'], floor: ['#34332f', '#151412'] },
+  snow: { wall: ['#2f3538', '#181c1e'], floor: ['#4a3a2a', '#1e160e'] },
+  garden: { wall: ['#2e3528', '#181d15'], floor: ['#3e3424', '#19140c'] },
+  museum: { wall: ['#3a3630', '#1d1b18'], floor: ['#4a3d2c', '#1f170f'] },
+  train: { wall: ['#3a2a28', '#1d1514'], floor: ['#3c3026', '#18120d'] },
+  tower: { wall: ['#353330', '#1a1918'], floor: ['#3e3a33', '#191714'] },
+  stage: { wall: ['#3a2624', '#1c1312'], floor: ['#3a2c22', '#17110c'] },
+  night: { wall: ['#262a36', '#13151c'], floor: ['#2f2c2a', '#131210'] },
+  bakery: { wall: ['#3b3329', '#1e1a14'], floor: ['#4a3826', '#1e160d'] },
+  paper: { wall: ['#3a352b', '#1d1a15'], floor: ['#45372a', '#1c150f'] },
 };
 
 let seq = 0;
@@ -577,12 +591,14 @@ function lockArt(u, room, viewId, s) {
   const [id, lock] = found;
   const open = s.open.includes(id);
   if (lock.skin === 'custom' || (open && ['dial', 'color', 'direction'].includes(lock.type))) return '';
+  if (room.art === 'kit' && (open || !lockReady(lock, s))) return '';
   const draft = open ? lock.answer : cleanInput(lock, s.drafts?.[id]);
   let out = '';
   if (lock.type === 'dial') {
     lock.at.forEach(([x, y], i) => {
       out += P(`M${x - 13} ${y - 30}L${x} ${y - 43}L${x + 13} ${y - 30}`, 'none', 'stroke="#e8e2d0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".85"')
         + P(`M${x - 13} ${y + 30}L${x} ${y + 43}L${x + 13} ${y + 30}`, 'none', 'stroke="#e8e2d0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".85"')
+        + (lock.tags?.[i] ? swatch(u, lock.tags[i], fill => C(x, y - 72, 10, fill, 'stroke="#1b1712" stroke-width="2"')) : '')
         + R(x - 22, y - 20, 44, 44, '#000', 'opacity=".35" rx="4"') + R(x - 22, y - 22, 44, 44, '#efe5cc', 'stroke="#2a1c10" stroke-width="3" rx="4"') + R(x - 22, y - 22, 44, 12, '#000', 'opacity=".12" rx="4"') + T(x, y + 1, draft[i], 28, '#2a1c10', NUM_FONT);
     });
     return out;
@@ -762,6 +778,99 @@ const pressroom = {
   },
 };
 
+// 생성 방(art: kit)은 장면 데이터의 물건(props)과 표식(marks)만으로 그립니다. 그림체는 18시 기준판과 같습니다.
+const MATS = { wood: 'wood', steel: 'steel', brass: 'brass' };
+const PIPS = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
+const rd = v => Math.round(v * 10) / 10;
+function pipsArt(n, x, y, s) {
+  const d = s * .5;
+  return R(rd(x - s + 1.5), rd(y - s + 2.5), rd(s * 2), rd(s * 2), '#000', `opacity=".3" rx="${rd(s * .3)}"`) + R(rd(x - s), rd(y - s), rd(s * 2), rd(s * 2), '#e6dfcc', `rx="${rd(s * .3)}" stroke="#8d8676" stroke-width="1.5"`)
+    + (PIPS[n] ?? []).map(([a, b]) => C(rd(x + a * d), rd(y + b * d), rd(s * .17), '#2a2118')).join('');
+}
+function tallyArt(n, x, y, s, ink) {
+  const gap = s * .34, gw = gap * 4, sp = gap * 1.8, groups = [];
+  for (let left = n; left > 0; left -= 5) groups.push(Math.min(5, left));
+  let gx = x - (groups.length * gw + (groups.length - 1) * sp) / 2, out = '';
+  for (const g of groups) {
+    for (let i = 0; i < Math.min(4, g); i++) out += L(rd(gx + (i + .5) * gap), rd(y - s * .7), rd(gx + (i + .5) * gap), rd(y + s * .7), ink, rd(s * .12), 'stroke-linecap="round"');
+    if (g === 5) out += L(rd(gx - gap * .2), rd(y + s * .5), rd(gx + gw + gap * .2), rd(y - s * .5), ink, rd(s * .12), 'stroke-linecap="round"');
+    gx += gw + sp;
+  }
+  return out;
+}
+function lampArt(u, on, x, y, s) {
+  return L(x, rd(y - s * 2.4), x, rd(y - s), '#151817', 1.5) + (on ? C(x, y, rd(s * 2.4), `url(#${u}-glow)`) : '') + R(rd(x - s * .4), rd(y - s * 1.2), rd(s * .8), rd(s * .45), '#3a3f3c')
+    + C(x, y, rd(s * .85), on ? '#f2cf7c' : '#2f3431', 'stroke="#151817" stroke-width="1.5"');
+}
+function pathArt(m) {
+  const { x, y, cell, cols, rows, start, moves } = m;
+  let out = '';
+  for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) out += C(rd(x + c * cell), rd(y + r * cell), 3.5, '#8d8676', 'opacity=".85"');
+  let [c, r] = start;
+  const pts = [[c, r]];
+  for (const d of moves) { if (d === 'up') r--; else if (d === 'down') r++; else if (d === 'left') c--; else c++; pts.push([c, r]); }
+  const d = 'M' + pts.map(([a, b]) => `${rd(x + a * cell)} ${rd(y + b * cell)}`).join('L');
+  out += P(d, 'none', 'stroke="#000" stroke-opacity=".35" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"') + P(d, 'none', 'stroke="#c8644f" stroke-width="4" stroke-dasharray="8 5" stroke-linecap="round" stroke-linejoin="round"');
+  const [ex, ey] = pts[pts.length - 1].map((v, i) => (i ? y : x) + v * cell);
+  return out + C(rd(x + start[0] * cell), rd(y + start[1] * cell), 8, 'none', 'stroke="#8e3b30" stroke-width="3"') + L(ex - 7, ey - 7, ex + 7, ey + 7, '#8e3b30', 3.5) + L(ex + 7, ey - 7, ex - 7, ey + 7, '#8e3b30', 3.5);
+}
+function itemMark(u, m) {
+  const f = itemArt(m.id);
+  if (!f) return '';
+  const s = m.s ?? 64;
+  return E(m.x, rd(m.y + s * .36), rd(s * .34), rd(s * .07), '#000', 'opacity=".35"') + `<g transform="translate(${rd(m.x - s / 2)} ${rd(m.y - s / 2)}) scale(${rd(s / .64) / 100})">${f(u)}</g>`;
+}
+function kitMark(u, m) {
+  const ink = m.c ?? '#2a2118';
+  switch (m.t) {
+    case 'shape': return swatch(u, m.c, fill => shape(m.k ?? 'circle', m.x, m.y, m.s, fill, 'stroke="#1b1712" stroke-width="2"'));
+    case 'glyph': return glyph(m.n, m.x, m.y, m.s, ink);
+    case 'arrow': return arrow(m.d, m.x, m.y, m.s, ink);
+    case 'num': return T(m.x, m.y, m.v, m.s, ink, NUM_FONT);
+    case 'pips': return pipsArt(m.n, m.x, m.y, m.s);
+    case 'tally': return tallyArt(m.n, m.x, m.y, m.s, ink);
+    case 'lamp': return lampArt(u, m.on, m.x, m.y, m.s);
+    case 'bar': return E(m.x, m.y + 2, rd(m.w * .8), 4, '#000', 'opacity=".3"') + swatch(u, m.c, fill => R(rd(m.x - m.w / 2), rd(m.y - m.h), m.w, rd(m.h), fill, 'rx="3"')) + L(m.x, rd(m.y - m.h), m.x, rd(m.y - m.h - 7), '#1b1b1b', 1.5);
+    case 'veil': {
+      const f = { dust: ['#d9d2bf', .9], dark: ['#050606', .82], fog: ['#c9d1cf', .78] }[m.k] ?? ['#000', .6];
+      const blobs = m.k === 'dark' ? '' : [[110, 170, 60], [230, 220, 70], [150, 290, 50]].map(([a, b, rr]) => E(a, b, rr, rr * .45, f[0], 'opacity=".5"')).join('');
+      return R(36, 100, 288, 250, f[0], `opacity="${f[1]}" rx="6"`) + blobs;
+    }
+    case 'card': return R(40, 106, 288, 244, '#000', 'opacity=".35"') + R(36, 100, 288, 244, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="1.5"') + C(180, 112, 4, '#9e3b30');
+    case 'path': return pathArt(m);
+    case 'plank': return R(m.x + 2, m.y + 5, m.w, 9, '#000', 'opacity=".35"') + R(m.x, m.y, m.w, 9, `url(#${u}-woodl)`, 'stroke="#22170d" stroke-width="1.5"');
+    case 'item': return itemMark(u, m);
+    case 'clock': return PROPS.clock(u, m.x - m.r, m.y - m.r, m.r * 2, m.r * 2, { time: m.time, empty: m.time === null });
+    case 'slot': return R(rd(m.x - m.s / 2), rd(m.y - m.s / 2), m.s, m.s, '#0b0c0b', 'rx="10" opacity=".72"') + R(rd(m.x - m.s / 2), rd(m.y - m.s / 2), m.s, m.s, 'none', 'rx="10" stroke="#cbb98d" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 5"');
+    case 'plate': return R(m.x + 3, m.y + 5, m.w, m.h, '#000', 'opacity=".4" rx="8"') + R(m.x, m.y, m.w, m.h, `url(#${u}-${MATS[m.m] ?? 'wood'})`, 'rx="8" stroke="#1a140e" stroke-width="2"')
+      + R(m.x + 10, m.y + 10, m.w - 20, m.h - 20, 'none', 'rx="4" stroke="#000" stroke-opacity=".3" stroke-width="2"') + [[14, 14], [m.w - 14, 14], [14, m.h - 14], [m.w - 14, m.h - 14]].map(([a, b]) => C(m.x + a, m.y + b, 4, '#a7a99f', 'stroke="#2a2e2b" stroke-width="1.5"')).join('');
+    case 'inside': return R(m.x + 3, m.y + 5, m.w, m.h, '#000', 'opacity=".4" rx="6"') + R(m.x, m.y, m.w, m.h, `url(#${u}-${MATS[m.m] ?? 'wood'})`, 'rx="6" stroke="#1a140e" stroke-width="2"')
+      + R(m.x + 16, m.y + 16, m.w - 32, m.h - 32, '#2a2118') + R(m.x + 40, m.y + 40, m.w - 80, m.h - 80, '#33281c') + R(m.x + 16, m.y + 16, m.w - 32, 30, '#000', 'opacity=".35"')
+      + R(m.x + 16, m.y + m.h * .55, m.w - 32, 8, `url(#${u}-woodl)`) + R(m.x + 16, m.y + m.h * .55 + 8, m.w - 32, 10, '#000', 'opacity=".3"') + L(m.x + 18, m.y + 18, m.x + 40, m.y + 40, '#000', 2, 'opacity=".4"') + L(m.x + m.w - 18, m.y + 18, m.x + m.w - 40, m.y + 40, '#000', 2, 'opacity=".4"');
+    default: return '';
+  }
+}
+function kitView(u, room, viewId, is) {
+  const v = room.views[viewId];
+  const ok = conds => (conds ?? []).every(is);
+  let out = v.kind === 'wall' ? wallBase(u, { floor: 368, brick: room.brick }) : zoomBase(u, v.tone ?? 'wall');
+  for (const p of v.props ?? []) {
+    if (!ok(p.if) || !PROPS[p.kind]) continue;
+    out += PROPS[p.kind](u, p.x, p.y, p.w, p.h, { on: p.on ? is(p.on) : false, empty: p.empty ? is(p.empty) : false, frost: p.frost ? is(p.frost) : false, tone: p.bloom && !is(p.bloom) ? undefined : p.tone, time: p.time, blank: p.blank });
+  }
+  for (const m of v.marks ?? []) if (ok(m.if)) out += kitMark(u, m);
+  // 불이 꺼진 방은 장면 전체를 어둡게 덮습니다. 불을 켜면 덮개가 사라집니다.
+  if (room.dark && !is(room.dark)) out += R(0, 0, VIEW_W, VIEW_H, '#020303', `opacity="${v.kind === 'wall' ? .48 : .36}"`);
+  return out;
+}
+const kitItem = id => {
+  const [base, ...rest] = String(id).split('_');
+  const f = ITEM_ART[base];
+  if (!f) return null;
+  const tone = rest.find(x => MUTED[x]);
+  return u => f(u, tone);
+};
+
 const ITEMS = {
   blade: () => bladeArt(14, 42, 17, -40),
   handle: () => handleArt(32, 32, 14, -40),
@@ -788,18 +897,19 @@ const ITEMS = {
   cover: () => `<g transform="rotate(-6 32 32)">${coverArt(12, 8, 40, 50)}</g>`,
 };
 const ARTS = { library, darkroom, pressroom };
-const itemArt = id => ITEMS[id] ?? (id.startsWith('memo') ? ITEMS.memo : null);
+const itemArt = id => ITEMS[id] ?? kitItem(id) ?? (id.startsWith('memo') ? ITEMS.memo : null);
 
 export function drawView(room, viewId, s, label = '') {
   const u = `a${++seq}`;
   const art = ARTS[room.art] ?? library;
   const state = { ...s, room };
   const is = cond => check(cond, state);
-  let body = (art[viewId]?.(u, state, is) ?? zoomBase(u)) + lockArt(u, room, viewId, state);
+  const scene = room.art === 'kit' ? kitView(u, room, viewId, is) : art[viewId]?.(u, state, is) ?? zoomBase(u);
+  let body = scene + lockArt(u, room, viewId, state);
   // 붉은 안전등이 켜지면 방 전체를 어둡고 붉게 덮습니다. 단서가 이 빛에서만 보이므로 빼지 않습니다.
   if (room.art === 'darkroom' && is('red')) body += R(0, 0, VIEW_W, VIEW_H, '#9c2216', 'style="mix-blend-mode:multiply" opacity=".62"');
   const role = label ? `role="img" aria-label="${label.replace(/"/g, '&quot;')}"` : 'aria-hidden="true"';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet" ${role} focusable="false">${defs(u, PALETTE[room.art] ?? PALETTE.library)}${body}${R(0, 0, VIEW_W, VIEW_H, `url(#${u}-vig)`, 'pointer-events="none"')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet" ${role} focusable="false">${defs(u, PALETTE[room.tone] ?? PALETTE[room.art] ?? PALETTE.library)}${body}${R(0, 0, VIEW_W, VIEW_H, `url(#${u}-vig)`, 'pointer-events="none"')}</svg>`;
 }
 export function drawItem(id, label = '') {
   const u = `i${++seq}`;
@@ -807,6 +917,6 @@ export function drawItem(id, label = '') {
   const role = label ? `role="img" aria-label="${label.replace(/"/g, '&quot;')}"` : 'aria-hidden="true"';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" ${role} focusable="false">${defs(u)}${body}</svg>`;
 }
-export const roomTone = room => PALETTE[room?.art] ?? PALETTE.library;
-export const hasArt = (room, viewId) => typeof (ARTS[room.art] ?? {})[viewId] === 'function';
+export const roomTone = room => PALETTE[room?.tone] ?? PALETTE[room?.art] ?? PALETTE.library;
+export const hasArt = (room, viewId) => (room.art === 'kit' ? !!room.views?.[viewId] : typeof (ARTS[room.art] ?? {})[viewId] === 'function');
 export const hasItemArt = id => typeof itemArt(id) === 'function';

@@ -4,11 +4,11 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-5';
-import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-5';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-5';
+} from './escape-engine.js?v=escape-6';
+import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-6';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-6';
 
-const VERSION = 'escape-5';
+const VERSION = 'escape-6';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
