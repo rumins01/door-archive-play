@@ -1,17 +1,23 @@
 // 문 너머 방탈출 화면입니다. 규칙은 escape-engine.js, 그림은 escape-art.js, 기기 차이는 platform.js가 맡습니다.
+// 배포 때 브라우저가 옛 파일과 새 파일을 섞어 쓰지 않도록 모든 상대 경로에 같은 버전 꼬리표(?v=)를 붙입니다.
 import {
-  SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, freshState, tap, combine, inputLock, move, jump, activeGoal, requestHint,
-  hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockControls, cleanInput, takePhoto,
-} from './escape-engine.js';
-import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES } from './escape-art.js';
-import { loadText, saveText, onPause, onBack, buzz } from './platform.js';
+  SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
+  activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
+  needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
+} from './escape-engine.js?v=escape-3';
+import { drawView, drawItem, roomTone, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-3';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-3';
 
+const VERSION = 'escape-3';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
+const params = new URLSearchParams(location.search);
 // ?slot=qa 처럼 저장 칸을 나누면 검수 중에도 실제 진행 기록을 건드리지 않습니다.
-const slotName = new URLSearchParams(location.search).get('slot');
+const slotName = params.get('slot');
 const KEY = slotName && /^[a-z0-9-]{1,24}$/i.test(slotName) ? `${SAVE_KEY_V2}.${slotName}` : SAVE_KEY_V2;
+// ?unlock=all은 검수용으로 잠긴 방을 모두 엽니다.
+const UNLOCK_ALL = params.get('unlock') === 'all';
 const NAV = { left: [0, NAV_TOP, 88, VIEW_H - NAV_TOP], right: [VIEW_W - 88, NAV_TOP, 88, VIEW_H - NAV_TOP], back: [128, NAV_TOP, 104, VIEW_H - NAV_TOP] };
 const NAV_LABEL = { left: '왼쪽으로 돌기', right: '오른쪽으로 돌기', back: '돌아가기' };
 
@@ -22,26 +28,42 @@ const PATHS = {
   bulb: 'M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 4H9c0-2 0-3-1-4Z',
   menu: 'M4 7h16M4 12h16M4 17h16', close: 'M6 6l12 12M18 6 6 18',
   sound: 'M11 5 6 9H3v6h3l5 4V5Zm4 4a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12', mute: 'M11 5 6 9H3v6h3l5 4V5Zm5 5 5 5m0-5-5 5',
-  album: 'M4 5h16v14H4V5Zm0 10 5-5 4 4 3-3 4 4M15 9h.01', reset: 'M4 4v6h6M5 15a8 8 0 1 0 2-8l-3 3',
+  reset: 'M4 4v6h6M5 15a8 8 0 1 0 2-8l-3 3',
   help: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7v.5M12 17h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',
   door: 'M5 21V3h11v18M3 21h18M13 12h.01', check: 'm5 12 5 5 9-10', plus: 'M12 5v14M5 12h14',
   hand: 'M9 11V5a1.5 1.5 0 0 1 3 0v6m0-1a1.5 1.5 0 0 1 3 0v1m0 0a1.5 1.5 0 0 1 3 0v4a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a1.5 1.5 0 0 1 2.5-1.5L9 15',
   bag: 'M5 8h14l-1 13H6L5 8Zm4 0V6a3 3 0 0 1 6 0v2', home: 'M3 11l9-7 9 7v9h-6v-6H9v6H3v-9Z',
   clock: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0', trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
+  book: 'M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4Zm0 13a3 3 0 0 1 3-3h11', pin: 'M9 4h6l-1 6 3 3H7l3-3-1-6Zm3 9v7',
+  share: 'M4 13v7h16v-7M12 3v12m-4-8 4-4 4 4', lock: 'M6 11h12v10H6V11Zm3 0V7a3 3 0 0 1 6 0v4',
+  note: 'M6 3h9l4 4v14H6V3Zm9 0v4h4M9 12h7M9 16h5', ribbon: 'M8 3h8v18l-4-4-4 4V3Z',
+  star: 'm12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7L12 3Z',
 };
 const icon = (name, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${PATHS[name]}"/></svg>`;
 const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const num = n => String(n).padStart(2, '0');
 const clock = sec => `${num(Math.floor(sec / 60))}:${num(sec % 60)}`;
 const box = ([x, y, w, h]) => `left:${(x / VIEW_W) * 100}%;top:${(y / VIEW_H) * 100}%;width:${(w / VIEW_W) * 100}%;height:${(h / VIEW_H) * 100}%`;
+const $ = selector => document.querySelector(selector);
+const stars = n => `<span class="stars" role="img" aria-label="난이도 5점 만점에 ${n}점">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">★</i>`).join('')}</span>`;
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-let rooms = [], save = null, room = null, s = null;
-let selected = null, zoomItem = null, saveTimer = 0, toastTimer = 0, revealTimer = 0, audio = null, saveWarned = false, returnFocus = null;
+let rooms = [], episodes = [], save = null, room = null, s = null;
+let selected = null, zoomItem = null, resume = false, pendingNote = null;
+let saveTimer = 0, toastTimer = 0, revealTimer = 0, liveTimer = 0, audio = null, saveWarned = false, returnFocus = null;
+let artKey = '', pinKey = '';
 const fresh = new Set();
+
+const roomById = id => rooms.find(r => r.id === id);
+const unlocked = id => roomUnlocked(episodes, save.rooms, id, UNLOCK_ALL);
+const cleared = id => save.rooms[id]?.cleared === true || save.rooms[id]?.escaped === true;
+const playOrder = () => episodes.flatMap(ep => ep.rooms).map(roomById).filter(Boolean);
+const stateSig = () => JSON.stringify([s.flags, s.open, s.got]);
+const notesOf = () => s.got.filter(id => ['note', 'secret'].includes(room.items[id]?.kind));
 
 function announce(text) { live.textContent = ''; requestAnimationFrame(() => { live.textContent = text; }); }
 function showSaveWarning() {
-  if (document.querySelector('.save-warn')) return;
+  if ($('.save-warn')) return;
   const note = document.createElement('p');
   note.className = 'save-warn';
   note.setAttribute('role', 'alert');
@@ -76,7 +98,7 @@ function sfx(kind) {
   } catch { save.sound = false; }
 }
 function fx(name) {
-  const stage = document.querySelector('#stage');
+  const stage = $('#stage');
   if (stage) {
     const cls = `fx-${name}`;
     stage.classList.remove(cls);
@@ -87,8 +109,8 @@ function fx(name) {
   sfx({ rattle: 'wrong', drop: 'pick', light: 'light', photo: 'photo' }[name] ?? 'open');
   if (save.sound) buzz(name === 'rattle' || name === 'photo' ? 'light' : 'heavy');
 }
-function toast(text, items = []) {
-  const t = document.querySelector('#toast');
+function toast(text, items = [], ms = 2000) {
+  const t = $('#toast');
   announce(text);
   if (!t) return;
   t.innerHTML = `${items.map(id => `<span class="toast-item">${drawItem(id)}</span>`).join('')}<span>${e(text)}</span>`;
@@ -96,17 +118,25 @@ function toast(text, items = []) {
   void t.offsetWidth;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+// 상태가 바뀐 직후 잠깐만 문이 열리고 서랍이 나오는 움직임을 재생합니다. 다시 볼 때는 바뀐 모습만 보입니다.
+function pulseLive() {
+  const stage = $('#stage');
+  if (!stage) return;
+  stage.classList.add('live');
+  clearTimeout(liveTimer);
+  liveTimer = setTimeout(() => stage.classList.remove('live'), 1300);
 }
 
 function focusKey() {
   const n = document.activeElement;
   if (!n || n === document.body || !n.dataset?.act) return null;
-  return `[data-act="${CSS.escape(n.dataset.act)}"]${['id', 'i', 'd', 'dir'].filter(k => n.dataset[k] !== undefined).map(k => `[data-${k}="${CSS.escape(n.dataset[k])}"]`).join('')}`;
+  return `[data-act="${CSS.escape(n.dataset.act)}"]${['id', 'i', 'd', 'dir', 'sym', 'key', 'tab'].filter(k => n.dataset[k] !== undefined).map(k => `[data-${k}="${CSS.escape(n.dataset[k])}"]`).join('')}`;
 }
 function restoreFocus(selector) {
   if (!selector) return;
-  const n = document.querySelector(selector);
+  const n = $(selector);
   if (n && !n.disabled) n.focus({ preventScroll: true });
 }
 
@@ -132,33 +162,57 @@ function hintFocus() {
   if (target === s.view) {
     if (focus.hotspot) return { ...NONE, spot: focus.hotspot };
     const lk = lockIn(room, s.view);
-    return lk && !s.open.includes(lk[0]) ? { ...NONE, lock: true } : { ...NONE, all: true };
+    return lk && !s.open.includes(lk[0]) && lockReady(lk[1], s) ? { ...NONE, lock: true } : { ...NONE, all: true };
   }
   const doorway = hotspotsIn(room, s).find(h => h.actions.some(a => (a.do ?? []).some(x => x.go === target)));
   if (doorway) return { ...NONE, spot: doorway.id };
   if (room.views[s.view].kind === 'zoom') return { ...NONE, nav: 'back' };
-  const goal_wall = wallOf(target);
-  return { ...NONE, nav: stepsTo(s.view, goal_wall, 'left') < stepsTo(s.view, goal_wall, 'right') ? 'left' : 'right' };
+  const goalWall = wallOf(target);
+  return { ...NONE, nav: stepsTo(s.view, goalWall, 'left') < stepsTo(s.view, goalWall, 'right') ? 'left' : 'right' };
 }
 
+// 방 목록: 에피소드마다 방을 이야기 순서로 보여 주고, 앞 방을 탈출해야 다음 방이 열립니다.
+function roomCard(r, ep, i) {
+  const st = save.rooms[r.id];
+  const thumb = drawView(r, r.start, freshState(r));
+  const meta = `<span class="meta">${stars(r.difficulty)}<span class="mins">${icon('clock', 14)}${r.minutes}분</span></span>`;
+  const head = `<span class="no">EP${ep.id} · ${i + 1}</span><b>${e(r.title)}</b><small>${e(r.subtitle)}</small>`;
+  if (!unlocked(r.id)) return `<li><div class="room-card is-locked"><span class="thumb">${thumb}<span class="lock-mark">${icon('lock', 22)}</span></span><span class="info">${head}${meta}<small class="lock-note">${icon('lock', 13)}앞 방을 탈출하면 열려요</small></span></div></li>`;
+  const done = cleared(r.id);
+  const marks = `${done ? `<span class="status done">${icon('check', 16)}<span class="sr-only">탈출 완료</span></span>` : st?.started ? '<span class="status play">진행 중</span>' : ''}${st?.secret ? `<span class="status mark" title="책갈피">${icon('ribbon', 15)}<span class="sr-only">책갈피 찾음</span></span>` : ''}`;
+  const label = `${r.title}, 난이도 5점 만점에 ${r.difficulty}점, ${done ? '탈출 완료' : st?.started ? '이어하기' : '시작하기'}`;
+  return `<li><button class="room-card" data-act="open-room" data-id="${r.id}" aria-label="${e(label)}"><span class="thumb">${thumb}</span><span class="info">${head}${meta}</span><span class="marks">${marks}</span></button></li>`;
+}
+function soonRow(soon, ep, i) {
+  return `<li class="soon"><span class="step">${i + 1}</span><span class="info"><b>${e(soon.title)}</b><span class="meta">${stars(soon.difficulty)}<span class="mins">${icon('clock', 14)}${soon.minutes}분</span></span></span><span class="tag">준비 중</span></li>`;
+}
+function episodeHtml(ep) {
+  const built = ep.rooms.filter(id => roomById(id));
+  const done = built.filter(id => cleared(id)).length;
+  const list = ep.rooms.map((id, i) => (roomById(id) ? roomCard(roomById(id), ep, i) : soonRow(ep.upcoming[id], ep, i))).join('');
+  const levels = ep.rooms.map(id => roomById(id)?.difficulty ?? ep.upcoming[id]?.difficulty).filter(Boolean);
+  const range = `★${Math.min(...levels)}~${Math.max(...levels)}`;
+  if (!built.length) {
+    return `<details class="episode is-soon"><summary><span class="kicker">EPISODE ${ep.id}</span><span class="ep-title">${e(ep.title)}</span><span class="ep-meta">방 ${ep.rooms.length}개 · ${range} · 준비 중</span></summary><p class="ep-tag">${e(ep.tagline)}</p><ol class="rooms">${list}</ol></details>`;
+  }
+  return `<section class="episode" aria-labelledby="ep-${ep.id}"><header class="ep-head"><p class="kicker">EPISODE ${ep.id}</p><h2 id="ep-${ep.id}">${e(ep.title)}</h2><p class="ep-tag">${e(ep.tagline)}</p><span class="ep-count">${done} / ${ep.rooms.length}</span></header><ol class="rooms">${list}</ol></section>`;
+}
 function renderHome() {
   document.body.dataset.screen = 'home';
-  const done = rooms.filter(r => save.rooms[r.id]?.escaped).length;
-  const cont = rooms.find(r => r.id === save.last && save.rooms[r.id]?.started && !save.rooms[r.id]?.escaped);
-  const next = rooms.find(r => !save.rooms[r.id]?.escaped);
-  const first = cont ?? next ?? rooms[0];
-  const heroLabel = cont ? '이어하기' : next ? '시작하기' : '다시 보기';
-  const cards = rooms.map(r => {
-    const st = save.rooms[r.id];
-    const status = st?.escaped ? `<span class="status done">${icon('check', 16)}<span class="sr-only">탈출 완료</span></span>` : st?.started ? '<span class="status play">진행 중</span>' : '';
-    const label = `${r.title}, ${st?.escaped ? '탈출 완료' : st?.started ? '이어하기' : '시작하기'}`;
-    return `<li><button class="room-card" data-act="open-room" data-id="${r.id}" aria-label="${e(label)}"><span class="thumb">${drawView(r, r.start, freshState(r))}</span><span class="info"><span class="no">${num(r.id)}</span><b>${e(r.title)}</b><small>${e(r.subtitle)}</small><span class="meta">${icon('clock', 14)}<span>${r.minutes}분</span><span class="dots" aria-label="난이도 ${r.difficulty} / 5">${'●'.repeat(r.difficulty)}${'○'.repeat(5 - r.difficulty)}</span></span></span>${status}</button></li>`;
-  }).join('');
+  delete document.body.dataset.view;
+  const order = playOrder();
+  const cont = order.find(r => r.id === save.last && save.rooms[r.id]?.started && !save.rooms[r.id]?.escaped && unlocked(r.id));
+  const next = order.find(r => unlocked(r.id) && !cleared(r.id));
+  const first = cont ?? next ?? order[0];
+  const heroLabel = cont ? '이어하기' : next ? '시작하기' : '다시 하기';
+  const total = episodes.reduce((n, ep) => n + ep.rooms.length, 0);
+  const done = order.filter(r => cleared(r.id)).length;
+  const marks = order.filter(r => save.rooms[r.id]?.secret).length;
   app.innerHTML = `<main class="home" id="main">
     <header class="home-top"><h1 class="brand">${icon('door', 26)}<span>문 너머</span></h1><button class="icon-btn" data-act="guide" aria-label="조작 안내">${icon('help')}</button></header>
-    <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} ${icon('right', 18)}</button></div></section>
-    <h2 class="list-title">방 <span>${done} / ${rooms.length}</span></h2>
-    <ul class="rooms">${cards}</ul>
+    <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
+    <div class="tally"><span>${icon('door', 16)}탈출 <b>${done}</b> / ${total}</span><span>${icon('ribbon', 16)}책갈피 <b>${marks}</b> / ${order.length}</span></div>
+    ${episodes.map(episodeHtml).join('')}
     <p class="legacy"><a href="legacy.html">이전 버전 사건 기록 24개</a></p>
   </main>`;
   if (saveWarned) showSaveWarning();
@@ -166,6 +220,8 @@ function renderHome() {
 
 function renderGame() {
   document.body.dataset.screen = 'game';
+  const tone = roomTone(room);
+  artKey = ''; pinKey = '';
   app.innerHTML = `<div class="game" id="main">
     <header class="bar">
       <button class="icon-btn" data-act="home" aria-label="방 목록으로">${icon('back')}</button>
@@ -174,8 +230,9 @@ function renderGame() {
       <button class="icon-btn" data-act="photo" aria-label="사진 찍기">${icon('camera')}</button>
       <button class="icon-btn" data-act="hint" aria-label="힌트">${icon('bulb')}</button>
       <button class="icon-btn" data-act="menu" aria-label="메뉴">${icon('menu')}</button>
+      <span class="meter" id="meter" role="progressbar" aria-label="진행" aria-valuemin="0"><i></i></span>
     </header>
-    <div class="stage-wrap"><div class="backdrop" id="backdrop" aria-hidden="true"></div><div class="stage" id="stage"><div class="scene" id="scene"></div><div class="overlay" id="overlay"></div><div class="toast" id="toast" aria-hidden="true"></div></div></div>
+    <div class="stage-wrap" style="--wall1:${tone.wall[0]};--wall2:${tone.wall[1]}"><div class="stage" id="stage"><div class="scene" id="scene"><div class="art" id="art"></div><div class="hits" id="hits"></div></div><div class="overlay" id="overlay"></div><button class="pin" id="pin" data-act="pin-open" hidden></button><div class="toast" id="toast" aria-hidden="true"></div></div></div>
     <nav class="bag" id="bag" aria-label="가방"></nav>
   </div>`;
   if (saveWarned) showSaveWarning();
@@ -183,33 +240,40 @@ function renderGame() {
 }
 function paint() {
   const f = focusKey();
-  paintBar(); paintScene(); paintOverlay(); paintBag();
+  paintBar(); paintScene(); paintPin(); paintOverlay(); paintBag();
   restoreFocus(f);
 }
 // 위 막대의 작은 글씨는 지금 시점 이름이고, 물건을 고르면 그 물건 이름으로 바뀝니다.
-// 고른 물건을 알림 띠로 띄우면 장면 위 단서를 가리므로 막대에만 표시합니다.
 function paintBar() {
-  const where = document.querySelector('#where-view');
+  const where = $('#where-view');
   if (!where) return;
   const held = selected && s.inv.includes(selected) ? room.items[selected].name : null;
   where.classList.toggle('is-held', !!held);
   where.innerHTML = held ? `${icon('hand', 14)}<span>${e(held)}</span>` : e(room.views[s.view].name);
+  const meter = $('#meter');
+  const { done, total } = progress(room, s);
+  meter.style.setProperty('--p', `${Math.round((done / total) * 100)}%`);
+  meter.setAttribute('aria-valuemax', total);
+  meter.setAttribute('aria-valuenow', done);
 }
 function paintScene() {
-  const scene = document.querySelector('#scene');
-  if (!scene) return;
+  const art = $('#art'), hits = $('#hits');
+  if (!art) return;
+  document.body.dataset.view = s.view;
+  // 그림은 상태가 바뀔 때만 다시 그립니다. 매번 그리면 휴대폰에서 느려지고 움직임이 처음부터 다시 시작됩니다.
+  const key = JSON.stringify([s.view, s.flags, s.open, s.got, s.drafts]);
+  if (key !== artKey) { art.innerHTML = drawView(room, s.view, s, viewAlt(room, s)); artKey = key; }
   const view = room.views[s.view];
   const focus = hintFocus();
-  let html = drawView(room, s.view, s, viewAlt(room, s));
+  let html = '';
   for (const h of hotspotsIn(room, s)) html += `<button class="spot${focus.all || focus.spot === h.id ? ' is-hint' : ''}" data-act="spot" data-id="${e(h.id)}" style="${box(h.rect)}" aria-label="${e(h.label)}"></button>`;
   const lk = lockIn(room, s.view);
-  if (lk && !s.open.includes(lk[0])) html += lockButtons(lk[0], lk[1], focus.lock);
+  const lockOn = !!(lk && !s.open.includes(lk[0]) && lockReady(lk[1], s));
+  if (lockOn) html += lockButtons(lk[0], lk[1], focus.lock);
+  $('#stage').classList.toggle('has-lock', lockOn);
   if (view.kind === 'wall') html += navButton('left', focus.nav) + navButton('right', focus.nav);
   else html += navButton('back', focus.nav);
-  scene.innerHTML = html;
-  // 키가 큰 화면에서 장면 위아래에 남는 공간은 같은 그림을 흐리게 깔아 빈 띠처럼 보이지 않게 합니다.
-  const backdrop = document.querySelector('#backdrop');
-  if (backdrop) backdrop.innerHTML = drawView(room, s.view, s).replace('xMidYMid meet', 'xMidYMid slice');
+  hits.innerHTML = html;
 }
 function navButton(dir, hint) {
   return `<button class="nav nav-${dir}${hint === dir ? ' is-hint' : ''}" data-act="nav" data-dir="${dir}" style="${box(NAV[dir])}" aria-label="${NAV_LABEL[dir]}"><span>${icon(dir === 'back' ? 'down' : dir, 24)}</span></button>`;
@@ -220,26 +284,73 @@ function lockButtons(id, lock, hint) {
     let label, data;
     if (lock.type === 'color') { label = `${lock.label} ${c.index + 1}번, 지금 ${COLOR_NAMES[draft[c.index]] ?? draft[c.index]}`; data = `data-i="${c.index}"`; }
     else if (lock.type === 'dial') { label = `${c.index + 1}번째 숫자 ${c.delta > 0 ? '올리기' : '내리기'}, 지금 ${draft[c.index]}`; data = `data-i="${c.index}" data-d="${c.delta}"`; }
+    else if (lock.type === 'switch') { label = `${c.index + 1}번 스위치, 지금 ${draft[c.index] ? '켜짐' : '꺼짐'}`; data = `data-i="${c.index}"`; }
+    else if (lock.type === 'rotate') { label = `${c.index + 1}번 타일 돌리기, 지금 ${DIRECTION_NAMES[draft[c.index]]}`; data = `data-i="${c.index}"`; }
+    else if (lock.type === 'symbol') { label = `${SYMBOL_NAMES[c.sym] ?? c.sym} 누르기`; data = `data-sym="${e(c.sym)}"`; }
+    else if (lock.type === 'keypad') { label = c.key === 'C' ? '모두 지우기' : c.key === '<' ? '하나 지우기' : c.key; data = `data-key="${c.key}"`; }
     else { label = `${DIRECTION_NAMES[c.dir]} 화살표`; data = `data-dir="${c.dir}"`; }
     return `<button class="ctrl${hint ? ' is-hint' : ''}" data-act="lock" ${data} style="${box([c.x, c.y, c.w, c.h])}" aria-label="${e(label)}"></button>`;
   }).join('');
-  return buttons + (lock.type === 'direction' ? `<span class="sr-only">${draft.length} / ${lock.answer.length} 입력</span>` : '');
+  return buttons + (SEQUENCE_LOCKS.includes(lock.type) ? `<span class="sr-only">${draft.length} / ${lock.answer.length} 입력</span>` : '');
+}
+// 고정한 사진은 장면 오른쪽 위 모서리에 작게 띄웁니다. 자물쇠 버튼은 이 영역 아래에만 놓입니다.
+function photoState(photo) { return { ...freshState(room), ...structuredClone(photo), inv: [...photo.got] }; }
+function paintPin() {
+  const pin = $('#pin');
+  if (!pin) return;
+  const photo = s.pin ? s.photos.find(p => p.sig === s.pin) : null;
+  if (!photo || !s.started || s.escaped) { pin.hidden = true; pinKey = ''; return; }
+  pin.hidden = false;
+  pin.setAttribute('style', box(PIN_ZONE));
+  if (photo.sig !== pinKey) {
+    pin.innerHTML = drawView(room, photo.view, photoState(photo)) + `<span class="pin-tag">${icon('pin', 12)}</span>`;
+    pin.setAttribute('aria-label', `고정한 사진, ${room.views[photo.view].name}. 크게 보기`);
+    pinKey = photo.sig;
+  }
+}
+function introHtml() {
+  const ep = episodeOf(episodes, room.id);
+  const kicker = ep ? `EPISODE ${ep.episode.id} · ${ep.index + 1} / ${ep.episode.rooms.length}` : `ROOM ${num(room.id)}`;
+  return `<div class="panel intro"><p class="kicker">${kicker}</p><h2>${e(room.title)}</h2><p class="intro-meta">${stars(room.difficulty)}<span>${icon('clock', 14)}${room.minutes}분</span></p>${room.intro.map(line => `<p>${e(line)}</p>`).join('')}<button class="btn primary wide" data-act="begin">들어가기 ${icon('right', 18)}</button></div>`;
+}
+// 쉬었다 돌아오면 어디까지 왔는지, 가방과 최근 사진을 먼저 보여 줍니다.
+function resumeHtml() {
+  const { done, total } = progress(room, s);
+  const bag = s.inv.length ? `<div class="recap-row" aria-label="가방">${s.inv.map(id => `<span class="recap-item" title="${e(room.items[id].name)}">${drawItem(id, room.items[id].name)}</span>`).join('')}</div>` : '';
+  const shots = s.photos.slice(0, 3);
+  const photos = shots.length ? `<div class="recap-row">${shots.map(p => `<span class="recap-photo">${drawView(room, p.view, photoState(p), room.views[p.view].name)}</span>`).join('')}</div>` : '';
+  return `<div class="panel resume"><p class="kicker">이어하기</p><h2>${e(room.title)}</h2><div class="recap-meter" role="img" aria-label="진행 ${done} / ${total}"><i style="width:${Math.round((done / total) * 100)}%"></i></div>${bag}${photos}<button class="btn primary wide" data-act="resume-go">계속하기 ${icon('right', 18)}</button></div>`;
+}
+function outroHtml() {
+  const ep = episodeOf(episodes, room.id);
+  const idx = ep?.index ?? 0, order = ep?.episode.rooms ?? [];
+  const nextId = order[idx + 1];
+  const nextRoom = nextId ? roomById(nextId) : null;
+  const soon = nextId && !nextRoom ? ep.episode.upcoming?.[nextId] : null;
+  const isLast = !!ep && idx === order.length - 1;
+  const best = s.best && (s.best.seconds !== s.seconds || s.best.hints !== hintsUsed(s)) ? `<div><dt>${icon('star', 16)}<span>최고</span></dt><dd>${clock(s.best.seconds)}</dd></div>` : '';
+  const hasSecret = Object.values(room.items).some(item => item.kind === 'secret');
+  const secret = hasSecret ? `<p class="secret-line${s.secret ? ' found' : ''}">${icon('ribbon', 16)}<span>${s.secret ? '책갈피를 찾았어요' : '이 방에 책갈피가 하나 숨어 있어요'}</span></p>` : '';
+  const bridge = ep && !isLast && ep.episode.bridges?.[room.id] ? `<p class="bridge">${e(ep.episode.bridges[room.id])}</p>` : '';
+  const finale = isLast ? `<div class="finale"><p class="kicker">EPISODE ${ep.episode.id} 완료</p>${ep.episode.finale.map(line => `<p>${e(line)}</p>`).join('')}</div>` : '';
+  const next = nextRoom ? `<button class="btn primary wide" data-act="next-room" data-id="${nextRoom.id}">다음 방 · ${e(nextRoom.title)} ${icon('right', 18)}</button>` : soon ? `<p class="soon-note">다음 방 「${e(soon.title)}」은 준비 중이에요.</p>` : '';
+  return `<div class="panel outro"><span class="outro-mark">${icon('door', 40)}</span><h2>${e(room.outro.title)}</h2>${room.outro.lines.map(line => `<p>${e(line)}</p>`).join('')}
+    <dl class="stats"><div><dt>${icon('clock', 16)}<span>시간</span></dt><dd>${clock(s.seconds)}</dd></div><div><dt>${icon('bulb', 16)}<span>힌트</span></dt><dd>${hintsUsed(s)}</dd></div>${best}</dl>
+    ${secret}${bridge}${finale}${next}
+    <div class="row"><button class="btn" data-act="share">${icon('share', 18)} 공유</button><button class="btn" data-act="replay">${icon('reset', 18)} 다시 하기</button><button class="btn${nextRoom ? '' : ' primary'}" data-act="home">방 목록</button></div></div>`;
 }
 function paintOverlay() {
-  const overlay = document.querySelector('#overlay');
+  const overlay = $('#overlay');
   if (!overlay) return;
   overlay.className = 'overlay';
-  if (!s.started) {
-    overlay.classList.add('is-on');
-    overlay.innerHTML = `<div class="panel intro"><p class="kicker">ROOM ${num(room.id)}</p><h2>${e(room.title)}</h2>${room.intro.map(line => `<p>${e(line)}</p>`).join('')}<button class="btn primary wide" data-act="begin">들어가기 ${icon('right', 18)}</button></div>`;
-    return;
-  }
+  if (!s.started) { overlay.classList.add('is-on'); overlay.innerHTML = introHtml(); return; }
   if (s.escaped) {
-    document.querySelector('#toast')?.classList.remove('show');
+    $('#toast')?.classList.remove('show');
     overlay.classList.add('is-on');
-    overlay.innerHTML = `<div class="panel outro"><span class="outro-mark">${icon('door', 40)}</span><h2>${e(room.outro.title)}</h2>${room.outro.lines.map(line => `<p>${e(line)}</p>`).join('')}<dl class="stats"><div><dt>${icon('clock', 16)}<span>시간</span></dt><dd>${clock(s.seconds)}</dd></div><div><dt>${icon('bulb', 16)}<span>힌트</span></dt><dd>${hintsUsed(s)}</dd></div></dl><div class="row"><button class="btn" data-act="replay">${icon('reset', 18)} 다시 하기</button><button class="btn primary" data-act="home">방 목록 ${icon('right', 18)}</button></div></div>`;
+    overlay.innerHTML = outroHtml();
     return;
   }
+  if (resume) { overlay.classList.add('is-on'); overlay.innerHTML = resumeHtml(); return; }
   if (zoomItem && s.inv.includes(zoomItem)) {
     const item = room.items[zoomItem];
     overlay.classList.add('is-on', 'is-item');
@@ -249,12 +360,14 @@ function paintOverlay() {
   zoomItem = null;
   overlay.innerHTML = '';
 }
+// 가방 맨 앞 칸은 수첩입니다. 찍은 사진과 주운 쪽지가 모두 여기에 모입니다.
 function paintBag() {
-  const bag = document.querySelector('#bag');
+  const bag = $('#bag');
   if (!bag) return;
   const focus = hintFocus();
-  const count = Math.max(6, s.inv.length);
-  let html = '';
+  const shots = s.photos.length, notes = notesOf().length;
+  let html = `<button class="slot journal" data-act="journal" aria-label="수첩, 사진 ${shots}장, 쪽지 ${notes}장">${icon('book', 24)}${shots ? `<span class="badge">${shots}</span>` : ''}</button>`;
+  const count = Math.max(5, s.inv.length);
   for (let i = 0; i < count; i++) {
     const id = s.inv[i];
     if (!id) { html += '<span class="slot empty" aria-hidden="true"></span>'; continue; }
@@ -267,33 +380,62 @@ function paintBag() {
   bag.innerHTML = html;
 }
 
+function onEscape() {
+  const now = { seconds: s.seconds, hints: hintsUsed(s) };
+  if (!s.best || now.hints < s.best.hints || (now.hints === s.best.hints && now.seconds < s.best.seconds)) s.best = now;
+  sfx('open');
+  void persist();
+}
 function play(events) {
-  const gains = [];
+  const gains = [], notes = [], secrets = [];
   for (const ev of events) {
     if (ev.type === 'gain') { gains.push(ev.item); fresh.add(ev.item); }
+    else if (ev.type === 'note') notes.push(ev.item);
+    else if (ev.type === 'secret') secrets.push(ev.item);
     else if (ev.type === 'fx') fx(ev.name);
     else if (ev.type === 'say' && ev.text) toast(ev.text);
-    else if (ev.type === 'escape') { sfx('open'); void persist(); }
+    else if (ev.type === 'escape') onEscape();
   }
   if (gains.length) {
     toast(`+ ${gains.map(id => room.items[id].name).join(', ')}`, gains);
     if (!events.some(ev => ev.type === 'fx')) sfx('pick');
   }
+  if (secrets.length) toast('책갈피를 찾았어요', secrets, 2400);
+  if (notes.length) { sfx('pick'); pendingNote = notes[0]; }
 }
-function changed(before) {
+// 시점을 옮기거나 상태가 바뀐 뒤에 처음 들어온 곳의 한 줄 반응과 단서 자동 기록을 처리합니다.
+function afterMove() {
+  if (!s.started || s.escaped || resume) return;
+  const firstVisit = markSeen(s);
+  const enter = room.views[s.view].enter;
+  if (firstVisit && enter) toast(enter, [], 2600);
+  if (save.autoClue && needsAutoPhoto(room, s)) {
+    const { added } = takePhoto(room, s, { auto: true });
+    if (added) {
+      paintBag();
+      flyPhoto();
+      if (!save.autoTold) { save.autoTold = true; toast('단서 장면은 수첩에 자동으로 찍혀요.', [], 2600); }
+    }
+  }
+  scheduleSave();
+}
+function changed(before, stateMoved = false) {
   const turned = before !== s.view;
+  if (stateMoved) pulseLive();
   scheduleSave();
   paint();
   if (turned) {
-    const scene = document.querySelector('#scene');
-    scene.classList.remove('turn');
-    void scene.offsetWidth;
-    scene.classList.add('turn');
+    const art = $('#art');
+    art.classList.remove('turn');
+    void art.offsetWidth;
+    art.classList.add('turn');
     announce(room.views[s.view].name);
   }
+  afterMove();
+  if (pendingNote) { const id = pendingNote; pendingNote = null; showNote(id); }
 }
 function onSpot(id) {
-  const before = s.view;
+  const before = s.view, prev = stateSig();
   const held = selected;
   const result = tap(room, s, id, held);
   if (!result.ok) return;
@@ -301,7 +443,7 @@ function onSpot(id) {
   if (result.rejected) toast('여기에는 쓸 수 없어요.');
   else if (!result.events.length) sfx('tap');
   play(result.events);
-  changed(before);
+  changed(before, stateSig() !== prev);
 }
 function onItem(id) {
   if (!s.inv.includes(id)) return;
@@ -326,7 +468,7 @@ function onItem(id) {
   if (selected === id) {
     zoomItem = id;
     paint();
-    document.querySelector('[data-act="zoom-close"]')?.focus({ preventScroll: true });
+    $('[data-act="zoom-close"]')?.focus({ preventScroll: true });
     return;
   }
   selected = id;
@@ -340,21 +482,24 @@ function onLock(button) {
   const found = lockIn(room, s.view);
   if (!found) return;
   const [id, lock] = found;
+  if (!lockReady(lock, s)) return;
   let draft = cleanInput(lock, s.drafts[id]);
-  if (lock.type === 'color') {
-    const i = Number(button.dataset.i), p = lock.palette;
-    draft[i] = p[(p.indexOf(draft[i]) + 1) % p.length];
-  } else if (lock.type === 'dial') {
-    const i = Number(button.dataset.i), size = (lock.max ?? 9) + 1;
-    draft[i] = (draft[i] + Number(button.dataset.d) + size) % size;
-  } else draft = [...draft, button.dataset.dir];
+  const i = Number(button.dataset.i);
+  if (lock.type === 'color') { const p = lock.palette; draft[i] = p[(p.indexOf(draft[i]) + 1) % p.length]; }
+  else if (lock.type === 'dial') { const size = (lock.max ?? 9) + 1; draft[i] = (draft[i] + Number(button.dataset.d) + size) % size; }
+  else if (lock.type === 'switch') draft[i] = draft[i] ? 0 : 1;
+  else if (lock.type === 'rotate') draft[i] = ROTATIONS[(ROTATIONS.indexOf(draft[i]) + 1) % ROTATIONS.length];
+  else if (lock.type === 'symbol') draft = [...draft, button.dataset.sym];
+  else if (lock.type === 'keypad') { const k = button.dataset.key; draft = k === 'C' ? [] : k === '<' ? draft.slice(0, -1) : [...draft, Number(k)]; }
+  else draft = [...draft, button.dataset.dir];
+  const before = s.view, prev = stateSig();
   const result = inputLock(room, s, id, draft);
   if (!result.ok) return;
   sfx('click');
   if (result.open) announce(`${lock.label}가 풀렸어요.`);
   if (result.wrong) toast('맞지 않아요.');
   play(result.events);
-  changed(s.view);
+  changed(before, result.open || stateSig() !== prev);
 }
 function onNav(dir) {
   const before = s.view;
@@ -363,12 +508,38 @@ function onNav(dir) {
   changed(before);
 }
 function reveal() {
-  const scene = document.querySelector('#scene');
+  const scene = $('#scene');
   if (!scene) return;
   scene.classList.add('reveal');
   clearTimeout(revealTimer);
   revealTimer = setTimeout(() => scene.classList.remove('reveal'), 1600);
   announce(`살펴볼 곳 ${hotspotsIn(room, s).length}개`);
+}
+// 찍은 장면이 수첩 칸으로 날아가 들어갑니다. 움직임을 줄인 설정에서는 수첩 칸만 살짝 튑니다.
+function flyPhoto() {
+  const art = $('#art'), target = $('[data-act="journal"]');
+  if (!target) return;
+  const bump = () => { const now = $('[data-act="journal"]'); if (!now) return; now.classList.remove('bump'); void now.offsetWidth; now.classList.add('bump'); };
+  if (!art || reducedMotion() || typeof Element.prototype.animate !== 'function') { bump(); return; }
+  const a = art.getBoundingClientRect(), b = target.getBoundingClientRect();
+  const ghost = document.createElement('div');
+  ghost.className = 'fly';
+  ghost.setAttribute('aria-hidden', 'true');
+  ghost.innerHTML = art.innerHTML;
+  Object.assign(ghost.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
+  document.body.append(ghost);
+  const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
+  const anim = ghost.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(${b.width / a.width})`, opacity: .35 }], { duration: 520, easing: 'cubic-bezier(.5,0,.75,0)' });
+  anim.onfinish = () => { ghost.remove(); bump(); };
+}
+function shoot() {
+  takePhoto(room, s);
+  fx('photo');
+  paintBag();
+  flyPhoto();
+  if (!save.pinTold) { save.pinTold = true; toast('수첩에서 사진을 고정하면 화면에 띄워 둘 수 있어요.', [], 2800); }
+  else toast(`사진 ${s.photos.length}장`);
+  scheduleSave();
 }
 
 function openSheet(html, labelledBy = 'sheet-title') {
@@ -392,22 +563,37 @@ function showHint() {
 }
 function showMenu() {
   openSheet(`${sheetHead('메뉴', 'menu')}<div class="menu-list">
-    <button data-act="album">${icon('album')}<span>사진</span><small>${s.photos.length}장</small></button>
+    <button data-act="journal">${icon('book')}<span>수첩</span><small>사진 ${s.photos.length}장</small></button>
+    <button data-act="auto-clue" aria-pressed="${save.autoClue}">${icon('camera')}<span>단서 자동 기록</span><small>${save.autoClue ? '켜짐' : '꺼짐'}</small></button>
     <button data-act="sound" aria-pressed="${save.sound}">${icon(save.sound ? 'sound' : 'mute')}<span>소리와 진동</span><small>${save.sound ? '켜짐' : '꺼짐'}</small></button>
     <button data-act="guide">${icon('help')}<span>조작 안내</span></button>
     <button data-act="reset">${icon('reset')}<span>처음부터</span></button>
     <button data-act="home">${icon('home')}<span>방 목록</span></button>
   </div>`);
 }
-function photoState(photo) { return { ...freshState(room), ...structuredClone(photo), inv: [...photo.got] }; }
-function showAlbum() {
-  const list = s.photos.map((photo, i) => `<button class="photo" data-act="photo-open" data-i="${i}" aria-label="${e(room.views[photo.view].name)} 사진 ${i + 1}">${drawView(room, photo.view, photoState(photo))}</button>`).join('');
-  openSheet(`${sheetHead('사진', 'album')}${list ? `<div class="photos">${list}</div>` : `<p class="sheet-copy empty-photo">${icon('camera', 28)}<span>카메라 버튼으로 장면을 찍어 두세요.</span></p>`}`);
+function showJournal(tab = 'photos') {
+  const notes = notesOf();
+  const tabs = `<div class="tabs" role="tablist">${[['photos', `사진 ${s.photos.length}`], ['notes', `쪽지 ${notes.length}`]].map(([k, label]) => `<button role="tab" aria-selected="${tab === k}" data-act="journal" data-tab="${k}">${label}</button>`).join('')}</div>`;
+  let body;
+  if (tab === 'notes') {
+    body = notes.length ? `<ul class="notes">${notes.map(id => { const item = room.items[id]; return `<li class="note-paper${item.kind === 'secret' ? ' secret' : ''}">${item.kind === 'secret' ? icon('ribbon', 16) : ''}<b>${e(item.name)}</b><p>${e(item.note ?? '')}</p></li>`; }).join('')}</ul>` : `<p class="sheet-copy empty-photo">${icon('note', 28)}<span>쪽지를 찾으면 여기에 모여요.</span></p>`;
+  } else {
+    body = s.photos.length ? `<div class="photos">${s.photos.map((p, i) => `<button class="photo${p.sig === s.pin ? ' pinned' : ''}" data-act="photo-open" data-i="${i}" aria-label="${e(room.views[p.view].name)}${p.auto ? ', 자동 기록' : ''}${p.sig === s.pin ? ', 고정됨' : ''}">${drawView(room, p.view, photoState(p))}${p.auto ? '<span class="ph-tag">자동</span>' : ''}${p.sig === s.pin ? `<span class="ph-pin">${icon('pin', 12)}</span>` : ''}</button>`).join('')}</div>` : `<p class="sheet-copy empty-photo">${icon('camera', 28)}<span>카메라로 장면을 찍어 두세요. 단서는 자동으로 찍혀요.</span></p>`;
+  }
+  openSheet(`${sheetHead('수첩', 'book')}${tabs}${body}`);
 }
 function showPhoto(i) {
   const photo = s.photos[i];
-  if (!photo) { showAlbum(); return; }
-  openSheet(`${sheetHead(room.views[photo.view].name, 'album')}<div class="photo-big">${drawView(room, photo.view, photoState(photo), viewAlt(room, photoState(photo), photo.view))}</div><div class="row"><button class="btn" data-act="photo-delete" data-i="${i}">${icon('trash', 18)} 지우기</button><button class="btn primary" data-act="album">목록</button></div>`);
+  if (!photo) { showJournal(); return; }
+  const n = s.photos.length, st = photoState(photo), pinned = s.pin === photo.sig;
+  openSheet(`${sheetHead(`${room.views[photo.view].name}${photo.auto ? ' · 자동' : ''}`, 'camera')}
+    <div class="photo-big">${drawView(room, photo.view, st, viewAlt(room, st, photo.view))}</div>
+    <div class="viewer-nav"><button class="icon-btn" data-act="photo-open" data-i="${(i - 1 + n) % n}" aria-label="이전 사진" ${n < 2 ? 'disabled' : ''}>${icon('left')}</button><span>${i + 1} / ${n}</span><button class="icon-btn" data-act="photo-open" data-i="${(i + 1) % n}" aria-label="다음 사진" ${n < 2 ? 'disabled' : ''}>${icon('right')}</button></div>
+    <div class="row"><button class="btn" data-act="photo-delete" data-i="${i}">${icon('trash', 18)} 지우기</button><button class="btn primary" data-act="photo-pin" data-i="${i}">${icon('pin', 18)} ${pinned ? '고정 풀기' : '화면에 고정'}</button></div>`);
+}
+function showNote(id) {
+  const item = room.items[id];
+  openSheet(`${sheetHead(item.kind === 'secret' ? '책갈피' : '쪽지', item.kind === 'secret' ? 'ribbon' : 'note')}<article class="note-paper big${item.kind === 'secret' ? ' secret' : ''}"><b>${e(item.name)}</b><p>${e(item.note ?? '')}</p></article><button class="btn primary wide" data-act="close">수첩에 넣기</button>`);
 }
 function showGuide() {
   openSheet(`${sheetHead('이렇게 해요', 'help')}<ol class="guide">
@@ -415,33 +601,42 @@ function showGuide() {
     <li><span class="g-icon">${icon('left', 22)}${icon('right', 22)}</span><span>화살표로 방을 둘러봐요.</span></li>
     <li><span class="g-icon">${icon('bag', 26)}</span><span>물건을 고르고 쓸 곳을 눌러요.</span></li>
     <li><span class="g-icon">${icon('plus', 26)}</span><span>고른 물건을 한 번 더 누르면 크게 보고 합칠 수 있어요.</span></li>
-    <li><span class="g-icon">${icon('eye', 20)}${icon('camera', 20)}${icon('bulb', 20)}</span><span>살펴볼 곳, 사진, 힌트를 써 보세요.</span></li>
+    <li><span class="g-icon">${icon('camera', 20)}${icon('book', 20)}${icon('bulb', 20)}</span><span>사진과 쪽지는 수첩에 모여요. 막히면 힌트를 열어요.</span></li>
   </ol><button class="btn primary wide" data-act="guide-done">알겠어요</button>`);
 }
 function confirmReset() {
-  openSheet(`${sheetHead('처음부터 할까요?', 'reset')}<p class="sheet-copy">이 방의 물건, 사진, 힌트 기록이 지워져요.</p><div class="row"><button class="btn" data-act="close">계속하기</button><button class="btn danger" data-act="confirm-reset">처음부터</button></div>`);
+  openSheet(`${sheetHead('처음부터 할까요?', 'reset')}<p class="sheet-copy">이 방의 물건, 사진, 힌트 기록이 지워져요. 탈출 기록과 책갈피는 남아요.</p><div class="row"><button class="btn" data-act="close">계속하기</button><button class="btn danger" data-act="confirm-reset">처음부터</button></div>`);
 }
 function restart() {
-  save.rooms[room.id] = freshState(room);
+  const keep = { cleared: s.cleared || s.escaped, best: s.best, secret: s.secret };
+  save.rooms[room.id] = { ...freshState(room), ...keep };
   s = save.rooms[room.id];
-  selected = null; zoomItem = null;
+  selected = null; zoomItem = null; resume = false;
   void persist();
-  paint();
+  renderGame();
+}
+async function shareResult() {
+  const text = `문 너머 「${room.title}」 탈출 ${clock(s.seconds)} · 힌트 ${hintsUsed(s)}개`;
+  const result = await share({ title: '문 너머', text, url: `${location.origin}${location.pathname}` });
+  if (result === 'copied') toast('결과를 복사했어요.');
+  else if (result === 'failed') toast('공유하지 못했어요.');
 }
 
 function route() {
   const match = location.hash.match(/^#room\/(\d+)$/);
-  const next = match ? rooms.find(r => r.id === Number(match[1])) : null;
+  const next = match ? roomById(Number(match[1])) : null;
   closeSheet();
-  selected = null; zoomItem = null;
-  if (next) {
+  selected = null; zoomItem = null; resume = false; pendingNote = null;
+  if (next && unlocked(next.id)) {
     room = next;
     save.rooms[room.id] ??= freshState(room);
     s = save.rooms[room.id];
     save.last = room.id;
+    resume = s.started && !s.escaped;
     scheduleSave();
     renderGame();
   } else {
+    if (match) history.replaceState(null, '', `${location.pathname}${location.search}`);
     room = null; s = null;
     renderHome();
   }
@@ -458,7 +653,7 @@ function handleBack() {
   if (sheet.open) { closeSheet(); return true; }
   if (!room) return false;
   if (zoomItem) { zoomItem = null; paint(); return true; }
-  if (room.views[s.view].kind === 'zoom' && s.started && !s.escaped) { onNav('back'); return true; }
+  if (room.views[s.view].kind === 'zoom' && s.started && !s.escaped && !resume) { onNav('back'); return true; }
   goHome();
   return true;
 }
@@ -470,31 +665,49 @@ document.addEventListener('click', event => {
   if (act === 'close') { closeSheet(); return; }
   if (act === 'guide') { showGuide(); return; }
   if (act === 'guide-done') { save.tutorial = true; scheduleSave(); closeSheet(); return; }
-  if (act === 'open-room') { location.hash = `room/${b.dataset.id}`; return; }
+  if (act === 'open-room' || act === 'next-room') { location.hash = `room/${b.dataset.id}`; return; }
   if (act === 'home') { goHome(); return; }
   if (!room) return;
-  if (act === 'begin') { s.started = true; scheduleSave(); paint(); if (!save.tutorial) showGuide(); return; }
+  if (act === 'begin') { s.started = true; scheduleSave(); paint(); if (!save.tutorial) showGuide(); else afterMove(); return; }
+  if (act === 'resume-go') { resume = false; paint(); afterMove(); return; }
   if (act === 'menu') { showMenu(); return; }
   if (act === 'hint') { showHint(); return; }
   if (act === 'hint-more') { requestHint(room, s); scheduleSave(); showHint(); paint(); return; }
-  if (act === 'album') { showAlbum(); return; }
+  if (act === 'journal') { showJournal(b.dataset.tab ?? 'photos'); return; }
   if (act === 'photo-open') { showPhoto(Number(b.dataset.i)); return; }
-  if (act === 'photo-delete') { s.photos.splice(Number(b.dataset.i), 1); scheduleSave(); showAlbum(); return; }
+  if (act === 'pin-open') { const i = s.photos.findIndex(p => p.sig === s.pin); if (i >= 0) showPhoto(i); return; }
+  if (act === 'photo-pin') {
+    const photo = s.photos[Number(b.dataset.i)];
+    if (!photo) return;
+    const pinned = s.pin === photo.sig;
+    s.pin = pinned ? null : photo.sig;
+    scheduleSave(); closeSheet(); paint();
+    toast(pinned ? '고정을 풀었어요.' : '사진을 화면 구석에 고정했어요.');
+    return;
+  }
+  if (act === 'photo-delete') {
+    const [gone] = s.photos.splice(Number(b.dataset.i), 1);
+    if (gone && s.pin === gone.sig) s.pin = null;
+    scheduleSave(); paint(); showJournal();
+    return;
+  }
   if (act === 'sound') { save.sound = !save.sound; scheduleSave(); sfx('open'); showMenu(); return; }
+  if (act === 'auto-clue') { save.autoClue = !save.autoClue; scheduleSave(); showMenu(); return; }
   if (act === 'reset') { confirmReset(); return; }
   if (act === 'confirm-reset' || act === 'replay') { closeSheet(); restart(); return; }
-  if (!s.started || s.escaped) return;
+  if (act === 'share') { void shareResult(); return; }
+  if (!s.started || s.escaped || resume) return;
   if (act === 'spot') onSpot(b.dataset.id);
   else if (act === 'item') onItem(b.dataset.id);
   else if (act === 'zoom-close') { zoomItem = null; paint(); restoreFocus(`[data-act="item"][data-id="${CSS.escape(selected ?? '')}"]`); }
   else if (act === 'lock') onLock(b);
   else if (act === 'nav') onNav(b.dataset.dir);
   else if (act === 'reveal') reveal();
-  else if (act === 'photo') { takePhoto(s); fx('photo'); toast(`사진 ${s.photos.length}장`); scheduleSave(); }
+  else if (act === 'photo') shoot();
 });
 document.addEventListener('pointerdown', event => {
   const scene = event.target.closest?.('#scene');
-  const stage = document.querySelector('#stage');
+  const stage = $('#stage');
   if (!scene || !stage) return;
   const rect = stage.getBoundingClientRect();
   const dot = document.createElement('span');
@@ -505,10 +718,13 @@ document.addEventListener('pointerdown', event => {
   setTimeout(() => dot.remove(), 480);
 });
 document.addEventListener('keydown', event => {
-  if (!room || sheet.open || !s?.started || s.escaped || event.altKey || event.metaKey || event.ctrlKey) return;
+  if (!room || sheet.open || !s?.started || s.escaped || resume || event.altKey || event.metaKey || event.ctrlKey) return;
   if (room.views[s.view].kind === 'wall' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
     event.preventDefault();
     onNav(event.key === 'ArrowLeft' ? 'left' : 'right');
+  } else if (event.key === 'p' || event.key === 'P') {
+    event.preventDefault();
+    shoot();
   }
 });
 sheet.addEventListener('click', event => { if (event.target === sheet) closeSheet(); });
@@ -516,19 +732,23 @@ sheet.addEventListener('close', () => {
   if (room && !save.tutorial && s?.started && sheet.querySelector('[data-act="guide-done"]')) { save.tutorial = true; scheduleSave(); }
   restoreFocus(returnFocus);
   returnFocus = null;
+  // 안내 창을 닫은 뒤에야 첫 장면의 한 줄 반응을 보여 줍니다.
+  if (room && s?.started && !s.escaped && !resume && !s.seen.includes(s.view)) afterMove();
 });
 
 function tick() {
-  if (!room || !s?.started || s.escaped || document.hidden || sheet.open) return;
+  if (!room || !s?.started || s.escaped || resume || document.hidden || sheet.open) return;
   s.seconds++;
   if (s.seconds % 15 === 0) scheduleSave();
 }
 
 async function init() {
   try {
-    const response = await fetch('./escape.json');
+    const response = await fetch(`./escape.json?v=${VERSION}`);
     if (!response.ok) throw new Error('방 정보를 읽지 못했어요.');
-    rooms = await response.json();
+    const data = await response.json();
+    rooms = data.rooms;
+    episodes = data.episodes;
     let raw = null;
     try { raw = JSON.parse((await loadText(KEY)) || 'null'); } catch { raw = null; }
     save = recoverSave(raw, rooms);

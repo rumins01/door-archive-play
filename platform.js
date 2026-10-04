@@ -1,5 +1,5 @@
 // 웹과 앱(Capacitor)의 차이를 이 파일에만 둡니다.
-// 앱으로 감쌀 때 Preferences, App, Haptics 플러그인이 있으면 그것을 쓰고, 없으면 브라우저 기능을 씁니다.
+// 앱으로 감쌀 때 Preferences, App, Haptics, Share 플러그인이 있으면 그것을 쓰고, 없으면 브라우저 기능을 씁니다.
 const plugin = name => globalThis.Capacitor?.Plugins?.[name];
 export const isNativeApp = () => globalThis.Capacitor?.isNativePlatform?.() === true;
 
@@ -37,4 +37,17 @@ export function buzz(strength = 'light') {
   const haptics = plugin('Haptics');
   if (haptics?.impact) { Promise.resolve(haptics.impact({ style: strength === 'heavy' ? 'HEAVY' : 'LIGHT' })).catch(() => {}); return; }
   try { navigator.vibrate?.(strength === 'heavy' ? 28 : 10); } catch { /* 진동을 지원하지 않는 기기는 조용히 넘어갑니다. */ }
+}
+
+// 결과를 공유합니다. 공유 창이 없으면 클립보드에 복사합니다. 결과는 shared, copied, cancelled, failed 중 하나입니다.
+export async function share(data) {
+  try {
+    const native = plugin('Share');
+    if (native?.share) { await native.share(data); return 'shared'; }
+    if (navigator.share) { await navigator.share(data); return 'shared'; }
+    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText([data.text, data.url].filter(Boolean).join(' ')); return 'copied'; }
+    return 'failed';
+  } catch (error) {
+    return error?.name === 'AbortError' ? 'cancelled' : 'failed';
+  }
 }
