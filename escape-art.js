@@ -1,6 +1,6 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
-// 질감은 dist/assets/tex/의 작은 반투명 타일을 겹쳐 그립니다. 움직임은 class 이름만 붙이고 실제 애니메이션은 CSS가 맡습니다.
-import { check, cleanInput, lockControls, lockIn, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-4';
+// 그림체 기준은 2026-10-04 18시 공개판(사서의 방)입니다. 그라데이션과 평면 그림자만 쓰고, 질감 타일과 늘 흐르는 움직임은 쓰지 않습니다.
+import { check, cleanInput, lockControls, lockIn, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-5';
 
 export const COLORS = { red: '#b8483a', blue: '#3f6d9c', green: '#4d8757', yellow: '#d6ab3f' };
 export const COLOR_NAMES = { red: '빨강', blue: '파랑', green: '초록', yellow: '노랑' };
@@ -10,11 +10,11 @@ export const SYMBOL_NAMES = { sun: '해', moon: '달', star: '별', drop: '물�
 const PATTERN = { red: 'dots', blue: 'lines', green: 'diag', yellow: null };
 const NUM_FONT = 'font-family="Georgia, \'Times New Roman\', serif"';
 const MONO_FONT = 'font-family="ui-monospace, SFMono-Regular, Menlo, monospace"';
-const TEX = 'assets/tex/';
+// 방마다 벽과 바닥 색만 조금 다르게 씁니다. 사서의 방은 18시 공개판 색 그대로입니다.
 const PALETTE = {
-  library: { wall: ['#3a4734', '#1b231a'], floor: ['#56412a', '#1e160d'] },
-  darkroom: { wall: ['#2e3536', '#141819'], floor: ['#2e2a25', '#0e0c0a'] },
-  pressroom: { wall: ['#4a3f38', '#211c19'], floor: ['#3f362d', '#15110d'] },
+  library: { wall: ['#2f3829', '#1a2119'], floor: ['#4b3a27', '#1e160d'] },
+  darkroom: { wall: ['#2b3130', '#171b1a'], floor: ['#3a3128', '#18130e'] },
+  pressroom: { wall: ['#3a332c', '#1e1a16'], floor: ['#45362a', '#1c150f'] },
 };
 
 let seq = 0;
@@ -24,61 +24,33 @@ const E = (cx, cy, rx, ry, fill, extra = '') => `<ellipse cx="${cx}" cy="${cy}" 
 const P = (d, fill, extra = '') => `<path d="${d}" fill="${fill}" ${extra}/>`;
 const L = (x1, y1, x2, y2, stroke, w = 1, extra = '') => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${stroke}" stroke-width="${w}" fill="none" ${extra}/>`;
 const T = (x, y, text, size, fill, extra = '') => `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" text-anchor="middle" dominant-baseline="central" ${extra}>${text}</text>`;
-const G = (cls, body, extra = '') => `<g class="${cls}" ${extra}>${body}</g>`;
 const pol = (cx, cy, len, deg) => [cx + len * Math.sin(deg * Math.PI / 180), cy - len * Math.cos(deg * Math.PI / 180)];
-const origin = (x, y, extra = '') => `style="transform-origin:${x}px ${y}px;${extra}"`;
 
-function defs(u, pal) {
+function defs(u, pal = PALETTE.library) {
   const lin = (id, stops, attrs = 'x2="0" y2="1"') => `<linearGradient id="${u}-${id}" ${attrs}>${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join('')}</linearGradient>`;
-  const rad = (id, stops, attrs = '') => `<radialGradient id="${u}-${id}" ${attrs}>${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join('')}</radialGradient>`;
-  const tex = (id, file, size, extra = '') => `<pattern id="${u}-${id}" patternUnits="userSpaceOnUse" width="${size}" height="${size}" ${extra}><image href="${TEX}${file}" width="${size}" height="${size}" preserveAspectRatio="none"/></pattern>`;
   return `<defs>
     ${lin('wall', [[0, pal.wall[0]], [1, pal.wall[1]]])}
     ${lin('floor', [[0, pal.floor[0]], [1, pal.floor[1]]])}
-    ${lin('sideL', [[0, '#000', .6], [1, '#000', .25]], 'x2="1" y2="0"')}
-    ${lin('sideR', [[0, '#000', .25], [1, '#000', .6]], 'x2="1" y2="0"')}
-    ${lin('aoL', [[0, '#000', .45], [1, '#000', 0]], 'x2="1" y2="0"')}
-    ${lin('aoR', [[0, '#000', 0], [1, '#000', .45]], 'x2="1" y2="0"')}
-    ${lin('aoT', [[0, '#000', .45], [1, '#000', 0]])}
-    ${lin('wood', [[0, '#7a5b3b'], [.5, '#57412a'], [1, '#3a2b1b']])}
-    ${lin('woodl', [[0, '#97754d'], [1, '#664c31']])}
-    ${lin('brass', [[0, '#6e5a36'], [.45, '#e8cc8e'], [.6, '#a98c55'], [1, '#5f4c2c']], 'x2="1" y2="1"')}
-    ${lin('steel', [[0, '#66716c'], [.5, '#3e4744'], [1, '#262d2a']], 'x2="1" y2="1"')}
-    ${lin('paper', [[0, '#f2e8cf'], [1, '#cdbf9b']])}
-    ${lin('night', [[0, '#0b1620'], [1, '#22394a']])}
-    ${lin('shade', [[0, '#45734f'], [1, '#1f3d29']])}
+    ${lin('wood', [[0, '#76583a'], [.5, '#55402a'], [1, '#3a2b1b']])}
+    ${lin('woodl', [[0, '#93714a'], [1, '#634a30']])}
+    ${lin('brass', [[0, '#6e5a36'], [.45, '#e2c588'], [.6, '#a98c55'], [1, '#5f4c2c']], 'x2="1" y2="1"')}
+    ${lin('steel', [[0, '#5b6661'], [.5, '#3c4542'], [1, '#262d2a']], 'x2="1" y2="1"')}
+    ${lin('paper', [[0, '#efe5cc'], [1, '#cdbf9b']])}
+    ${lin('night', [[0, '#0d1822'], [1, '#253c4c']])}
+    ${lin('shade', [[0, '#3f6b4a'], [1, '#1f3d29']])}
     ${lin('film', [[0, '#1b1a18'], [1, '#2c2a26']])}
-    ${lin('neg', [[0, '#a8622a'], [1, '#6e3a14']])}
-    ${lin('hall', [[0, '#fbe4ab'], [1, '#8a6a3a']])}
-    ${lin('ray', [[0, '#ffe2a6', .55], [1, '#ffe2a6', 0]])}
-    ${lin('glass', [[0, '#ffffff', .35], [.3, '#ffffff', .05], [1, '#ffffff', .15]], 'x2="1" y2="1"')}
-    ${rad('glow', [[0, '#ffd98f', .75], [.5, '#ffcf7a', .22], [1, '#ffcf7a', 0]])}
-    ${rad('warm', [[0, '#ffdca0', .32], [.6, '#ffcf7a', .08], [1, '#ffcf7a', 0]])}
-    ${rad('redglow', [[0, '#ff4a32', .65], [.5, '#ff2a1a', .18], [1, '#ff2a1a', 0]])}
-    ${rad('sh', [[0, '#000', .6], [1, '#000', 0]])}
-    ${rad('vig', [[.55, '#050806', 0], [1, '#050806', .62]], 'cx=".5" cy=".45" r=".75"')}
-    ${tex('tp', 'plaster.png', 160)}
-    ${tex('tw', 'wood.png', 200)}
-    ${tex('tv', 'wood.png', 200, 'patternTransform="rotate(90)"')}
-    ${tex('tn', 'noise.png', 96)}
-    ${tex('tf', 'fabric.png', 48)}
+    ${lin('hall', [[0, '#f6d999'], [1, '#8a6a3a']])}
+    ${lin('neg', [[0, '#8a5a2e'], [1, '#5a3618']])}
+    ${lin('ray', [[0, '#f3d38c', .28], [1, '#f3d38c', 0]])}
+    <radialGradient id="${u}-glow"><stop offset="0" stop-color="#ffd98f" stop-opacity=".75"/><stop offset=".5" stop-color="#ffcf7a" stop-opacity=".22"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${u}-sh"><stop offset="0" stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${u}-vig" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#050806" stop-opacity="0"/><stop offset="1" stop-color="#050806" stop-opacity=".62"/></radialGradient>
     <pattern id="${u}-dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.5" fill="#fff" fill-opacity=".5"/></pattern>
     <pattern id="${u}-lines" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="2.2" fill="#fff" fill-opacity=".42"/></pattern>
     <pattern id="${u}-diag" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2.2" height="7" fill="#fff" fill-opacity=".42"/></pattern>
   </defs>`;
 }
 
-function glyph(name, x, y, s, color, extra = '') {
-  if (name === 'sun') return C(x, y, s * .55, color, extra) + Array.from({ length: 8 }, (_, i) => { const [x1, y1] = pol(x, y, s * .78, i * 45), [x2, y2] = pol(x, y, s * 1.12, i * 45); return L(x1.toFixed(1), y1.toFixed(1), x2.toFixed(1), y2.toFixed(1), color, s * .16, 'stroke-linecap="round"'); }).join('');
-  if (name === 'moon') return P(`M${x + s * .45} ${y - s}A${s} ${s} 0 0 0 ${x + s * .45} ${y + s}A${s * 1.3} ${s * 1.3} 0 0 1 ${x + s * .45} ${y - s}Z`, color, extra);
-  if (name === 'star') return P(Array.from({ length: 10 }, (_, i) => { const [px, py] = pol(x, y, i % 2 ? s * .45 : s * 1.05, i * 36); return `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`; }).join('') + 'Z', color, extra);
-  if (name === 'drop') return P(`M${x} ${y - s * 1.1}C${x + s * .3} ${y - s * .5} ${x + s * .85} ${y} ${x + s * .85} ${y + s * .35}A${s * .85} ${s * .85} 0 0 1 ${x - s * .85} ${y + s * .35}C${x - s * .85} ${y} ${x - s * .3} ${y - s * .5} ${x} ${y - s * 1.1}Z`, color, extra);
-  if (name === 'leaf') return P(`M${x - s} ${y + s}C${x - s} ${y - s * .3} ${x - s * .2} ${y - s} ${x + s} ${y - s}C${x + s} ${y + s * .2} ${x + s * .2} ${y + s} ${x - s} ${y + s}Z`, color, extra) + L(x - s * .8, y + s * .8, x + s * .5, y - s * .5, '#00000055', s * .14);
-  if (name === 'eye') return P(`M${x - s * 1.1} ${y}Q${x} ${y - s} ${x + s * 1.1} ${y}Q${x} ${y + s} ${x - s * 1.1} ${y}Z`, 'none', `stroke="${color}" stroke-width="${s * .2}"`) + C(x, y, s * .38, color, extra);
-  if (name === 'key') return C(x - s * .45, y, s * .45, 'none', `stroke="${color}" stroke-width="${s * .22}"`) + L(x, y, x + s, y, color, s * .22) + L(x + s * .7, y, x + s * .7, y + s * .4, color, s * .2) + L(x + s, y, x + s, y + s * .4, color, s * .2);
-  if (name === 'crown') return P(`M${x - s} ${y + s * .6}L${x - s} ${y - s * .5}L${x - s * .45} ${y}L${x} ${y - s * .8}L${x + s * .45} ${y}L${x + s} ${y - s * .5}L${x + s} ${y + s * .6}Z`, color, extra);
-  return C(x, y, s * .6, color, extra);
-}
 function shape(kind, x, y, s, fill, extra = '') {
   if (kind === 'circle') return C(x, y, s, fill, extra);
   if (kind === 'square') return R(x - s * .9, y - s * .9, s * 1.8, s * 1.8, fill, extra);
@@ -93,14 +65,9 @@ function arrow(dir, x, y, s, fill, extra = '') {
   const rot = { up: 0, right: 90, down: 180, left: 270 }[dir] ?? 0;
   return `<path d="M0 ${-s}L${s * .9} ${s * .05}H${s * .34}V${s}H${-s * .34}V${s * .05}H${-s * .9}Z" fill="${fill}" transform="translate(${x} ${y}) rotate(${rot})" ${extra}/>`;
 }
-const shadow = (u, cx, cy, rx, ry = 8) => E(cx, cy, rx, ry, `url(#${u}-sh)`);
-const woodBox = (u, x, y, w, h, extra = 'stroke="#22170d" stroke-width="2"') => R(x, y, w, h, `url(#${u}-wood)`, extra) + R(x, y, w, h, `url(#${u}-tw)`, 'opacity=".5"');
-const dust = pts => pts.map(([x, y, d], i) => C(x, y, i % 3 ? 1.1 : 1.6, '#f6e6c0', `class="amb-dust" opacity="0" style="animation-delay:${d}s"`)).join('');
-
 function spine(u, x, y, w, h, color, mark = null) {
   let out = swatch(u, color, fill => R(x, y, w, h, fill, 'rx="2"'));
-  out += R(x, y, w, h, `url(#${u}-tv)`, 'opacity=".25"');
-  out += R(x, y + h * .07, w, h * .035, '#000', 'opacity=".28"') + R(x, y + h * .88, w, h * .035, '#000', 'opacity=".28"') + R(x + w * .12, y, w * .1, h, '#fff', 'opacity=".08"') + R(x + w * .8, y, w * .2, h, '#000', 'opacity=".22"');
+  out += R(x, y + h * .07, w, h * .035, '#000', 'opacity=".28"') + R(x, y + h * .88, w, h * .035, '#000', 'opacity=".28"') + R(x + w * .12, y, w * .1, h, '#fff', 'opacity=".07"');
   if (mark) {
     const s = Math.min(w * .26, 12);
     out += C(x + w / 2, y + h * .46, s * 1.75, '#f0e5c6') + shape(mark, x + w / 2, y + h * .46, s, '#2a2118');
@@ -119,7 +86,7 @@ function filler(u, x0, x1, base, maxH, seed) {
   return out;
 }
 function clockFace(u, cx, cy, Rr, numerals) {
-  let out = C(cx + Rr * .06, cy + Rr * .1, Rr * 1.02, '#000', 'opacity=".4"') + C(cx, cy, Rr, `url(#${u}-brass)`) + C(cx, cy, Rr * .9, '#2a221a') + C(cx, cy, Rr * .85, `url(#${u}-paper)`) + C(cx, cy, Rr * .85, `url(#${u}-tn)`, 'opacity=".35"');
+  let out = C(cx, cy + Rr * .04, Rr * 1.02, '#000', 'opacity=".35"') + C(cx, cy, Rr, `url(#${u}-brass)`) + C(cx, cy, Rr * .9, '#2a221a') + C(cx, cy, Rr * .85, `url(#${u}-paper)`);
   for (let i = 0; i < 60; i++) {
     const big = i % 5 === 0;
     if (!big && !numerals) continue;
@@ -128,12 +95,9 @@ function clockFace(u, cx, cy, Rr, numerals) {
   }
   if (numerals) for (let n = 1; n <= 12; n++) { const [x, y] = pol(cx, cy, Rr * .56, n * 30); out += T(x.toFixed(1), y.toFixed(1), n, Rr * .15, '#3a2f22', NUM_FONT); }
   const [hx, hy] = pol(cx, cy, Rr * .42, 290), [mx, my] = pol(cx, cy, Rr * .66, 240);
-  out += L(cx, cy, hx.toFixed(1), hy.toFixed(1), '#1d1812', Rr * .08, 'stroke-linecap="round"') + L(cx, cy, mx.toFixed(1), my.toFixed(1), '#1d1812', Rr * .05, 'stroke-linecap="round"');
-  // 멈춘 초침이 제자리에서 떨립니다.
-  out += G('amb-tick', L(cx, cy + Rr * .12, cx + Rr * .02, cy - Rr * .72, '#9b2f22', Math.max(1, Rr * .018), 'stroke-linecap="round"'), origin(cx, cy));
-  out += C(cx, cy, Rr * .07, `url(#${u}-brass)`);
+  out += L(cx, cy, hx.toFixed(1), hy.toFixed(1), '#1d1812', Rr * .08, 'stroke-linecap="round"') + L(cx, cy, mx.toFixed(1), my.toFixed(1), '#1d1812', Rr * .05, 'stroke-linecap="round"') + C(cx, cy, Rr * .07, `url(#${u}-brass)`);
   out += P(`M${cx - Rr * .55} ${cy - Rr * .6}L${cx - Rr * .12} ${cy - Rr * .14}L${cx + Rr * .04} ${cy - Rr * .3}L${cx + Rr * .5} ${cy + Rr * .22}`, 'none', `stroke="#fff" stroke-opacity=".6" stroke-width="${Math.max(1, Rr * .014)}"`);
-  out += P(`M${cx - Rr * .7} ${cy - Rr * .2}A${Rr * .75} ${Rr * .75} 0 0 1 ${cx - Rr * .1} ${cy - Rr * .74}`, 'none', `stroke="#fff" stroke-opacity=".22" stroke-width="${Rr * .06}" stroke-linecap="round"`);
+  out += P(`M${cx - Rr * .7} ${cy - Rr * .2}A${Rr * .75} ${Rr * .75} 0 0 1 ${cx - Rr * .1} ${cy - Rr * .74}`, 'none', `stroke="#fff" stroke-opacity=".18" stroke-width="${Rr * .06}" stroke-linecap="round"`);
   return out;
 }
 function alarmIcon(x, y, s, color) {
@@ -166,8 +130,7 @@ function screw(x, y, s) {
   return C(x, y, s, '#a7a99f', 'stroke="#2a2e2b" stroke-width="2"') + L(x - s * .6, y - s * .6, x + s * .6, y + s * .6, '#2a2e2b', s * .22) + L(x - s * .6, y + s * .6, x + s * .6, y - s * .6, '#2a2e2b', s * .22);
 }
 function bulbArt(x, y, s, lit, u) {
-  return (lit ? C(x, y, s * 2.4, `url(#${u}-glow)`, 'class="amb-flicker"') : '') + C(x, y, s, lit ? '#fff3c4' : '#e9eef0', `fill-opacity="${lit ? 1 : .55}" stroke="#d9dccf" stroke-width="2"`)
-    + C(x - s * .35, y - s * .35, s * .25, '#fff', 'opacity=".6"')
+  return (lit ? C(x, y, s * 2.4, `url(#${u}-glow)`) : '') + C(x, y, s, lit ? '#fff3c4' : '#e9eef0', `fill-opacity="${lit ? 1 : .55}" stroke="#d9dccf" stroke-width="2"`)
     + P(`M${x - s * .3} ${y + s * .2}Q${x} ${y - s * .4} ${x + s * .3} ${y + s * .2}`, 'none', `stroke="${lit ? '#c9892c' : '#8a8d84'}" stroke-width="${s * .1}"`)
     + R(x - s * .45, y + s * .85, s * .9, s * .55, '#a7a99f', 'rx="2"') + L(x - s * .45, y + s * 1.05, x + s * .45, y + s * 1.05, '#5f625b', 2) + L(x - s * .45, y + s * 1.25, x + s * .45, y + s * 1.25, '#5f625b', 2);
 }
@@ -189,19 +152,51 @@ function handleArt(x, y, s, rot = 0) {
 function bladeArt(x, y, s, rot = 0) {
   return `<g transform="translate(${x} ${y}) rotate(${rot})">${R(-s * .2, -s * .18, s * 2.2, s * .36, '#b9bcb4', 'stroke="#55594f" stroke-width="1.5"')}${P(`M${s * 2} ${-s * .18}L${s * 2.45} ${-s * .08}V${s * .08}L${s * 2} ${s * .18}Z`, '#d9dbd3', 'stroke="#55594f" stroke-width="1.5"')}${R(-s * .55, -s * .3, s * .4, s * .6, '#7b7f77', 'stroke="#55594f" stroke-width="1.5"')}</g>`;
 }
-// 현상 집게: 경첩 고리에서 두 팔이 벌어지고 끝에 넓적한 고무 집게가 있습니다.
+
+function wallBase(u, o = {}) {
+  const f = o.floor ?? 388;
+  let out = R(0, 0, VIEW_W, VIEW_H, `url(#${u}-wall)`);
+  if (o.brick) {
+    for (let y = 30, r = 0; y < f - 6; y += 18, r++) {
+      out += L(0, y, VIEW_W, y, '#000', 1, 'opacity=".2"');
+      for (let x = (r % 2) * 22; x < VIEW_W; x += 44) out += L(x, y, x, Math.min(y + 18, f - 6), '#000', 1, 'opacity=".14"');
+    }
+  } else for (let x = 12; x < VIEW_W; x += 24) out += L(x, 0, x, f - 4, '#fff', 1, 'opacity=".025"');
+  out += R(0, f, VIEW_W, VIEW_H - f, `url(#${u}-floor)`) + R(0, f - 6, VIEW_W, 9, '#140f09');
+  for (let i = 0; i < 6; i++) out += L(-40 + i * 90, 480, 40 + i * 60, f + 3, '#000', 1.5, 'opacity=".25"');
+  return out;
+}
+function zoomBase(u, tone = 'wall') {
+  const fill = tone === 'wood' ? `url(#${u}-wood)` : tone === 'dark' ? '#121512' : `url(#${u}-wall)`;
+  return R(0, 0, VIEW_W, VIEW_H, fill) + R(0, 0, VIEW_W, VIEW_H, '#000', 'opacity=".25"');
+}
+
+function glyph(name, x, y, s, color, extra = '') {
+  if (name === 'sun') return C(x, y, s * .55, color, extra) + Array.from({ length: 8 }, (_, i) => { const [x1, y1] = pol(x, y, s * .78, i * 45), [x2, y2] = pol(x, y, s * 1.12, i * 45); return L(x1.toFixed(1), y1.toFixed(1), x2.toFixed(1), y2.toFixed(1), color, s * .16, 'stroke-linecap="round"'); }).join('');
+  if (name === 'moon') return P(`M${x + s * .45} ${y - s}A${s} ${s} 0 0 0 ${x + s * .45} ${y + s}A${s * 1.3} ${s * 1.3} 0 0 1 ${x + s * .45} ${y - s}Z`, color, extra);
+  if (name === 'star') return P(Array.from({ length: 10 }, (_, i) => { const [px, py] = pol(x, y, i % 2 ? s * .45 : s * 1.05, i * 36); return `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`; }).join('') + 'Z', color, extra);
+  if (name === 'drop') return P(`M${x} ${y - s * 1.1}C${x + s * .3} ${y - s * .5} ${x + s * .85} ${y} ${x + s * .85} ${y + s * .35}A${s * .85} ${s * .85} 0 0 1 ${x - s * .85} ${y + s * .35}C${x - s * .85} ${y} ${x - s * .3} ${y - s * .5} ${x} ${y - s * 1.1}Z`, color, extra);
+  if (name === 'leaf') return P(`M${x - s} ${y + s}C${x - s} ${y - s * .3} ${x - s * .2} ${y - s} ${x + s} ${y - s}C${x + s} ${y + s * .2} ${x + s * .2} ${y + s} ${x - s} ${y + s}Z`, color, extra) + L(x - s * .8, y + s * .8, x + s * .5, y - s * .5, '#00000055', s * .14);
+  if (name === 'eye') return P(`M${x - s * 1.1} ${y}Q${x} ${y - s} ${x + s * 1.1} ${y}Q${x} ${y + s} ${x - s * 1.1} ${y}Z`, 'none', `stroke="${color}" stroke-width="${s * .2}"`) + C(x, y, s * .38, color, extra);
+  if (name === 'key') return C(x - s * .45, y, s * .45, 'none', `stroke="${color}" stroke-width="${s * .22}"`) + L(x, y, x + s, y, color, s * .22) + L(x + s * .7, y, x + s * .7, y + s * .4, color, s * .2) + L(x + s, y, x + s, y + s * .4, color, s * .2);
+  if (name === 'crown') return P(`M${x - s} ${y + s * .6}L${x - s} ${y - s * .5}L${x - s * .45} ${y}L${x} ${y - s * .8}L${x + s * .45} ${y}L${x + s} ${y - s * .5}L${x + s} ${y + s * .6}Z`, color, extra);
+  return C(x, y, s * .6, color, extra);
+}
+
 function tongsArt() {
   return P('M4 -1L44 -9L46 -5L6 1Z', '#cfd3cc', 'stroke="#55594f" stroke-width="1"') + P('M4 1L44 9L46 5L6 -1Z', '#b9bdb6', 'stroke="#55594f" stroke-width="1"')
     + R(38, -14, 12, 7, '#c0392b', 'rx="2" transform="rotate(-11 44 -10)"') + R(38, 7, 12, 7, '#c0392b', 'rx="2" transform="rotate(11 44 10)"')
     + C(4, 0, 5, 'none', 'stroke="#9aa09a" stroke-width="2.5"');
 }
+
 function memoArt(x, y, w, h, rot = 0) {
   return `<g transform="rotate(${rot} ${x + w / 2} ${y + h / 2})">${R(x + 2, y + 3, w, h, '#000', 'opacity=".35"')}${R(x, y, w, h, '#efe5cc', 'stroke="#8d7c5a" stroke-width="1"')}${[.3, .5, .7].map(k => R(x + w * .15, y + h * k, w * .7, Math.max(1, h * .05), '#6d604a', 'opacity=".6"')).join('')}${P(`M${x + w * .72} ${y}L${x + w} ${y + h * .28}H${x + w * .72}Z`, '#d6c9a6')}</g>`;
 }
+
 function ribbon(x, y, s) {
   return P(`M${x} ${y}h${s}v${s * 3.2}l${-s / 2} ${-s * .7}l${-s / 2} ${s * .7}Z`, '#a3322a', 'stroke="#5a1712" stroke-width="1"') + R(x, y, s, s * .5, '#d6ab3f');
 }
-// 사람 실루엣이 한쪽을 가리킵니다. 붉은 빛에서만 드러나는 사진에 씁니다.
+
 function pointer(x, y, s, dir, color) {
   const vertical = dir === 'up' || dir === 'down';
   const sx = vertical ? x + s * .6 : x;
@@ -214,6 +209,7 @@ function pointer(x, y, s, dir, color) {
     + P(`M${hx.toFixed(1)} ${hy.toFixed(1)}L${(tx + Math.cos(ang + 1.9) * s * .3).toFixed(1)} ${(ty + Math.sin(ang + 1.9) * s * .3).toFixed(1)}L${(tx + Math.cos(ang - 1.9) * s * .3).toFixed(1)} ${(ty + Math.sin(ang - 1.9) * s * .3).toFixed(1)}Z`, color)
     + L(x - s * .3, y + s * .9, x - s * .35, y + s * 1.8, color, s * .22) + L(x + s * .3, y + s * .9, x + s * .35, y + s * 1.8, color, s * .22);
 }
+
 function groupPhoto(x, y, w, h, withSign = true) {
   const s = h / 9;
   let out = R(x, y, w, h, '#efe9dc') + R(x + w * .06, y + h * .07, w * .88, h * .74, '#5a5348');
@@ -225,65 +221,46 @@ function groupPhoto(x, y, w, h, withSign = true) {
   return out;
 }
 
-function wallBase(u, o = {}) {
-  let out = R(0, 0, VIEW_W, VIEW_H, `url(#${u}-wall)`) + R(0, 0, VIEW_W, 392, `url(#${u}-tp)`, 'opacity=".6"');
-  if (o.brick) out += brick();
-  if (o.stripes !== false) for (let x = 30; x < 336; x += 22) out += L(x, 28, x, 356, '#fff', 1, 'opacity=".035"') + L(x + 11, 28, x + 11, 356, '#000', 1, 'opacity=".08"');
-  out += P('M0 0H360V12L342 26H18L0 12Z', '#0b0e0b', 'opacity=".9"') + L(18, 26, 342, 26, '#000', 3, 'opacity=".4"') + L(18, 29, 342, 29, '#fff', 1, 'opacity=".07"');
-  out += P('M0 12L18 26V368L0 390Z', `url(#${u}-sideL)`) + P('M360 12L342 26V368L360 390Z', `url(#${u}-sideR)`);
-  out += R(18, 354, 324, 14, '#1a120a') + R(18, 354, 324, 14, `url(#${u}-tw)`, 'opacity=".4"') + L(18, 354, 342, 354, '#fff', 1, 'opacity=".1"');
-  const floor = 'M0 390L18 368H342L360 390V480H0Z';
-  out += P(floor, `url(#${u}-floor)`) + P(floor, `url(#${u}-tw)`, 'opacity=".5"');
-  for (let i = 0; i <= 8; i++) { const x = 18 + i * 40.5; out += L(x.toFixed(1), 368, (180 + (x - 180) * 2.6).toFixed(1), 480, '#000', 1.2, 'opacity=".32"'); }
-  out += L(0, 418, 360, 418, '#000', 1, 'opacity=".14"') + L(0, 452, 360, 452, '#000', 1, 'opacity=".14"');
-  out += R(0, 0, 70, 392, `url(#${u}-aoL)`) + R(290, 0, 70, 392, `url(#${u}-aoR)`) + R(0, 26, 360, 44, `url(#${u}-aoT)`);
-  if (o.light) out += C(o.light[0], o.light[1], o.light[2] ?? 170, `url(#${u}-warm)`);
-  return out;
-}
-function zoomBase(u, tone = 'wall') {
-  const fill = tone === 'wood' ? `url(#${u}-wood)` : tone === 'dark' ? '#121512' : `url(#${u}-wall)`;
-  return R(0, 0, VIEW_W, VIEW_H, fill) + R(0, 0, VIEW_W, VIEW_H, `url(#${u}-tp)`, 'opacity=".45"') + R(0, 0, VIEW_W, VIEW_H, '#000', 'opacity=".22"') + E(180, 30, 240, 140, `url(#${u}-warm)`);
-}
+// 새 방 그림이 쓰는 이름을 18시 그림체에 맞춥니다. 움직임 묶음(G)은 그림만 남기고, 그림자는 평면 타원, 나무 상자는 그라데이션만 씁니다.
+const G = (cls, body) => body;
+const origin = () => '';
+const dust = () => '';
+const shadow = (u, cx, cy, rx, ry = 8) => E(cx, cy, rx, ry, '#060807', 'opacity=".42"');
+const woodBox = (u, x, y, w, h, extra = 'stroke="#22170d" stroke-width="2"') => R(x, y, w, h, `url(#${u}-wood)`, extra);
 
 // 상태에 따라 바뀌는 사서의 방 장면입니다.
 const library = {
   north(u, s, is) {
-    let out = wallBase(u, { light: [180, 70, 150] });
-    out += E(180, 440, 170, 30, '#3a1f1a', 'opacity=".75"') + E(180, 440, 150, 24, '#5a2c22', 'opacity=".6"') + E(180, 440, 150, 24, `url(#${u}-tf)`, 'opacity=".5"');
+    let out = wallBase(u) + E(180, 438, 170, 30, '#3a1f1a', 'opacity=".75"') + E(180, 438, 150, 24, '#5a2c22', 'opacity=".6"');
     out += clockFace(u, 180, 72, 42, false);
-    out += shadow(u, 180, 394, 90, 8) + R(110, 120, 140, 272, '#3a2a19') + R(114, 124, 132, 266, '#20170f');
+    out += R(110, 120, 140, 272, '#3a2a19') + R(114, 124, 132, 266, '#20170f');
     if (is('door-open')) {
-      out += R(120, 130, 120, 260, `url(#${u}-hall)`) + G('anim-swing', P('M120 130L150 140V384L120 392Z', `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"'), origin(120, 260))
-        + G('amb-rays', P('M120 390H240L320 480H40Z', `url(#${u}-ray)`) + P('M150 130H220L260 390H130Z', '#fff4cf', 'opacity=".12"'))
-        + dust([[150, 200, 0], [190, 250, 1.2], [210, 180, 2.1], [170, 320, .6], [200, 300, 2.8]]);
+      out += R(120, 130, 120, 260, `url(#${u}-hall)`) + P('M120 130L150 140V384L120 392Z', `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"')
+        + P('M120 390H240L300 480H60Z', '#f3d38c', 'opacity=".22"') + R(150, 150, 70, 190, '#fff', 'opacity=".08"');
     } else {
-      out += R(120, 130, 120, 260, `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"') + R(120, 130, 120, 260, `url(#${u}-tv)`, 'opacity=".55"')
+      out += R(120, 130, 120, 260, `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"')
         + R(132, 144, 96, 104, 'none', 'stroke="#2a1c10" stroke-width="3" opacity=".7"') + R(132, 262, 96, 112, 'none', 'stroke="#2a1c10" stroke-width="3" opacity=".7"')
-        + L(133, 145, 227, 145, '#fff', 1, 'opacity=".1"') + L(133, 263, 227, 263, '#fff', 1, 'opacity=".1"')
-        + C(224, 254, 7, `url(#${u}-brass)`) + C(222, 252, 2, '#fff', 'opacity=".6"') + R(217, 266, 14, 26, `url(#${u}-brass)`, 'rx="3"') + C(224, 275, 3, '#120d08') + R(223, 276, 2, 8, '#120d08');
+        + C(224, 254, 7, `url(#${u}-brass)`) + R(217, 266, 14, 26, `url(#${u}-brass)`, 'rx="3"') + C(224, 275, 3, '#120d08') + R(223, 276, 2, 8, '#120d08');
     }
-    out += shadow(u, 64, 394, 58, 7) + woodBox(u, 10, 318, 108, 74) + L(14, 354, 114, 354, '#2a1c10', 2) + C(64, 336, 3, `url(#${u}-brass)`) + C(64, 372, 3, `url(#${u}-brass)`);
-    out += R(22, 236, 92, 86, '#000', 'opacity=".35" rx="4"') + R(18, 232, 92, 86, `url(#${u}-steel)`, 'rx="4" stroke="#1b201e" stroke-width="2"') + L(20, 234, 108, 234, '#fff', 1, 'opacity=".25"');
+    out += R(10, 318, 108, 74, `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"') + L(14, 354, 114, 354, '#2a1c10', 2) + C(64, 336, 3, `url(#${u}-brass)`) + C(64, 372, 3, `url(#${u}-brass)`);
+    out += R(18, 232, 92, 86, `url(#${u}-steel)`, 'rx="4" stroke="#1b201e" stroke-width="2"');
     if (is('open:safe')) {
-      out += R(26, 240, 76, 70, '#0d0f0e') + G('anim-swing', P('M26 240L12 246V306L26 310Z', '#4a5450', 'stroke="#1b201e" stroke-width="1.5"'), origin(26, 275, '--sx:-5.4'));
+      out += R(26, 240, 76, 70, '#0d0f0e') + P('M26 240L12 246V306L26 310Z', '#4a5450', 'stroke="#1b201e" stroke-width="1.5"');
       if (!is('got:key')) out += bundle(u, 38, 262, 50, 40, true);
     } else {
       out += R(26, 240, 76, 70, 'none', 'stroke="#1b201e" stroke-width="2"') + R(20, 248, 5, 12, '#1b201e') + R(20, 290, 5, 12, '#1b201e') + R(92, 262, 6, 26, `url(#${u}-brass)`, 'rx="3"') + filmIcon(60, 252, 34, 14, '#c9b27a')
         + arrow('up', 64, 268, 5, '#c9b27a') + arrow('down', 64, 292, 5, '#c9b27a') + arrow('left', 52, 280, 5, '#c9b27a') + arrow('right', 76, 280, 5, '#c9b27a')
         + [0, 1, 2, 3].map(i => C(52 + i * 8, 303, 2.2, '#4b4436')).join('');
     }
-    out += L(318, 112, 318, 386, `url(#${u}-wood)`, 6) + P('M300 388L336 388L318 378Z', '#2a1c10') + L(304, 118, 332, 118, '#3a2a19', 4) + shadow(u, 318, 392, 26, 5);
-    let coat = P('M298 128Q318 116 338 128L346 268Q318 280 290 268Z', '#2f4436', 'stroke="#1a261d" stroke-width="2"') + P('M298 128Q318 116 338 128L346 268Q318 280 290 268Z', `url(#${u}-tf)`, 'opacity=".55"') + P('M318 126L312 200L318 268L324 200Z', '#253629');
-    coat += P('M302 214H330V236Q316 242 302 236Z', '#263a2d', 'stroke="#1a261d" stroke-width="1.5"');
-    if (!is('got:memo1')) coat += memoArt(306, 202, 18, 14, -10);
-    out += G('amb-sway', coat, origin(318, 120));
+    out += L(318, 112, 318, 386, `url(#${u}-wood)`, 6) + P('M300 388L336 388L318 378Z', '#2a1c10') + L(304, 118, 332, 118, '#3a2a19', 4)
+      + P('M298 128Q318 116 338 128L346 268Q318 280 290 268Z', '#2f4436', 'stroke="#1a261d" stroke-width="2"') + P('M318 126L312 200L318 268L324 200Z', '#253629')
+      + P('M302 214H330V236Q316 242 302 236Z', '#263a2d', 'stroke="#1a261d" stroke-width="1.5"');
+    if (!is('got:memo1')) out += memoArt(306, 202, 18, 14, -10);
     return out;
   },
   east(u, s, is) {
-    let out = wallBase(u, { light: [180, 60, 150] });
-    out += shadow(u, 180, 398, 160, 9) + R(24, 20, 312, 376, `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(24, 20, 312, 376, `url(#${u}-tv)`, 'opacity=".5"') + R(34, 30, 292, 354, '#1b1510');
-    out += R(34, 30, 292, 30, '#000', 'opacity=".35"');
-    out += R(30, 156, 300, 8, `url(#${u}-woodl)`) + R(30, 272, 300, 8, `url(#${u}-woodl)`) + R(30, 384, 300, 8, `url(#${u}-woodl)`) + [164, 280].map(y => R(34, y, 292, 10, '#000', 'opacity=".3"')).join('');
+    let out = wallBase(u) + R(24, 20, 312, 376, `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(34, 30, 292, 354, '#1b1510');
+    out += R(30, 156, 300, 8, `url(#${u}-woodl)`) + R(30, 272, 300, 8, `url(#${u}-woodl)`) + R(30, 384, 300, 8, `url(#${u}-woodl)`);
     out += filler(u, 36, 214, 156, 96, 1) + filler(u, 266, 326, 156, 92, 5);
     if (is('book-pulled')) out += R(222, 70, 36, 86, '#120e0a') + E(240, 154, 14, 2, '#5a4a36', 'opacity=".6"');
     // 튀어나온 책은 옆면과 그림자를 그려 다른 책보다 앞으로 나와 보이게 합니다.
@@ -291,51 +268,44 @@ const library = {
     const mid = [['#6b4a33', null], ['yellow', 'diamond'], ['#4b5446', null], ['red', 'circle'], ['blue', 'triangle'], ['#5a3f2c', null], ['green', 'square'], ['#3f3a35', null]];
     mid.forEach(([color, mark], i) => { const h = 92 - ((i * 11) % 14); out += spine(u, 42 + i * 35.5, 272 - h, 32, h, color, mark); });
     out += [0, 1, 2].map(i => R(44 + i * 4, 362 - i * 18, 128 - i * 12, 16, TONES[i + 2], 'rx="2" stroke="#120e0a"')).join('');
-    out += shadow(u, 251, 386, 58, 5) + R(196, 314, 110, 70, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"') + R(196, 314, 110, 70, `url(#${u}-tw)`, 'opacity=".45"');
-    if (is('open:box')) out += G('anim-lid', P('M196 314L204 294H298L306 314Z', '#2a1f14', 'stroke="#2a1c10" stroke-width="2"'), origin(251, 314)) + R(200, 300, 102, 14, '#0e0b08');
+    out += R(196, 314, 110, 70, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"');
+    if (is('open:box')) out += P('M196 314L204 294H298L306 314Z', '#2a1f14', 'stroke="#2a1c10" stroke-width="2"') + R(200, 300, 102, 14, '#0e0b08');
     else out += P('M196 314L202 302H300L306 314Z', `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"') + bookIcon(251, 333, 9, '#3a2a19');
     const boxDraft = is('open:box') ? s.room.locks.box.answer : cleanInput(s.room.locks.box, s.drafts.box);
     boxDraft.forEach((color, i) => { out += swatch(u, color, fill => C(224 + i * 18, 362, 6.5, fill, 'stroke="#2a1c10" stroke-width="1.5"')); });
-    out += dust([[90, 110, 0], [150, 200, 1.4], [280, 130, 2.6], [120, 320, .8], [300, 240, 3.2]]);
     return out;
   },
   south(u, s, is) {
     let out = wallBase(u);
     if (is('projected')) {
-      out += G('anim-fade', P('M126 168L176 104H344V216H176Z', '#ffe1a0', 'opacity=".14"') + R(176, 104, 168, 112, '#f2d9a2', 'opacity=".85" rx="3"')
-        + Array.from({ length: 6 }, (_, i) => R(184 + i * 26, 110, 12, 7, '#8a7651', 'opacity=".55"') + R(184 + i * 26, 203, 12, 7, '#8a7651', 'opacity=".55"')).join('')
-        + ['right', 'up', 'right', 'down'].map((dir, i) => arrow(dir, 202 + i * 39, 160, 15, '#3a2a19')).join(''));
+      out += P('M126 168L176 104H344V216H176Z', '#ffe1a0', 'opacity=".12"') + R(176, 104, 168, 112, '#f2d9a2', 'opacity=".85" rx="3"');
+      for (let i = 0; i < 6; i++) out += R(184 + i * 26, 110, 12, 7, '#8a7651', 'opacity=".55"') + R(184 + i * 26, 203, 12, 7, '#8a7651', 'opacity=".55"');
+      ['right', 'up', 'right', 'down'].forEach((dir, i) => { out += arrow(dir, 202 + i * 39, 160, 15, '#3a2a19'); });
     }
-    if (is('lamp-on')) out += G('amb-flicker', C(86, 214, 110, `url(#${u}-glow)`) + P('M44 212H128L170 292H8Z', '#ffd98f', 'opacity=".16"')) + dust([[70, 240, 0], [100, 260, 1.1], [60, 280, 2.3], [110, 230, 3]]);
-    out += shadow(u, 180, 396, 170, 9) + R(6, 288, 348, 18, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"') + R(6, 288, 348, 18, `url(#${u}-tw)`, 'opacity=".5"') + woodBox(u, 14, 306, 332, 86);
-    out += L(8, 289, 352, 289, '#fff', 1, 'opacity=".18"');
+    if (is('lamp-on')) out += C(86, 214, 90, `url(#${u}-glow)`) + P('M44 212H128L170 292H8Z', '#ffd98f', 'opacity=".14"');
+    out += R(6, 288, 348, 18, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"') + R(14, 306, 332, 86, `url(#${u}-wood)`, 'stroke="#2a1c10" stroke-width="2"');
     out += R(24, 316, 78, 30, 'none', 'stroke="#2a1c10" stroke-width="2"') + R(24, 352, 78, 30, 'none', 'stroke="#2a1c10" stroke-width="2"') + R(258, 316, 78, 30, 'none', 'stroke="#2a1c10" stroke-width="2"') + R(258, 352, 78, 30, 'none', 'stroke="#2a1c10" stroke-width="2"');
     out += [[63, 331], [63, 367], [297, 331], [297, 367]].map(([x, y]) => C(x, y, 3, `url(#${u}-brass)`)).join('');
-    const open = is('open:drawer');
-    let drawer = open ? R(116, 312, 128, 10, '#0c0906') + R(112, 320, 136, 72, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"') : R(116, 312, 128, 76, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"');
-    const top = open ? 8 : 0;
-    drawer += alarmIcon(180, 324 + top, 5, '#3a2a19');
-    (open ? s.room.locks.drawer.answer : cleanInput(s.room.locks.drawer, s.drafts.drawer)).forEach((n, i) => { drawer += R(146 + i * 24, 338 + top, 20, 24, '#efe5cc', 'stroke="#2a1c10" stroke-width="2" rx="2"') + T(156 + i * 24, 350 + top, n, 15, '#2a1c10', NUM_FONT); });
-    drawer += R(160, 372 + top, 40, 6, `url(#${u}-brass)`, 'rx="3"');
-    out += open ? G('anim-slide', drawer) : drawer;
+    if (is('open:drawer')) out += R(116, 312, 128, 10, '#0c0906') + R(112, 320, 136, 72, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"');
+    else out += R(116, 312, 128, 76, `url(#${u}-woodl)`, 'stroke="#2a1c10" stroke-width="2"');
+    const top = is('open:drawer') ? 8 : 0;
+    out += alarmIcon(180, 324 + top, 5, '#3a2a19');
+    (is('open:drawer') ? s.room.locks.drawer.answer : cleanInput(s.room.locks.drawer, s.drafts.drawer)).forEach((n, i) => { out += R(146 + i * 24, 338 + top, 20, 24, '#efe5cc', 'stroke="#2a1c10" stroke-width="2" rx="2"') + T(156 + i * 24, 350 + top, n, 15, '#2a1c10', NUM_FONT); });
+    out += R(160, 372 + top, 40, 6, `url(#${u}-brass)`, 'rx="3"');
     out += E(86, 292, 34, 7, `url(#${u}-brass)`) + R(83, 208, 6, 84, `url(#${u}-brass)`);
     if (is('lamp-on')) out += `<g transform="rotate(180 86 225)">${bulbArt(86, 225, 9, true, u)}</g>`;
-    out += P('M62 152H110L138 210H34Z', `url(#${u}-shade)`, 'stroke="#1a2e20" stroke-width="2"') + P('M66 156H86L74 206H40Z', '#fff', 'opacity=".08"') + R(32, 208, 108, 6, `url(#${u}-brass)`, 'rx="2"');
+    out += P('M62 152H110L138 210H34Z', `url(#${u}-shade)`, 'stroke="#1a2e20" stroke-width="2"') + R(32, 208, 108, 6, `url(#${u}-brass)`, 'rx="2"');
     if (is('projected')) out += R(42, 214, 88, 14, `url(#${u}-film)`, 'opacity=".9"');
-    out += R(266, 278, 64, 10, '#e2d5b4', 'transform="rotate(-4 298 283)"') + R(270, 272, 60, 10, '#cbbd98', 'transform="rotate(3 300 277)"') + C(232, 280, 8, '#1d2a31') + R(229, 266, 6, 8, '#1d2a31') + C(229, 277, 2, '#fff', 'opacity=".4"');
+    out += R(266, 278, 64, 10, '#e2d5b4', 'transform="rotate(-4 298 283)"') + R(270, 272, 60, 10, '#cbbd98', 'transform="rotate(3 300 277)"') + C(232, 280, 8, '#1d2a31') + R(229, 266, 6, 8, '#1d2a31');
     return out;
   },
   west(u, s, is) {
     let out = wallBase(u);
-    out += P('M150 392L196 250H300L330 392Z', '#a9c4d6', 'opacity=".06"');
     out += R(162, 46, 164, 196, `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(172, 56, 144, 176, `url(#${u}-night)`);
-    let rain = '';
-    for (let i = 0; i < 18; i++) { const x = 176 + ((i * 37) % 136), y = 56 + ((i * 53) % 176); rain += L(x, y, x - 6, y + 18, '#9fb7c6', 1.2, 'opacity=".5"') + L(x, y - 176, x - 6, y - 158, '#9fb7c6', 1.2, 'opacity=".5"'); }
-    out += `<clipPath id="${u}-win"><rect x="172" y="56" width="144" height="176"/></clipPath><g clip-path="url(#${u}-win)">${G('amb-rain', rain)}</g>`;
-    out += R(172, 56, 144, 176, '#d8e8ff', 'class="amb-bolt" opacity="0"');
-    out += P('M172 92Q200 74 236 88Q262 70 300 84Q316 86 316 96V56H172Z', '#1b2833') + L(244, 56, 244, 232, `url(#${u}-wood)`, 6) + L(172, 144, 316, 144, `url(#${u}-wood)`, 6) + R(172, 56, 144, 176, `url(#${u}-glass)`);
+    for (let i = 0; i < 16; i++) { const x = 176 + ((i * 37) % 136), y = 62 + ((i * 53) % 150); out += L(x, y, x - 6, y + 18, '#9fb7c6', 1.2, 'opacity=".45"'); }
+    out += P('M172 92Q200 74 236 88Q262 70 300 84Q316 86 316 96V56H172Z', '#1b2833') + L(244, 56, 244, 232, `url(#${u}-wood)`, 6) + L(172, 144, 316, 144, `url(#${u}-wood)`, 6);
     out += R(156, 240, 176, 10, `url(#${u}-woodl)`);
-    out += C(80, 70, 4, '#9e3b30') + R(26, 74, 116, 164, '#000', 'opacity=".3"') + R(22, 70, 116, 164, `url(#${u}-paper)`, 'transform="rotate(-1.5 80 152)" stroke="#8d7c5a" stroke-width="1.5"');
+    out += C(80, 70, 4, '#9e3b30') + R(22, 70, 116, 164, `url(#${u}-paper)`, 'transform="rotate(-1.5 80 152)" stroke="#8d7c5a" stroke-width="1.5"');
     out += bookIcon(80, 92, 11, '#4a3a26');
     ['triangle', 'square', 'circle', 'diamond'].forEach((kind, i) => { const y = 124 + i * 28; out += T(56, y, i + 1, 18, '#3a2f22', NUM_FONT) + shape(kind, 102, y, 8, '#3a2f22'); });
     out += R(146, 284, 164, 96, '#000', 'opacity=".25"');
@@ -343,7 +313,7 @@ const library = {
       out += R(152, 290, 152, 84, '#0b0d0c', 'stroke="#2a2e2b" stroke-width="2"') + R(160, 300, 136, 64, '#171310');
       if (!is('got:bulb')) out += C(198, 336, 9, '#e9eef0', 'opacity=".55"');
       if (!is('got:film-r')) out += R(240, 330, 34, 18, `url(#${u}-film)`);
-      out += G('anim-drop', P('M306 300L330 296L334 388L310 390Z', `url(#${u}-steel)`, 'stroke="#1b201e" stroke-width="1.5"'));
+      out += P('M306 300L330 296L334 388L310 390Z', `url(#${u}-steel)`, 'stroke="#1b201e" stroke-width="1.5"');
     } else {
       out += R(152, 290, 152, 84, `url(#${u}-steel)`, 'rx="3" stroke="#1b201e" stroke-width="2"');
       for (let y = 304; y < 364; y += 10) out += R(170, y, 116, 4, '#151a18', 'rx="2"');
@@ -355,9 +325,9 @@ const library = {
     return zoomBase(u) + clockFace(u, 180, 212, 150, true);
   },
   safe(u, s, is) {
-    let out = zoomBase(u, 'dark') + R(38, 44, 300, 372, '#000', 'opacity=".4" rx="10"') + R(30, 34, 300, 372, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"') + R(30, 34, 300, 372, `url(#${u}-tn)`, 'opacity=".4" rx="10"');
+    let out = zoomBase(u, 'dark') + R(30, 34, 300, 372, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"');
     if (is('open:safe')) {
-      out += R(54, 60, 252, 320, '#0b0c0b', 'rx="4"') + R(54, 300, 252, 8, '#2a302d') + G('anim-swing', P('M54 60L14 74V368L54 380Z', '#46504c', 'stroke="#151a18" stroke-width="2"'), origin(54, 220, '--sx:-6.3'));
+      out += R(54, 60, 252, 320, '#0b0c0b', 'rx="4"') + R(54, 300, 252, 8, '#2a302d') + P('M54 60L14 74V368L54 380Z', '#46504c', 'stroke="#151a18" stroke-width="2"');
       if (!is('got:key')) out += bundle(u, 100, 180, 160, 116, true);
       return out;
     }
@@ -367,15 +337,15 @@ const library = {
     out += C(px, py, 100, '#1f2422', 'stroke="#59625d" stroke-width="3"') + C(px, py, 22, `url(#${u}-brass)`);
     for (const c of lockControls(lock)) {
       const x = c.x + c.w / 2, y = c.y + c.h / 2;
-      out += R(x - 25, y - 23, 50, 50, '#000', 'opacity=".35" rx="10"') + R(x - 25, y - 25, 50, 50, `url(#${u}-brass)`, 'rx="10" stroke="#3b2f1a" stroke-width="2"') + arrow(c.dir, x, y, 13, '#2a2118');
+      out += R(x - 25, y - 25, 50, 50, `url(#${u}-brass)`, 'rx="10" stroke="#3b2f1a" stroke-width="2"') + arrow(c.dir, x, y, 13, '#2a2118');
     }
     const lit = cleanInput(lock, s.drafts.safe).length;
     const [lx, ly] = lock.lights;
-    lock.answer.forEach((_, i) => { const cx = lx + (i - (lock.answer.length - 1) / 2) * 28; out += (i < lit ? C(cx, ly, 16, `url(#${u}-glow)`) : '') + C(cx, ly, 8, i < lit ? '#f2cf7c' : '#2a2e2b', 'stroke="#151a18" stroke-width="2"'); });
+    lock.answer.forEach((_, i) => { out += C(lx + (i - (lock.answer.length - 1) / 2) * 28, ly, 8, i < lit ? '#f2cf7c' : '#2a2e2b', 'stroke="#151a18" stroke-width="2"'); });
     return out;
   },
   books(u, s, is) {
-    let out = zoomBase(u, 'dark') + R(0, 396, VIEW_W, 20, `url(#${u}-woodl)`) + R(0, 396, VIEW_W, 20, `url(#${u}-tw)`, 'opacity=".5"');
+    let out = zoomBase(u, 'dark') + R(0, 396, VIEW_W, 20, `url(#${u}-woodl)`);
     const set = [['#6b4a33', null], ['yellow', 'diamond'], ['#4b5446', null], ['red', 'circle'], ['blue', 'triangle'], ['#5a3f2c', null], ['green', 'square'], ['#3f3a35', null]];
     set.forEach(([color, mark], i) => { const h = 320 - ((i * 23) % 40); out += spine(u, 14 + i * 42, 396 - h, 38, h, color, mark); });
     if (!is('got:bookmark')) out += ribbon(323, 150, 9);
@@ -384,39 +354,39 @@ const library = {
   box(u, s, is) {
     let out = zoomBase(u, 'dark');
     if (is('open:box')) {
-      out += G('anim-lid', P('M38 96L60 16H300L322 96Z', '#2a1f14', 'stroke="#140e08" stroke-width="3"'), origin(180, 96)) + R(30, 96, 300, 80, '#0d0a07', 'stroke="#140e08" stroke-width="3"');
+      out += P('M38 96L60 16H300L322 96Z', '#2a1f14', 'stroke="#140e08" stroke-width="3"') + R(30, 96, 300, 80, '#0d0a07', 'stroke="#140e08" stroke-width="3"');
       if (!is('got:film-l')) out += filmStrip(u, 124, 118, 112, 46, true, 'right');
     } else {
-      out += P('M30 170L54 70H306L330 170Z', `url(#${u}-wood)`, 'stroke="#140e08" stroke-width="3"') + P('M30 170L54 70H306L330 170Z', `url(#${u}-tw)`, 'opacity=".5"') + bookIcon(180, 120, 30, '#2a1c10');
+      out += P('M30 170L54 70H306L330 170Z', `url(#${u}-wood)`, 'stroke="#140e08" stroke-width="3"') + bookIcon(180, 120, 30, '#2a1c10');
     }
-    out += R(30, 170, 300, 236, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(30, 170, 300, 236, `url(#${u}-tw)`, 'opacity=".45"') + R(44, 214, 272, 108, '#3a2a19', 'rx="8"');
+    out += R(30, 170, 300, 236, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(44, 214, 272, 108, '#3a2a19', 'rx="8"');
     const draft = cleanInput(s.room.locks.box, s.drafts.box);
-    s.room.locks.box.at.forEach(([x, y], i) => { out += C(x, y + 3, 26, '#000', 'opacity=".4"') + C(x, y, 26, `url(#${u}-brass)`) + swatch(u, draft[i], fill => C(x, y, 20, fill)) + C(x - 7, y - 7, 5, '#fff', 'opacity=".25"'); });
+    s.room.locks.box.at.forEach(([x, y], i) => { out += C(x, y + 3, 26, '#000', 'opacity=".4"') + C(x, y, 26, `url(#${u}-brass)`) + swatch(u, draft[i], fill => C(x, y, 20, fill)); });
     return out;
   },
   drawer(u, s, is) {
     let out = zoomBase(u, 'dark');
     const lock = s.room.locks.drawer;
     if (is('open:drawer')) {
-      let inside = R(36, 150, 288, 190, '#2a1f14', 'stroke="#140e08" stroke-width="3"') + R(48, 162, 264, 166, '#1a130c');
-      if (!is('got:memo2')) inside += memoArt(222, 164, 64, 44, 8);
-      if (!is('got:handle')) inside += handleArt(180, 260, 40, -8);
-      inside += R(24, 336, 312, 80, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(24, 336, 312, 80, `url(#${u}-tw)`, 'opacity=".45"') + R(140, 366, 80, 12, `url(#${u}-brass)`, 'rx="6"');
-      return out + G('anim-slide', inside);
+      out += R(36, 150, 288, 190, '#2a1f14', 'stroke="#140e08" stroke-width="3"') + R(48, 162, 264, 166, '#1a130c');
+      if (!is('got:memo2')) out += memoArt(222, 164, 64, 44, 8);
+      if (!is('got:handle')) out += handleArt(180, 260, 40, -8);
+      out += R(24, 336, 312, 80, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(140, 366, 80, 12, `url(#${u}-brass)`, 'rx="6"');
+      return out;
     }
-    out += R(24, 112, 312, 300, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(24, 112, 312, 300, `url(#${u}-tw)`, 'opacity=".45"') + R(40, 128, 280, 268, 'none', 'stroke="#3a2a19" stroke-width="2" opacity=".6"');
+    out += R(24, 112, 312, 300, `url(#${u}-woodl)`, 'stroke="#140e08" stroke-width="3"') + R(40, 128, 280, 268, 'none', 'stroke="#3a2a19" stroke-width="2" opacity=".6"');
     out += alarmIcon(180, 152, 15, '#3a2a19');
     const draft = cleanInput(lock, s.drafts.drawer);
     lock.at.forEach(([x, y], i) => {
       out += P(`M${x - 13} ${y - 30}L${x} ${y - 43}L${x + 13} ${y - 30}`, 'none', 'stroke="#1e140a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"');
       out += P(`M${x - 13} ${y + 30}L${x} ${y + 43}L${x + 13} ${y + 30}`, 'none', 'stroke="#1e140a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"');
-      out += R(x - 22, y - 22, 44, 44, '#efe5cc', 'stroke="#2a1c10" stroke-width="3" rx="4"') + R(x - 22, y - 22, 44, 12, '#000', 'opacity=".12" rx="4"') + T(x, y + 1, draft[i], 28, '#2a1c10', NUM_FONT);
+      out += R(x - 22, y - 22, 44, 44, '#efe5cc', 'stroke="#2a1c10" stroke-width="3" rx="4"') + T(x, y + 1, draft[i], 28, '#2a1c10', NUM_FONT);
     });
     out += R(140, 330, 80, 12, `url(#${u}-brass)`, 'rx="6"');
     return out;
   },
   poster(u) {
-    let out = zoomBase(u) + R(46, 40, 280, 374, '#000', 'opacity=".3"') + R(40, 34, 280, 374, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="2"') + R(40, 34, 280, 374, `url(#${u}-tn)`, 'opacity=".4"') + C(180, 46, 6, '#9e3b30');
+    let out = zoomBase(u) + R(40, 34, 280, 374, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="2"') + C(180, 46, 6, '#9e3b30');
     out += bookIcon(180, 92, 30, '#4a3a26');
     ['triangle', 'square', 'circle', 'diamond'].forEach((kind, i) => { const y = 160 + i * 62; out += T(122, y, i + 1, 40, '#3a2f22', NUM_FONT) + shape(kind, 230, y, 20, '#3a2f22'); });
     return out;
@@ -430,26 +400,26 @@ const library = {
       if (!is('got:film-r')) out += filmStrip(u, 202, 238, 100, 46, true, 'left');
       return out;
     }
-    out += R(42, 104, 288, 268, '#000', 'opacity=".35" rx="8"') + R(36, 96, 288, 268, `url(#${u}-steel)`, 'rx="8" stroke="#151a18" stroke-width="3"') + R(36, 96, 288, 268, `url(#${u}-tn)`, 'opacity=".4" rx="8"');
-    for (let y = 146; y < 326; y += 20) out += R(84, y, 192, 8, '#151a18', 'rx="4"') + L(84, y + 9, 276, y + 9, '#fff', 1, 'opacity=".12"');
+    out += R(36, 96, 288, 268, `url(#${u}-steel)`, 'rx="8" stroke="#151a18" stroke-width="3"');
+    for (let y = 146; y < 326; y += 20) out += R(84, y, 192, 8, '#151a18', 'rx="4"');
     return out + screw(62, 122, 13) + screw(298, 122, 13) + screw(62, 338, 13) + screw(298, 338, 13);
   },
   lamp(u, s, is) {
     let out = zoomBase(u);
     if (is('projected')) {
-      out += G('anim-fade', R(40, 20, 280, 74, '#f2d9a2', 'opacity=".92" rx="4"')
-        + Array.from({ length: 9 }, (_, i) => R(50 + i * 30, 25, 14, 7, '#8a7651', 'opacity=".55"') + R(50 + i * 30, 82, 14, 7, '#8a7651', 'opacity=".55"')).join('')
-        + ['right', 'up', 'right', 'down'].map((dir, i) => arrow(dir, 75 + i * 70, 57, 19, '#3a2a19')).join('')
-        + P('M110 104L40 94H320L250 104Z', '#ffe1a0', 'opacity=".25"'));
+      out += R(40, 20, 280, 74, '#f2d9a2', 'opacity=".9" rx="4"');
+      for (let i = 0; i < 9; i++) out += R(50 + i * 30, 25, 14, 7, '#8a7651', 'opacity=".55"') + R(50 + i * 30, 82, 14, 7, '#8a7651', 'opacity=".55"');
+      ['right', 'up', 'right', 'down'].forEach((dir, i) => { out += arrow(dir, 75 + i * 70, 57, 19, '#3a2a19'); });
+      out += P('M110 104L40 94H320L250 104Z', '#ffe1a0', 'opacity=".25"');
     }
     const on = is('lamp-on');
-    if (on) out += G('amb-flicker', C(180, 296, 160, `url(#${u}-glow)`));
-    out += R(176, 344, 8, 72, `url(#${u}-brass)`) + E(180, 418, 80, 14, `url(#${u}-brass)`) + E(180, 430, 90, 10, `url(#${u}-sh)`);
+    if (on) out += C(180, 296, 150, `url(#${u}-glow)`);
+    out += R(176, 344, 8, 72, `url(#${u}-brass)`) + E(180, 418, 80, 14, `url(#${u}-brass)`);
     out += R(156, 240, 48, 26, `url(#${u}-brass)`, 'rx="4"') + R(164, 264, 32, 22, `url(#${u}-brass)`) + [0, 1, 2].map(i => L(164, 268 + i * 6, 196, 268 + i * 6, '#5a4a30', 2)).join('');
-    if (on) out += G('anim-glow', `<g transform="rotate(180 180 318)">${bulbArt(180, 318, 26, true, u)}</g>`);
+    if (on) out += `<g transform="rotate(180 180 318)">${bulbArt(180, 318, 26, true, u)}</g>`;
     // 전구가 없으면 소켓 구멍과 빈 전구 자리(점선)를 보여 줍니다.
     else out += E(180, 287, 16, 6, '#0b0906', 'stroke="#8a7146" stroke-width="2"') + C(180, 318, 24, 'none', 'stroke="#e9eef0" stroke-opacity=".55" stroke-width="2.5" stroke-dasharray="6 6"');
-    out += P('M130 110H230L296 236H64Z', `url(#${u}-shade)`, 'stroke="#13241a" stroke-width="3"') + P('M140 116H178L150 230H76Z', '#fff', 'opacity=".07"') + R(60, 232, 240, 12, `url(#${u}-brass)`, 'rx="4"');
+    out += P('M130 110H230L296 236H64Z', `url(#${u}-shade)`, 'stroke="#13241a" stroke-width="3"') + R(60, 232, 240, 12, `url(#${u}-brass)`, 'rx="4"');
     if (is('projected')) out += filmStrip(u, 92, 248, 176, 40, true);
     return out;
   },
@@ -473,10 +443,10 @@ function tray(u, cx, cy, w, h, sym, liquid) {
 const darkroom = {
   north(u, s, is) {
     const red = is('red');
-    let out = wallBase(u, { light: red ? null : [180, 64, 170] });
+    let out = wallBase(u, { floor: 368, light: red ? null : [180, 64, 170] });
     out += R(44, 74, 110, 130, '#000', 'opacity=".3"') + R(40, 70, 110, 130, `url(#${u}-paper)`, 'transform="rotate(-1 95 135)" stroke="#8d7c5a" stroke-width="1.5"') + C(95, 76, 3.5, '#9e3b30');
     ['drop', 'leaf', 'star'].forEach((g, i) => { const y = 102 + i * 38; out += glyph(g, 95, y, 10, '#3a2f22') + (i < 2 ? arrow('down', 95, y + 19, 5, '#6d604a') : ''); });
-    out += L(262, 70, 262, 84, '#2a2a28', 4) + (red ? C(262, 112, 70, `url(#${u}-redglow)`) : '') + P('M216 84H308L298 142H226Z', '#1b1d1c', 'stroke="#3a3f3c" stroke-width="2"') + R(232, 94, 60, 38, red ? '#ff5a44' : '#4a1512', 'rx="3"') + [0, 1, 2].map(i => L(234, 103 + i * 10, 290, 103 + i * 10, '#000', 1.5, 'opacity=".35"')).join('') + T(262, 154, 'SAFE LIGHT', 8, '#8d958f', 'letter-spacing="1"');
+    out += L(262, 70, 262, 84, '#2a2a28', 4) + (red ? '' : '') + P('M216 84H308L298 142H226Z', '#1b1d1c', 'stroke="#3a3f3c" stroke-width="2"') + R(232, 94, 60, 38, red ? '#ff5a44' : '#4a1512', 'rx="3"') + [0, 1, 2].map(i => L(234, 103 + i * 10, 290, 103 + i * 10, '#000', 1.5, 'opacity=".35"')).join('') + T(262, 154, 'SAFE LIGHT', 8, '#8d958f', 'letter-spacing="1"');
     out += L(180, 26, 180, 48, '#111', 2) + R(175, 46, 10, 6, '#2a2a28') + (red ? C(180, 60, 9, '#3a3a36') : G('amb-flicker', C(180, 60, 44, `url(#${u}-glow)`)) + C(180, 60, 9, '#fff2c8'));
     out += shadow(u, 180, 374, 170, 9) + woodBox(u, 24, 262, 312, 104) + L(180, 268, 180, 360, '#1a120a', 2) + C(166, 314, 3, `url(#${u}-brass)`) + C(194, 314, 3, `url(#${u}-brass)`);
     out += P('M14 262L22 246H338L346 262Z', '#3b3f3d', 'stroke="#1e2120" stroke-width="2"') + L(22, 247, 338, 247, '#fff', 1, 'opacity=".14"');
@@ -492,7 +462,7 @@ const darkroom = {
   },
   east(u, s, is) {
     const red = is('red'), open = is('open:door');
-    let out = wallBase(u, { light: red ? null : [180, 40, 160] });
+    let out = wallBase(u, { floor: 368, light: red ? null : [180, 40, 160] });
     out += R(156, 62, 68, 26, '#151716', 'rx="4"') + R(162, 67, 56, 16, red ? '#ff5a44' : '#3a1210', 'rx="3"') + T(190, 75, '현상 중', 10, red ? '#3a0a06' : '#1c0906');
     out += R(34, 172, 64, 82, '#000', 'opacity=".35" rx="4"') + R(30, 166, 64, 82, `url(#${u}-steel)`, 'rx="4" stroke="#1b201e" stroke-width="2"') + L(32, 168, 92, 168, '#fff', 1, 'opacity=".2"');
     const sw = is('open:panel') ? s.room.locks.panel.answer : cleanInput(s.room.locks.panel, s.drafts.panel);
@@ -503,29 +473,29 @@ const darkroom = {
       out += R(124, 104, 132, 268, `url(#${u}-hall)`) + G('anim-swing', P('M124 104L156 116V360L124 372Z', '#2a2d2c', 'stroke="#111" stroke-width="2"'), origin(124, 238))
         + G('amb-rays', P('M124 372H256L340 480H40Z', `url(#${u}-ray)`)) + dust([[160, 200, 0], [200, 260, 1.3], [230, 180, 2.2], [180, 320, .7]]);
     } else {
-      out += R(124, 104, 132, 268, '#2a2d2c', 'stroke="#111" stroke-width="2"') + R(124, 104, 132, 268, `url(#${u}-tv)`, 'opacity=".35"') + R(124, 104, 132, 268, 'none', 'stroke="#0c0c0c" stroke-width="5" opacity=".7"');
+      out += R(124, 104, 132, 268, '#2a2d2c', 'stroke="#111" stroke-width="2"') + R(124, 104, 132, 268, 'none', 'stroke="#0c0c0c" stroke-width="5" opacity=".7"');
       out += R(214, 214, 28, 40, '#1c1f1e', 'rx="4" stroke="#4a524e" stroke-width="1.5"') + [0, 1, 2].map(r => [0, 1, 2].map(c => C(221 + c * 7, 224 + r * 9, 2, '#8d958f')).join('')).join('') + C(240, 284, 6, `url(#${u}-brass)`);
     }
-    let apron = L(306, 116, 306, 128, '#888', 2) + C(306, 116, 4, `url(#${u}-brass)`) + P('M290 128H322L338 300H274Z', '#3b2c22', 'stroke="#1b130c" stroke-width="2"') + P('M290 128H322L338 300H274Z', `url(#${u}-tf)`, 'opacity=".5"') + P('M286 220H326V258Q306 266 286 258Z', '#2e221a', 'stroke="#1b130c" stroke-width="1.5"');
+    let apron = L(306, 116, 306, 128, '#888', 2) + C(306, 116, 4, `url(#${u}-brass)`) + P('M290 128H322L338 300H274Z', '#3b2c22', 'stroke="#1b130c" stroke-width="2"') + P('M286 220H326V258Q306 266 286 258Z', '#2e221a', 'stroke="#1b130c" stroke-width="1.5"');
     if (!is('got:memo3')) apron += memoArt(296, 208, 20, 15, 8);
     out += G('amb-sway', apron, origin(306, 118));
     return out;
   },
   south(u, s, is) {
     const red = is('red');
-    let out = wallBase(u, { light: red ? null : [180, 40, 160] });
+    let out = wallBase(u, { floor: 368, light: red ? null : [180, 40, 160] });
     out += P('M14 52Q160 70 306 52', 'none', 'stroke="#cfc9b8" stroke-width="1.5"');
     [34, 96, 158, 220].forEach((x, i) => { out += photoSheet(x, 60, 52, 64, red ? DIRS[i] : null, '#f1e9d8') + R(x + 22, 52, 8, 14, '#b88a52', 'rx="2"'); });
     out += shadow(u, 180, 374, 150, 9) + woodBox(u, 40, 272, 280, 14) + R(56, 286, 10, 82, `url(#${u}-wood)`) + R(294, 286, 10, 82, `url(#${u}-wood)`) + R(66, 340, 228, 6, `url(#${u}-wood)`);
     out += R(96, 258, 168, 14, '#1e2120', 'rx="2"') + R(110, 254, 140, 6, red ? '#e7dccb' : '#f2ede2', 'opacity=".25"');
     out += R(172, 150, 14, 110, `url(#${u}-steel)`) + R(128, 140, 104, 52, '#1b1e1d', 'rx="6" stroke="#3a403d" stroke-width="2"') + L(132, 142, 228, 142, '#fff', 1, 'opacity=".15"') + P('M164 192H196L190 212H170Z', '#111');
     if (is('neg-in')) out += R(136, 168, 88, 8, `url(#${u}-neg)`);
-    out += `<g transform="rotate(4 213 223)">${R(192, 206, 44, 36, '#e8d27a')}${['sun', 'moon', 'sun', 'sun'].map((g, i) => glyph(g, 199 + i * 10, 224, 3.4, '#3a2f22')).join('')}</g>`;
+    out += `<g transform="rotate(4 213 223)">${R(192, 206, 44, 36, '#d9c99a')}${['sun', 'moon', 'sun', 'sun'].map((g, i) => glyph(g, 199 + i * 10, 224, 3.4, '#3a2f22')).join('')}</g>`;
     return out;
   },
   west(u, s, is) {
     const red = is('red');
-    let out = wallBase(u, { light: red ? null : [180, 40, 160] });
+    let out = wallBase(u, { floor: 368, light: red ? null : [180, 40, 160] });
     out += shadow(u, 180, 374, 165, 9) + R(24, 84, 10, 284, `url(#${u}-wood)`) + R(326, 84, 10, 284, `url(#${u}-wood)`);
     [172, 270, 362].forEach(y => { out += R(24, y, 312, 8, `url(#${u}-woodl)`) + R(34, y + 8, 292, 8, '#000', 'opacity=".3"'); });
     const bottles = [[44, 26, 62, '#8a5a1e'], [84, 30, 54, '#3f6b4a'], [126, 24, 66, '#c9d6d3'], [164, 28, 58, '#3a5a8a'], [214, 34, 68, '#5a3a1e'], [266, 24, 48, '#8a5a1e']];
@@ -542,7 +512,7 @@ const darkroom = {
     return out;
   },
   chart(u) {
-    let out = zoomBase(u) + R(66, 36, 236, 372, '#000', 'opacity=".3"') + R(60, 30, 236, 372, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="2"') + R(60, 30, 236, 372, `url(#${u}-tn)`, 'opacity=".4"') + C(178, 42, 6, '#9e3b30');
+    let out = zoomBase(u) + R(66, 36, 236, 372, '#000', 'opacity=".3"') + R(60, 30, 236, 372, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="2"') + C(178, 42, 6, '#9e3b30');
     ['drop', 'leaf', 'star'].forEach((g, i) => { const y = 102 + i * 120; out += glyph(g, 178, y, 34, '#3a2f22') + (i < 2 ? arrow('down', 178, y + 60, 14, '#6d604a') : ''); });
     return out;
   },
@@ -569,21 +539,21 @@ const darkroom = {
     return out;
   },
   panel(u) {
-    return zoomBase(u) + R(36, 138, 300, 250, '#000', 'opacity=".35" rx="10"') + R(30, 130, 300, 250, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"') + R(30, 130, 300, 250, `url(#${u}-tn)`, 'opacity=".4" rx="10"')
+    return zoomBase(u) + R(36, 138, 300, 250, '#000', 'opacity=".35" rx="10"') + R(30, 130, 300, 250, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"')
       + screw(52, 152, 8) + screw(308, 152, 8) + screw(52, 358, 8) + screw(308, 358, 8) + P('M186 150L170 176H182L174 200L196 168H184L192 150Z', '#d6ab3f');
   },
   door(u) {
-    return zoomBase(u, 'dark') + R(0, 0, VIEW_W, VIEW_H, '#232625') + R(0, 0, VIEW_W, VIEW_H, `url(#${u}-tv)`, 'opacity=".3"')
+    return zoomBase(u, 'dark') + R(0, 0, VIEW_W, VIEW_H, '#232625')
       + R(76, 58, 220, 344, '#000', 'opacity=".45" rx="12"') + R(70, 52, 220, 344, '#1a1d1c', 'rx="12" stroke="#4a524e" stroke-width="2"') + L(74, 54, 286, 54, '#fff', 1, 'opacity=".15"');
   },
   enlarger(u, s, is) {
-    let out = zoomBase(u) + R(20, 360, 320, 60, `url(#${u}-wood)`) + R(20, 360, 320, 60, `url(#${u}-tw)`, 'opacity=".5"');
+    let out = zoomBase(u) + R(20, 360, 320, 60, `url(#${u}-wood)`);
     out += R(70, 312, 220, 52, '#1e2120', 'rx="4"') + R(84, 320, 192, 36, '#ebe5d6', 'opacity=".25"');
     out += R(170, 170, 20, 150, `url(#${u}-steel)`) + R(100, 110, 160, 86, '#1b1e1d', 'rx="8" stroke="#3a403d" stroke-width="2"') + L(104, 113, 256, 113, '#fff', 1, 'opacity=".18"');
     out += R(112, 148, 136, 18, '#0b0c0c', 'rx="3"');
     if (is('neg-in')) out += G('anim-slide', R(116, 150, 128, 14, `url(#${u}-neg)`) + [0, 1, 2, 3, 4, 5].map(i => R(120 + i * 20, 152, 8, 3, '#e0b98a', 'opacity=".7"')).join(''));
     out += P('M156 196H204L196 236H164Z', '#111') + E(180, 236, 16, 5, '#2f3a3a');
-    out += `<g transform="rotate(4 238 230)">${R(198, 202, 84, 60, '#000', 'opacity=".3"')}${R(196, 200, 84, 60, '#e8d27a')}${['sun', 'moon', 'sun', 'sun'].map((g, i) => glyph(g, 211 + i * 18, 230, 7, '#3a2f22')).join('')}</g>`;
+    out += `<g transform="rotate(4 238 230)">${R(198, 202, 84, 60, '#000', 'opacity=".3"')}${R(196, 200, 84, 60, '#d9c99a')}${['sun', 'moon', 'sun', 'sun'].map((g, i) => glyph(g, 211 + i * 18, 230, 7, '#3a2f22')).join('')}</g>`;
     return out;
   },
   negbox(u, s, is) {
@@ -592,9 +562,9 @@ const darkroom = {
       out += G('anim-lid', P('M30 140L56 70H304L330 140Z', '#3a2a19', 'stroke="#22170d" stroke-width="3"'), origin(180, 140)) + R(30, 140, 300, 110, '#0d0a07');
       if (!is('got:negative')) out += R(110, 170, 140, 46, `url(#${u}-neg)`, 'rx="2"') + [0, 1, 2, 3, 4, 5, 6].map(i => R(116 + i * 19, 174, 9, 5, '#e0b98a', 'opacity=".7"') + R(116 + i * 19, 207, 9, 5, '#e0b98a', 'opacity=".7"')).join('');
     } else {
-      out += P('M30 140L46 110H314L330 140Z', `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(30, 140, 300, 110, `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(30, 140, 300, 110, `url(#${u}-tw)`, 'opacity=".45"') + filmIcon(180, 196, 120, 40, '#c9b27a');
+      out += P('M30 140L46 110H314L330 140Z', `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + R(30, 140, 300, 110, `url(#${u}-wood)`, 'stroke="#22170d" stroke-width="3"') + filmIcon(180, 196, 120, 40, '#c9b27a');
     }
-    out += R(30, 250, 300, 120, `url(#${u}-woodl)`, 'stroke="#22170d" stroke-width="3"') + R(30, 250, 300, 120, `url(#${u}-tw)`, 'opacity=".45"');
+    out += R(30, 250, 300, 120, `url(#${u}-woodl)`, 'stroke="#22170d" stroke-width="3"');
     return out;
   },
 };
@@ -671,22 +641,10 @@ function coverArt(x, y, w, h) {
   return R(x + 3, y + 4, w, h, '#000', 'opacity=".35"') + R(x, y, w, h, '#f6efdc', 'stroke="#b9ad8e" stroke-width="1.5"') + bookIcon(x + w / 2, y + h * .22, h * .14, '#6d604a')
     + T(x + w / 2, y + h * .52, '은서', h * .16, '#2a2118', 'font-weight="700"') + T(x + w / 2, y + h * .76, '한결', h * .16, '#2a2118', 'font-weight="700"');
 }
-function brick() {
-  const tones = ['#8a5440', '#74452f', '#93604a', '#653b2a', '#7d4a37'];
-  let out = '';
-  for (let y = 30, r = 0; y < 354; y += 18, r++) {
-    for (let x = 18 - (r % 2) * 22; x < 342; x += 44) {
-      const bx = Math.max(18, x), bw = Math.min(x + 44, 342) - bx;
-      if (bw <= 4) continue;
-      out += R(bx + 1, y + 1, bw - 2, 16, tones[(r * 7 + Math.round(x / 44) * 3) % tones.length], 'opacity=".62" rx="1"') + L(bx + 2, y + 2, bx + bw - 3, y + 2, '#fff', 1, 'opacity=".08"');
-    }
-  }
-  return out;
-}
 const pressroom = {
   north(u, s, is) {
-    let out = wallBase(u, { stripes: false, brick: true });
-    out += L(150, 26, 150, 56, '#111', 2) + P('M128 72L138 56H162L172 72Z', '#2c2f2d', 'stroke="#111" stroke-width="1.5"') + G('amb-flicker', C(150, 96, 150, `url(#${u}-warm)`) + C(150, 74, 5, '#fff2c8'));
+    let out = wallBase(u, { floor: 368, stripes: false, brick: true });
+    out += L(150, 26, 150, 56, '#111', 2) + P('M128 72L138 56H162L172 72Z', '#2c2f2d', 'stroke="#111" stroke-width="1.5"') + G('amb-flicker', '' + C(150, 74, 5, '#fff2c8'));
     out += shadow(u, 145, 378, 120, 9) + C(42, 296, 32, 'none', 'stroke="#2e3331" stroke-width="7"') + [0, 45, 90, 135].map(a => { const [x1, y1] = pol(42, 296, 30, a), [x2, y2] = pol(42, 296, 30, a + 180); return L(x1.toFixed(1), y1.toFixed(1), x2.toFixed(1), y2.toFixed(1), '#2e3331', 4); }).join('');
     out += R(40, 360, 210, 16, '#1e2120') + R(58, 150, 18, 212, `url(#${u}-steel)`) + R(214, 150, 18, 212, `url(#${u}-steel)`) + R(50, 132, 190, 22, `url(#${u}-steel)`, 'stroke="#151a18" stroke-width="1.5"') + [64, 120, 176, 226].map(x => C(x, 143, 2.5, '#9aa29c')).join('');
     out += R(136, 154, 18, 40, `url(#${u}-brass)`) + R(84, 194, 122, 14, `url(#${u}-steel)`) + R(78, 250, 134, 26, '#202221', 'stroke="#111" stroke-width="1.5"') + R(88, 236, 114, 16, 'none', 'stroke="#a98c55" stroke-width="2"');
@@ -699,13 +657,13 @@ const pressroom = {
       out += R(268, 134, 72, 252, `url(#${u}-hall)`) + G('anim-swing', P('M268 134L284 142V380L268 386Z', `url(#${u}-wood)`, 'stroke="#1a120a" stroke-width="2"'), origin(268, 260, '--sx:4.5'))
         + G('amb-rays', P('M268 386H340L360 480H190Z', `url(#${u}-ray)`)) + dust([[290, 200, 0], [312, 262, 1.4], [298, 320, 2.5]]);
     } else {
-      out += R(268, 134, 72, 252, `url(#${u}-wood)`, 'stroke="#1a120a" stroke-width="2"') + R(268, 134, 72, 252, `url(#${u}-tv)`, 'opacity=".5"') + R(276, 146, 56, 66, 'none', 'stroke="#1a120a" stroke-width="2.5" opacity=".7"') + R(276, 296, 56, 78, 'none', 'stroke="#1a120a" stroke-width="2.5" opacity=".7"');
+      out += R(268, 134, 72, 252, `url(#${u}-wood)`, 'stroke="#1a120a" stroke-width="2"') + R(276, 146, 56, 66, 'none', 'stroke="#1a120a" stroke-width="2.5" opacity=".7"') + R(276, 296, 56, 78, 'none', 'stroke="#1a120a" stroke-width="2.5" opacity=".7"');
       out += bookIcon(304, 228, 8, '#c9b27a') + R(280, 244, 48, 20, `url(#${u}-brass)`, 'rx="3"') + R(286, 250, 36, 7, '#0b0806', 'rx="2"') + C(330, 278, 4, `url(#${u}-brass)`);
     }
     return out;
   },
   east(u, s, is) {
-    let out = wallBase(u, { stripes: false, brick: true, light: [170, 50, 150] });
+    let out = wallBase(u, { floor: 368, stripes: false, brick: true, light: [170, 50, 150] });
     out += shadow(u, 164, 376, 140, 8) + woodBox(u, 30, 64, 268, 300) + R(24, 58, 280, 10, `url(#${u}-woodl)`);
     for (let r = 0; r < 7; r++) for (let c = 0; c < 6; c++) {
       if (r === 3 && c === 2) continue;
@@ -713,14 +671,14 @@ const pressroom = {
       out += R(x, y, 36, 32, `url(#${u}-woodl)`, 'stroke="#22170d" stroke-width="1.2"') + R(x + 6, y + 4, 24, 5, '#efe5cc', 'opacity=".45"') + R(x + 12, y + 18, 12, 5, `url(#${u}-brass)`, 'rx="2"');
     }
     if (is('open:case')) out += R(126, 196, 36, 32, '#0d0a07') + G('anim-slide', R(122, 204, 44, 34, `url(#${u}-woodl)`, 'stroke="#22170d" stroke-width="1.5"') + R(130, 210, 28, 10, '#8f8a7e'));
-    else out += R(126, 196, 36, 32, '#4a3520', 'stroke="#d6ab3f" stroke-width="1.5"') + [0, 1, 2].map(i => C(136 + i * 8, 207, 2.2, '#2a2e2b')).join('') + glyph('star', 144, 220, 4, '#d6ab3f');
+    else out += R(126, 196, 36, 32, '#4a3520', 'stroke="#7a6040" stroke-width="1.5"') + [0, 1, 2].map(i => C(136 + i * 8, 207, 2.2, '#2a2e2b')).join('') + glyph('star', 144, 220, 4, '#d6ab3f');
     out += L(330, 120, 330, 140, '#8d8f88', 2) + C(330, 120, 3, '#8d8f88');
     if (!is('got:roller')) out += G('amb-sway', rollerArt(330, 180, 26, false), origin(330, 140));
     return out;
   },
   south(u, s, is) {
-    let out = wallBase(u, { stripes: false, brick: true });
-    out += R(20, 34, 320, 192, '#6a5136', 'stroke="#2a1c10" stroke-width="3"') + R(20, 34, 320, 192, `url(#${u}-tf)`, 'opacity=".55"');
+    let out = wallBase(u, { floor: 368, stripes: false, brick: true });
+    out += R(20, 34, 320, 192, '#6a5136', 'stroke="#2a1c10" stroke-width="3"');
     const sheet = (x, names, orn) => {
       let o = R(x + 3, 47, 138, 172, '#000', 'opacity=".3"') + R(x, 44, 138, 172, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="1"') + C(x + 69, 50, 3.5, '#9e3b30');
       o += R(x + 14, 60, 110, 5, '#6d604a', 'opacity=".6"') + bookIcon(x + 69, 92, 12, '#4a3a26');
@@ -732,12 +690,12 @@ const pressroom = {
     out += L(95, 236, 66, 258, '#777', 1.5) + L(95, 236, 124, 258, '#777', 1.5) + C(95, 236, 3, '#999');
     out += R(48, 262, 102, 66, '#000', 'opacity=".35" rx="4"') + R(44, 258, 102, 66, `url(#${u}-steel)`, 'rx="4" stroke="#151a18" stroke-width="2"') + `<g transform="translate(95 292) scale(-1 1)">${T(0, 0, '583', 34, '#cfd4cd', `${NUM_FONT} font-weight="700"`)}</g>`;
     out += shadow(u, 296, 384, 40, 6) + P('M262 300H330L322 378H270Z', '#2a2e2b', 'stroke="#111" stroke-width="2"') + [276, 290, 304, 318].map(x => L(x, 302, x - 2, 376, '#111', 1.5)).join('');
-    out += C(282, 298, 12, '#e9dfc5') + C(304, 294, 14, '#d9cfb3') + C(320, 300, 10, '#efe6cf');
-    if (!is('got:type2')) out += R(288, 284, 22, 8, '#8f8a7e', 'stroke="#4a4740"') + C(312, 280, 3, '#fff', 'class="amb-flicker"');
+    out += P('M272 300L280 288L292 292L290 304Z', '#d9cfb3') + P('M294 296L304 284L318 290L312 302Z', '#cfc5a8') + P('M312 302L320 292L328 298L322 306Z', '#e2d8bd');
+    if (!is('got:type2')) out += R(288, 284, 22, 8, '#8f8a7e', 'stroke="#4a4740"') + C(312, 280, 3, '#fff',);
     return out;
   },
   west(u, s, is) {
-    let out = wallBase(u, { stripes: false, brick: true, light: [180, 40, 150] });
+    let out = wallBase(u, { floor: 368, stripes: false, brick: true, light: [180, 40, 150] });
     out += R(24, 76, 10, 160, `url(#${u}-wood)`) + R(326, 76, 10, 160, `url(#${u}-wood)`);
     [136, 222].forEach(y => { out += R(24, y, 312, 8, `url(#${u}-woodl)`) + R(34, y + 8, 292, 8, '#000', 'opacity=".3"'); });
     const stack = (x, w, n, base) => Array.from({ length: n }, (_, i) => R(x + (i % 2) * 2, base - (i + 1) * 7, w, 6, i % 3 ? '#e9dfc5' : '#d6cba9', 'stroke="#8d7c5a" stroke-width=".6"')).join('');
@@ -773,13 +731,13 @@ const pressroom = {
     let out = zoomBase(u, 'dark') + R(30, 104, 312, 310, '#000', 'opacity=".4"') + woodBox(u, 24, 96, 312, 310, 'stroke="#140e08" stroke-width="3"') + R(40, 112, 280, 278, 'none', 'stroke="#3a2a19" stroke-width="2" opacity=".6"');
     if (is('open:case')) out += G('anim-slide', R(40, 128, 280, 96, '#1a130c', 'stroke="#140e08" stroke-width="2"') + [1, 2, 3].map(i => L(40 + i * 70, 128, 40 + i * 70, 224, '#2a1f14', 3)).join('') + (is('got:type1') ? '' : typeBlock(110, 158, 140, 40)));
     else out += R(124, 140, 112, 44, `url(#${u}-brass)`, 'rx="6" stroke="#3b2f1a" stroke-width="2"') + bookIcon(180, 162, 12, '#3a2f22');
-    out += R(18, 236, 324, 68, '#2a1f14', 'rx="12"') + R(18, 236, 324, 68, `url(#${u}-tw)`, 'opacity=".3" rx="12"');
+    out += R(18, 236, 324, 68, '#2a1f14', 'rx="12"');
     return out;
   },
   proofs(u) {
-    let out = zoomBase(u) + R(4, 26, 352, 370, '#6a5136') + R(4, 26, 352, 370, `url(#${u}-tf)`, 'opacity=".5"');
+    let out = zoomBase(u) + R(4, 26, 352, 370, '#6a5136');
     const big = (x, title, names, orn) => {
-      let o = R(x + 4, 44, 160, 340, '#000', 'opacity=".3"') + R(x, 40, 160, 340, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="1.5"') + R(x, 40, 160, 340, `url(#${u}-tn)`, 'opacity=".35"') + C(x + 80, 50, 5, '#9e3b30');
+      let o = R(x + 4, 44, 160, 340, '#000', 'opacity=".3"') + R(x, 40, 160, 340, `url(#${u}-paper)`, 'stroke="#8d7c5a" stroke-width="1.5"') + C(x + 80, 50, 5, '#9e3b30');
       o += T(x + 80, 74, title, 13, '#6d604a') + bookIcon(x + 80, 122, 22, '#4a3a26');
       names.forEach((n, i) => { const y = 190 + i * 44; o += n ? T(x + 80, y, n, 28, '#2a2118', 'font-weight="700"') : R(x + 44, y - 13, 72, 26, '#e6dbbd') + L(x + 48, y - 6, x + 110, y + 4, '#cbbf9f', 2) + L(x + 52, y + 6, x + 106, y - 4, '#cbbf9f', 2); });
       orn.forEach((g, i) => { if (g) o += glyph(g, x + 18 + i * 31, 330, 11, '#3a2f22'); });
@@ -789,12 +747,12 @@ const pressroom = {
   },
   plate(u) {
     return zoomBase(u) + L(180, 70, 90, 132, '#777', 2.5) + L(180, 70, 270, 132, '#777', 2.5) + C(180, 70, 6, '#999')
-      + R(58, 138, 260, 170, '#000', 'opacity=".4" rx="10"') + R(50, 130, 260, 170, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"') + R(50, 130, 260, 170, `url(#${u}-tn)`, 'opacity=".4" rx="10"')
+      + R(58, 138, 260, 170, '#000', 'opacity=".4" rx="10"') + R(50, 130, 260, 170, `url(#${u}-steel)`, 'rx="10" stroke="#151a18" stroke-width="3"')
       + screw(72, 152, 8) + screw(288, 152, 8) + screw(72, 278, 8) + screw(288, 278, 8)
       + `<g transform="translate(180 218) scale(-1 1)">${T(3, 4, '583', 96, '#1b201e', `${NUM_FONT} font-weight="700" opacity=".5"`)}${T(0, 0, '583', 96, '#d9ddd6', `${NUM_FONT} font-weight="700"`)}</g>`;
   },
   cabinet(u, s, is) {
-    let out = zoomBase(u, 'dark') + R(38, 68, 300, 350, '#000', 'opacity=".4" rx="8"') + R(30, 60, 300, 350, `url(#${u}-steel)`, 'rx="8" stroke="#151a18" stroke-width="3"') + R(30, 60, 300, 350, `url(#${u}-tn)`, 'opacity=".4" rx="8"');
+    let out = zoomBase(u, 'dark') + R(38, 68, 300, 350, '#000', 'opacity=".4" rx="8"') + R(30, 60, 300, 350, `url(#${u}-steel)`, 'rx="8" stroke="#151a18" stroke-width="3"');
     if (is('open:cabinet')) {
       out += R(46, 76, 268, 318, '#0b0c0c', 'rx="4"') + R(46, 280, 268, 8, '#2a302d') + G('anim-swing', P('M46 76L12 90V380L46 394Z', '#46504c', 'stroke="#151a18" stroke-width="2"'), origin(46, 235, '--sx:-7.9'));
       if (!is('got:ink')) out += inkTin(180, 212, 44);
@@ -838,16 +796,16 @@ export function drawView(room, viewId, s, label = '') {
   const state = { ...s, room };
   const is = cond => check(cond, state);
   let body = (art[viewId]?.(u, state, is) ?? zoomBase(u)) + lockArt(u, room, viewId, state);
-  // 붉은 안전등이 켜지면 방 전체를 붉게 물들입니다.
-  if (room.art === 'darkroom' && is('red')) body += R(0, 0, VIEW_W, VIEW_H, '#c0281c', 'style="mix-blend-mode:multiply" opacity=".66"') + C(262, 60, 260, `url(#${u}-redglow)`, 'opacity=".55"');
+  // 붉은 안전등이 켜지면 방 전체를 어둡고 붉게 덮습니다. 단서가 이 빛에서만 보이므로 빼지 않습니다.
+  if (room.art === 'darkroom' && is('red')) body += R(0, 0, VIEW_W, VIEW_H, '#9c2216', 'style="mix-blend-mode:multiply" opacity=".62"');
   const role = label ? `role="img" aria-label="${label.replace(/"/g, '&quot;')}"` : 'aria-hidden="true"';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet" ${role} focusable="false">${defs(u, PALETTE[room.art] ?? PALETTE.library)}${body}${R(0, 0, VIEW_W, VIEW_H, `url(#${u}-tn)`, 'opacity=".3" pointer-events="none"')}${R(0, 0, VIEW_W, VIEW_H, `url(#${u}-vig)`, 'pointer-events="none"')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet" ${role} focusable="false">${defs(u, PALETTE[room.art] ?? PALETTE.library)}${body}${R(0, 0, VIEW_W, VIEW_H, `url(#${u}-vig)`, 'pointer-events="none"')}</svg>`;
 }
 export function drawItem(id, label = '') {
   const u = `i${++seq}`;
   const body = itemArt(id)?.(u) ?? C(32, 32, 14, '#a9ada1');
   const role = label ? `role="img" aria-label="${label.replace(/"/g, '&quot;')}"` : 'aria-hidden="true"';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" ${role} focusable="false">${defs(u, PALETTE.library)}${body}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" ${role} focusable="false">${defs(u)}${body}</svg>`;
 }
 export const roomTone = room => PALETTE[room?.art] ?? PALETTE.library;
 export const hasArt = (room, viewId) => typeof (ARTS[room.art] ?? {})[viewId] === 'function';

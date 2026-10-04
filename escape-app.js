@@ -4,11 +4,11 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-4';
-import { drawView, drawItem, roomTone, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-4';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-4';
+} from './escape-engine.js?v=escape-5';
+import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-5';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-5';
 
-const VERSION = 'escape-4';
+const VERSION = 'escape-5';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -46,11 +46,10 @@ const clock = sec => `${num(Math.floor(sec / 60))}:${num(sec % 60)}`;
 const box = ([x, y, w, h]) => `left:${(x / VIEW_W) * 100}%;top:${(y / VIEW_H) * 100}%;width:${(w / VIEW_W) * 100}%;height:${(h / VIEW_H) * 100}%`;
 const $ = selector => document.querySelector(selector);
 const stars = n => `<span class="stars" role="img" aria-label="난이도 5점 만점에 ${n}점">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">★</i>`).join('')}</span>`;
-const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let rooms = [], episodes = [], save = null, room = null, s = null;
 let selected = null, zoomItem = null, resume = false, pendingNote = null;
-let saveTimer = 0, toastTimer = 0, revealTimer = 0, liveTimer = 0, audio = null, saveWarned = false, returnFocus = null;
+let saveTimer = 0, toastTimer = 0, revealTimer = 0, audio = null, saveWarned = false, returnFocus = null;
 let artKey = '', pinKey = '';
 const fresh = new Set();
 
@@ -120,14 +119,6 @@ function toast(text, items = [], ms = 2000) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), ms);
 }
-// 상태가 바뀐 직후 잠깐만 문이 열리고 서랍이 나오는 움직임을 재생합니다. 다시 볼 때는 바뀐 모습만 보입니다.
-function pulseLive() {
-  const stage = $('#stage');
-  if (!stage) return;
-  stage.classList.add('live');
-  clearTimeout(liveTimer);
-  liveTimer = setTimeout(() => stage.classList.remove('live'), 1300);
-}
 
 function focusKey() {
   const n = document.activeElement;
@@ -190,14 +181,14 @@ function episodeCard(ep) {
   const st = episodeState(ep);
   const ready = st.built.length > 0;
   const first = st.built[0];
-  const cover = ready ? drawView(first, first.start, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true">${icon('door', 44)}<i>${num(ep.id)}</i></span>`;
-  const badge = !ready ? '<span class="ep-badge soon">준비 중</span>' : st.done === st.total ? `<span class="ep-badge done">${icon('check', 13)}완료</span>` : st.done ? `<span class="ep-badge">${st.done} / ${st.total}</span>` : '';
-  const state = !ready ? '준비 중' : st.done === st.total ? '완료' : st.done ? `${st.total}화 중 ${st.done}화 탈출` : '시작 전';
+  const cover = ready ? drawView(first, first.start, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true"><i>EPISODE ${ep.id}</i><small>준비 중</small></span>`;
+  const done = ready && st.done === st.total;
+  const mark = done ? `<span class="marks"><span class="status done">${icon('check', 16)}</span></span>` : '';
+  const progressText = !ready ? '' : done ? '<span class="ok">완료</span>' : st.done ? `<span>${st.done}/${st.total} 탈출</span>` : '';
+  const state = !ready ? '준비 중' : done ? '완료' : st.done ? `${st.total}화 중 ${st.done}화 탈출` : '시작 전';
   const label = `에피소드 ${ep.id} ${ep.title}, ${st.total}화, 난이도 5점 만점에 ${st.lo === st.hi ? st.lo : `${st.lo}~${st.hi}`}점, ${state}. 화 목록 보기`;
-  const play = ready
-    ? `<button class="btn primary ep-play" data-act="open-room" data-id="${st.target.id}" aria-label="${e(`${ep.title} ${st.action}, ${st.target.title}`)}">${icon('right', 16)}<span>${st.action}</span></button>`
-    : '<span class="ep-play is-soon">준비 중</span>';
-  return `<li class="ep-card${ready ? '' : ' is-soon'}" style="--h:${(ep.id * 47) % 360}"><button class="ep-open" data-act="episode" data-ep="${ep.id}" aria-label="${e(label)}"><span class="ep-cover">${cover}${badge}</span><span class="ep-body"><span class="kicker">EP ${ep.id}</span><b>${e(ep.title)}</b><span class="ep-meta">${starRange(st.lo, st.hi)}<span>${st.total}화</span></span></span></button>${play}</li>`;
+  const play = ready ? `<button class="btn ep-play" data-act="open-room" data-id="${st.target.id}" aria-label="${e(`${ep.title} ${st.action}, ${st.target.title}`)}">${e(st.action)}</button>` : '';
+  return `<li class="ep-card"><button class="ep-open" data-act="episode" data-ep="${ep.id}" aria-label="${e(label)}"><span class="ep-cover">${cover}${mark}</span><span class="ep-body"><span class="no">EP ${ep.id}</span><b>${e(ep.title)}</b><span class="ep-meta">${starRange(st.lo, st.hi)}<span>${st.total}화</span>${progressText}</span></span></button>${play}</li>`;
 }
 function roomRow(r, ep, i) {
   const st = save.rooms[r.id];
@@ -237,8 +228,7 @@ function renderHome() {
   app.innerHTML = `<main class="home" id="main">
     <header class="home-top"><h1 class="brand">${icon('door', 26)}<span>문 너머</span></h1><button class="icon-btn" data-act="guide" aria-label="조작 안내">${icon('help')}</button></header>
     <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
-    <div class="tally"><span>${icon('door', 16)}탈출 <b>${done}</b> / ${total}</span><span>${icon('ribbon', 16)}책갈피 <b>${marks}</b> / ${order.length}</span></div>
-    <h2 class="list-title">에피소드<span>첫 화는 바로 시작할 수 있어요</span></h2>
+    <h2 class="list-title">에피소드 <span>탈출 ${done} / ${total}${marks ? ` · 책갈피 ${marks}` : ''}</span></h2>
     <ul class="episodes">${episodes.map(episodeCard).join('')}</ul>
     <p class="legacy"><a href="legacy.html">이전 버전 사건 기록 24개</a></p>
   </main>`;
@@ -247,7 +237,6 @@ function renderHome() {
 
 function renderGame() {
   document.body.dataset.screen = 'game';
-  const tone = roomTone(room);
   artKey = ''; pinKey = '';
   app.innerHTML = `<div class="game" id="main">
     <header class="bar">
@@ -259,7 +248,7 @@ function renderGame() {
       <button class="icon-btn" data-act="menu" aria-label="메뉴">${icon('menu')}</button>
       <span class="meter" id="meter" role="progressbar" aria-label="진행" aria-valuemin="0"><i></i></span>
     </header>
-    <div class="stage-wrap" style="--wall1:${tone.wall[0]};--wall2:${tone.wall[1]}"><div class="stage" id="stage"><div class="scene" id="scene"><div class="art" id="art"></div><div class="hits" id="hits"></div></div><div class="overlay" id="overlay"></div><button class="pin" id="pin" data-act="pin-open" hidden></button><div class="toast" id="toast" aria-hidden="true"></div></div></div>
+    <div class="stage-wrap"><div class="backdrop" id="backdrop" aria-hidden="true"></div><div class="stage" id="stage"><div class="scene" id="scene"><div class="art" id="art"></div><div class="hits" id="hits"></div></div><div class="overlay" id="overlay"></div><button class="pin" id="pin" data-act="pin-open" hidden></button><div class="toast" id="toast" aria-hidden="true"></div></div></div>
     <nav class="bag" id="bag" aria-label="가방"></nav>
   </div>`;
   if (saveWarned) showSaveWarning();
@@ -289,7 +278,13 @@ function paintScene() {
   document.body.dataset.view = s.view;
   // 그림은 상태가 바뀔 때만 다시 그립니다. 매번 그리면 휴대폰에서 느려지고 움직임이 처음부터 다시 시작됩니다.
   const key = JSON.stringify([s.view, s.flags, s.open, s.got, s.drafts]);
-  if (key !== artKey) { art.innerHTML = drawView(room, s.view, s, viewAlt(room, s)); artKey = key; }
+  if (key !== artKey) {
+    art.innerHTML = drawView(room, s.view, s, viewAlt(room, s));
+    // 키가 큰 화면에서 장면 위아래에 남는 공간은 같은 그림을 흐리게 깔아 빈 띠처럼 보이지 않게 합니다.
+    const backdrop = $('#backdrop');
+    if (backdrop) backdrop.innerHTML = drawView(room, s.view, s).replace('xMidYMid meet', 'xMidYMid slice');
+    artKey = key;
+  }
   const view = room.views[s.view];
   const focus = hintFocus();
   let html = '';
@@ -448,7 +443,6 @@ function afterMove() {
 }
 function changed(before, stateMoved = false) {
   const turned = before !== s.view;
-  if (stateMoved) pulseLive();
   scheduleSave();
   paint();
   if (turned) {
@@ -542,22 +536,13 @@ function reveal() {
   revealTimer = setTimeout(() => scene.classList.remove('reveal'), 1600);
   announce(`살펴볼 곳 ${hotspotsIn(room, s).length}개`);
 }
-// 찍은 장면이 수첩 칸으로 날아가 들어갑니다. 움직임을 줄인 설정에서는 수첩 칸만 살짝 튑니다.
+// 사진을 찍거나 단서가 자동으로 찍히면 수첩 칸이 한 번 튑니다.
 function flyPhoto() {
-  const art = $('#art'), target = $('[data-act="journal"]');
-  if (!target) return;
-  const bump = () => { const now = $('[data-act="journal"]'); if (!now) return; now.classList.remove('bump'); void now.offsetWidth; now.classList.add('bump'); };
-  if (!art || reducedMotion() || typeof Element.prototype.animate !== 'function') { bump(); return; }
-  const a = art.getBoundingClientRect(), b = target.getBoundingClientRect();
-  const ghost = document.createElement('div');
-  ghost.className = 'fly';
-  ghost.setAttribute('aria-hidden', 'true');
-  ghost.innerHTML = art.innerHTML;
-  Object.assign(ghost.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
-  document.body.append(ghost);
-  const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
-  const anim = ghost.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(${b.width / a.width})`, opacity: .35 }], { duration: 520, easing: 'cubic-bezier(.5,0,.75,0)' });
-  anim.onfinish = () => { ghost.remove(); bump(); };
+  const now = $('[data-act="journal"]');
+  if (!now) return;
+  now.classList.remove('bump');
+  void now.offsetWidth;
+  now.classList.add('bump');
 }
 function shoot() {
   takePhoto(room, s);

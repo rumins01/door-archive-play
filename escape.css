@@ -20,10 +20,10 @@ svg{display:block}
 .loading{min-height:100dvh;display:grid;place-content:center;gap:8px;padding:24px;text-align:center;color:var(--muted)}
 .loading h1{font:600 24px/1.3 var(--serif);color:var(--ink)}
 .save-warn{position:fixed;z-index:30;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));padding:10px 14px;border-radius:12px;background:#5a2a22;color:#ffe2da;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.stars{display:inline-flex;gap:1px;font-size:13px;line-height:1;letter-spacing:0}
-.stars i{font-style:normal;color:#4d4f45}
+.stars{display:inline-flex;gap:1px;font-size:11px;line-height:1;letter-spacing:1px}
+.stars i{font-style:normal;color:rgba(236,233,223,.2)}
 .stars i.on{color:var(--accent)}
-.stars i.part{color:rgba(215,183,123,.42)}
+.stars i.part{color:rgba(215,183,123,.45)}
 
 /* 버튼 */
 .icon-btn{display:inline-grid;place-items:center;flex:none;min-width:var(--tap);min-height:var(--tap);border-radius:12px;color:var(--ink)}
@@ -47,36 +47,26 @@ svg{display:block}
 .hero img{width:100%;height:100%;object-fit:cover;display:block;opacity:.82}
 .hero-copy{position:absolute;inset:auto 0 0 0;display:grid;gap:12px;padding:56px 16px 16px;background:linear-gradient(rgba(8,9,7,0),rgba(8,9,7,.94) 45%)}
 .hero-line{font:500 18px/1.45 var(--serif)}
-.tally{display:flex;gap:16px;flex-wrap:wrap;margin:16px 2px 0;color:var(--muted);font-size:13px}
-.tally span{display:inline-flex;align-items:center;gap:6px}
-.tally svg{color:var(--accent)}
-.tally b{color:var(--ink);font:600 14px var(--mono)}
 .kicker{font:500 12px var(--mono);letter-spacing:.12em;color:var(--accent)!important}
 .ep-tag{color:var(--muted);font-size:14px}
-.list-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;margin:24px 2px 12px;font:600 19px/1.3 var(--serif)}
-.list-title span{font:500 13px var(--sans);color:var(--muted)}
-/* 에피소드는 화면 너비와 관계없이 두 칸씩 놓습니다. 카드 안에는 표지, 제목, 별, 첫 화 버튼만 둡니다. */
+.list-title{display:flex;align-items:baseline;gap:8px;margin:28px 0 12px;font:600 17px/1.3 var(--sans)}
+.list-title span{color:var(--muted);font:500 13px var(--mono)}
+/* 에피소드는 두 칸씩 놓습니다. 18시 방 카드와 같은 패널, 얇은 테두리, 명조 제목만 씁니다. */
 .episodes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .ep-card{display:flex;flex-direction:column;min-width:0;border-radius:14px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
-.ep-open{display:flex;flex-direction:column;flex:1;min-width:0;text-align:left}
+.ep-open{position:relative;display:flex;flex-direction:column;flex:1;gap:8px;min-width:0;padding:8px;text-align:left}
 .ep-open:active{background:var(--raised)}
-.ep-cover{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:radial-gradient(circle at 50% 38%,hsl(var(--h,40) 24% 24%),#0b0c0a 78%)}
+.ep-cover{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;border-radius:10px;background:#0b0c0a}
 .ep-cover svg{width:100%;height:100%}
-.ep-cover *{animation:none!important}
-.ep-card.is-soon .ep-cover{border-bottom:1px dashed var(--line)}
-.ep-blank{position:absolute;inset:0;display:grid;place-items:center;color:hsl(var(--h,40) 30% 62%)}
-.ep-blank svg{opacity:.28}
-.ep-blank i{position:absolute;left:10px;bottom:6px;font:600 28px/1 var(--serif);font-style:normal;opacity:.6}
-.ep-badge{position:absolute;top:6px;right:6px;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:99px;background:rgba(10,11,9,.82);color:var(--accent);font:600 12px var(--sans)}
-.ep-badge.done{color:var(--success)}
-.ep-badge.soon{color:var(--muted)}
-.ep-body{display:grid;gap:2px;padding:10px 10px 6px;min-width:0}
-.ep-body .kicker{font-size:11px}
-.ep-body b{font:600 16px/1.3 var(--serif)}
+.ep-blank{position:absolute;inset:0;display:grid;place-content:center;gap:4px;text-align:center;background:linear-gradient(#1b1d19,#111310)}
+.ep-blank i{font:500 12px var(--mono);font-style:normal;letter-spacing:.12em;color:var(--muted)}
+.ep-blank small{font-size:12px;color:rgba(169,173,161,.7)}
+.ep-body{display:grid;gap:2px;min-width:0;padding:0 2px}
+.ep-body .no{font:500 12px var(--mono);color:var(--accent)}
+.ep-body b{font:600 16px/1.35 var(--serif)}
 .ep-meta{display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px;color:var(--muted);font-size:12px}
-.ep-play{min-height:44px;margin:4px 10px 10px;padding:0 8px;gap:4px;font-size:14px;white-space:nowrap;overflow:hidden}
-.ep-play span{overflow:hidden;text-overflow:ellipsis}
-.ep-play.is-soon{display:grid;place-items:center;border-radius:12px;border:1px dashed var(--line);color:var(--muted);font-size:13px}
+.ep-meta .ok{color:var(--success)}
+.ep-play{min-height:44px;margin:0 8px 8px;padding:0 10px;font-size:14px;white-space:nowrap;overflow:hidden}
 #sheet .rooms{margin-top:2px}
 .rooms{list-style:none;padding:0;display:grid;gap:12px}
 .room-card{position:relative;display:flex;gap:14px;align-items:stretch;width:100%;padding:10px;border-radius:14px;background:var(--panel);border:1px solid var(--line);text-align:left}
@@ -96,7 +86,7 @@ button.room-card:active{background:var(--raised)}
 .marks{position:absolute;top:10px;right:10px;display:grid;gap:6px;justify-items:end}
 .status{display:grid;place-items:center}
 .status.done{width:28px;height:28px;border-radius:50%;background:rgba(176,197,162,.16);color:var(--success)}
-.status.mark{width:28px;height:28px;border-radius:50%;background:rgba(163,50,42,.22);color:#e9a596}
+.status.mark{width:28px;height:28px;border-radius:50%;background:rgba(236,233,223,.08);color:var(--muted)}
 .status.play{padding:2px 8px;border-radius:99px;background:rgba(215,183,123,.14);color:var(--accent);font-size:12px}
 .soon{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 10px;border-radius:12px;border:1px dashed var(--line);color:var(--muted)}
 .soon .step{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:var(--raised);font:600 13px var(--mono)}
@@ -104,7 +94,7 @@ button.room-card:active{background:var(--raised)}
 .soon b{font:600 15px var(--serif);color:var(--ink)}
 .soon .meta{display:flex;align-items:center;gap:10px;font-size:13px}
 .soon .tag{flex:none;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--raised)}
-.thumb *,.photo *,.pin *,.recap-photo *,.fly *{animation:none!important}
+.thumb *,.photo *,.pin *,.recap-photo *,.ep-cover *{animation:none!important}
 .legacy{margin-top:28px;text-align:center}
 .legacy a{display:inline-block;min-height:44px;padding:12px;color:var(--muted);font-size:13px}
 
@@ -117,10 +107,12 @@ button.room-card:active{background:var(--raised)}
 .where small span{overflow:hidden;text-overflow:ellipsis}
 .where small.is-held{color:var(--accent)}
 .where small svg{flex:none}
-.meter{position:absolute;left:0;right:0;bottom:-1px;height:3px;pointer-events:none}
-.meter i{display:block;height:100%;width:var(--p,0%);background:var(--accent);box-shadow:0 0 8px rgba(215,183,123,.6);transition:width 480ms ease-out}
-.stage-wrap{position:relative;container-type:size;display:grid;place-items:center;min-height:0;min-width:0;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,var(--wall1,#2c3527),var(--wall2,#141a13) 62%,#060706)}
-.stage{position:relative;z-index:1;box-shadow:0 0 40px rgba(0,0,0,.6);width:min(100cqw,75cqh);aspect-ratio:3/4;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.meter{position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none}
+.meter i{display:block;height:100%;width:var(--p,0%);background:var(--accent);opacity:.75;transition:width 480ms ease-out}
+.stage-wrap{position:relative;container-type:size;display:grid;place-items:center;min-height:0;min-width:0;overflow:hidden}
+.backdrop{position:absolute;inset:-24px;filter:blur(18px) brightness(.38) saturate(.85);pointer-events:none}
+.backdrop svg{width:100%;height:100%}
+.stage{position:relative;z-index:1;box-shadow:0 0 32px rgba(0,0,0,.55);width:min(100cqw,75cqh);aspect-ratio:3/4;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .scene,.art,.hits,.overlay{position:absolute;inset:0}
 .art svg{width:100%;height:100%}
 .spot,.ctrl,.nav{position:absolute;padding:0;border-radius:12px}
@@ -144,38 +136,10 @@ button.room-card:active{background:var(--raised)}
 .ripple{position:absolute;z-index:5;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:2px solid rgba(255,233,190,.7);pointer-events:none;animation:ripple 450ms ease-out forwards}
 @keyframes ripple{from{transform:scale(.3);opacity:1}to{transform:scale(1);opacity:0}}
 
-/* 장면 속 움직임: 늘 흐르는 움직임(amb)과 상태가 바뀐 직후에만 한 번 재생하는 움직임(anim)입니다. */
-.amb-flicker{animation:flicker 5s infinite}
-@keyframes flicker{0%,100%{opacity:1}42%{opacity:1}44%{opacity:.72}46%{opacity:.95}48%{opacity:.8}52%{opacity:1}}
-.amb-sway{animation:sway 6s ease-in-out infinite}
-@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(1.4deg)}}
-.amb-rain{animation:rain .8s linear infinite}
-@keyframes rain{from{transform:translateY(0)}to{transform:translateY(176px)}}
-.amb-bolt{animation:bolt 9s infinite}
-@keyframes bolt{0%,90%,100%{opacity:0}91%{opacity:.55}92%{opacity:.05}93%{opacity:.35}95%{opacity:0}}
-.amb-tick{animation:tick 1.2s steps(1) infinite}
-@keyframes tick{0%{transform:rotate(0)}50%{transform:rotate(5deg)}}
-.amb-rays{animation:rays 5s ease-in-out infinite}
-@keyframes rays{0%,100%{opacity:.75}50%{opacity:1}}
-.amb-dust{animation:dust 6s linear infinite}
-@keyframes dust{0%{opacity:0;transform:translateY(0)}30%{opacity:.8}100%{opacity:0;transform:translateY(-26px)}}
-.stage.live .anim-swing{animation:swing 900ms cubic-bezier(.3,.7,.3,1)}
-@keyframes swing{from{transform:scaleX(var(--sx,4))}to{transform:scaleX(1)}}
-.stage.live .anim-lid{animation:lid 700ms ease-out}
-@keyframes lid{from{transform:translateY(18px) scaleY(.4);opacity:.3}to{transform:none;opacity:1}}
-.stage.live .anim-slide{animation:slide 650ms ease-out}
-@keyframes slide{from{transform:translateY(-16px);opacity:.3}to{transform:none;opacity:1}}
-.stage.live .anim-drop{animation:drop 700ms cubic-bezier(.5,0,.75,0)}
-@keyframes drop{from{transform:translate(-150px,-10px) rotate(-8deg);opacity:1}to{transform:none;opacity:1}}
-.stage.live .anim-fade{animation:fadein 1000ms ease-out}
-@keyframes fadein{from{opacity:0}to{opacity:1}}
-.stage.live .anim-glow{animation:glowin 900ms ease-out}
-@keyframes glowin{0%{opacity:.1}40%{opacity:1}55%{opacity:.5}100%{opacity:1}}
-
 /* 고정한 사진: 장면 오른쪽 위 모서리에 작게 띄웁니다. */
-.pin{position:absolute;z-index:2;padding:0;border:2px solid rgba(215,183,123,.9);border-radius:8px;overflow:hidden;background:#000;box-shadow:0 6px 18px rgba(0,0,0,.65);animation:fadein 240ms ease-out}
+.pin{position:absolute;z-index:2;padding:0;border:1px solid rgba(236,233,223,.35);border-radius:6px;overflow:hidden;background:#000;box-shadow:0 6px 18px rgba(0,0,0,.6)}
 .pin svg{width:100%;height:100%}
-.pin-tag{position:absolute;top:3px;left:3px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#1b160d}
+.pin-tag{position:absolute;top:3px;left:3px;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:rgba(10,11,9,.78);color:var(--ink)}
 .toast{position:absolute;z-index:6;left:50%;bottom:calc(12.5% + 8px);display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:6px 14px;border-radius:999px;background:rgba(18,19,15,.94);border:1px solid rgba(215,183,123,.42);color:var(--ink);font-size:14px;line-height:1.35;opacity:0;transform:translate(-50%,8px);transition:opacity 200ms,transform 200ms;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 /* 물건을 크게 볼 때는 아래쪽 안내 글을 가리지 않게 알림을 위로 올립니다. 오른쪽 닫기 버튼과도 겹치지 않게 폭을 줄입니다. */
@@ -186,8 +150,6 @@ button.room-card:active{background:var(--raised)}
 .stage.has-lock .toast.show{transform:none}
 .toast-item{flex:none;width:32px;height:32px;margin-left:-6px}
 .toast-item svg{width:100%;height:100%}
-.fly{position:fixed;z-index:40;pointer-events:none;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.6)}
-.fly svg{width:100%;height:100%}
 
 /* 장면 위 안내와 확대 화면. 내용이 길면 위에서부터 스크롤합니다. */
 .overlay{z-index:3;pointer-events:none}
@@ -208,10 +170,10 @@ button.room-card:active{background:var(--raised)}
 .stats dt{display:flex;align-items:center;gap:4px;font-size:13px}
 .stats dd{font:600 16px var(--mono);color:var(--ink)}
 .secret-line{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted)!important;font-size:13px!important}
-.secret-line.found{color:#e9a596!important}
-.bridge{padding:10px 12px;border-left:3px solid var(--accent);background:rgba(215,183,123,.08);text-align:left;font:500 14px/1.55 var(--serif)!important;color:var(--ink)!important}
-.finale{display:grid;gap:6px;padding:12px;border-radius:12px;background:rgba(215,183,123,.1);border:1px solid rgba(215,183,123,.35)}
-.finale p:not(.kicker){font:500 14px/1.55 var(--serif);color:var(--ink)}
+.secret-line.found{color:var(--ink)!important}
+.bridge{font:italic 500 14px/1.55 var(--serif)!important;color:#d9d5c9!important}
+.finale{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+.finale p:not(.kicker){font:500 14px/1.55 var(--serif);color:#d9d5c9}
 .soon-note{color:var(--muted)!important;font-size:13px!important}
 .resume{gap:12px}
 .recap-meter{height:6px;border-radius:3px;background:var(--raised);overflow:hidden}
@@ -234,9 +196,9 @@ button.room-card:active{background:var(--raised)}
 .slot{position:relative;display:grid;place-items:center;flex:none;width:var(--slot);height:var(--slot);padding:4px;border-radius:12px;background:#11130f;border:1px solid var(--line)}
 .slot svg{width:100%;height:100%}
 .slot.empty{opacity:.45}
-.slot.journal{color:var(--accent);background:#211d13;border-color:rgba(215,183,123,.4)}
+.slot.journal{color:var(--accent)}
 .slot.journal svg{width:62%;height:62%}
-.badge{position:absolute;top:-5px;right:-5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--accent);color:#1b160d;font:700 11px var(--mono)}
+.badge{position:absolute;top:-5px;right:-5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--raised);border:1px solid var(--line);color:var(--ink);font:600 11px var(--mono)}
 .slot[aria-pressed=true]{background:#2c2618;border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent),0 0 16px rgba(215,183,123,.35)}
 .slot.is-new{animation:pop 420ms ease-out}
 .slot.bump{animation:pop 380ms ease-out}
@@ -279,8 +241,7 @@ button.room-card:active{background:var(--raised)}
 .note-paper{display:grid;gap:4px;padding:14px 16px;border-radius:6px;background:#efe5cc;color:#2a2118;box-shadow:0 4px 14px rgba(0,0,0,.35);text-align:left}
 .note-paper b{display:flex;align-items:center;gap:6px;font:600 15px/1.4 var(--serif)}
 .note-paper p{font:500 14px/1.6 var(--serif);color:#3a2f22}
-.note-paper.secret{background:#3a1c18;color:#f2d9c9;border:1px solid #a3322a}
-.note-paper.secret p{color:#f2d9c9}
+.note-paper.secret{border-left:3px solid #9e3b30}
 .note-paper.big{padding:20px;transform:rotate(-1deg)}
 .note-paper.big p{font-size:16px}
 .guide{list-style:none;padding:0;display:grid;gap:8px}
@@ -309,9 +270,9 @@ button.room-card:active{background:var(--raised)}
 /* 360px 안팎의 좁은 화면에서는 위 막대 버튼을 최소 터치 크기(44px)로 줄여 방 이름 자리를 확보합니다. */
 @media (max-width:400px) and (orientation:portrait){
   .episodes{gap:10px}
-  .ep-body{padding:8px 8px 4px}
+  .ep-open{padding:6px;gap:6px}
   .ep-body b{font-size:15px}
-  .ep-play{margin:4px 8px 8px;padding:0 6px;font-size:13px}
+  .ep-play{margin:0 6px 6px;padding:0 6px;font-size:13px}
   .bar{gap:0}
   .bar .icon-btn{min-width:44px;min-height:44px}
   .where{padding:0 2px}
