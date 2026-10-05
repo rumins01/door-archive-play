@@ -1,8 +1,8 @@
 // 단서 그림 표식(mark)을 그립니다. 생성 방의 확대 화면에 놓이는 숫자판, 계기, 창문, 구슬, 그림자 같은 그림입니다.
 // escape-art.js의 kitMark가 먼저 이 함수를 부르고, null이면 기존 표식 그리기로 넘어갑니다.
 // h에는 escape-art.js의 도구가 들어옵니다: glyph(name, x, y, s, color), arrow(dir, x, y, s, fill), swatch(u, color, draw), shape(kind, x, y, s, fill, extra), colors.
-import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-9';
-import { icon, ICONS } from './escape-icons.js?v=escape-9';
+import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-10';
+import { icon, ICONS } from './escape-icons.js?v=escape-10';
 
 const EDGE = 'stroke="#211b15" stroke-width="1.3"';
 const round = n => Math.round(n * 100) / 100;
@@ -23,7 +23,11 @@ function card(u, k) {
   const mat = mats[k];
   if (!mat) return null;
   const [fill, edge, rx] = mat;
-  let out = R(40, 106, 288, 244, '#000', 'opacity=".32"') + R(36, 100, 288, 244, fill, `rx="${rx}" stroke="${edge}" stroke-width="2"`);
+  // 납작한 판처럼 보이지 않게, 위에서 빛을 받은 결과 안쪽 테두리와 위쪽 고정 집게를 그립니다(그림 판 위에서 물건에 걸린 안내판처럼 보이게).
+  const lit = `<defs><linearGradient id="${u}-cardlit" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".75" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs>`;
+  let out = lit + E(180, 352, 150, 10, '#000', 'opacity=".28"') + R(42, 108, 288, 244, '#000', 'opacity=".3"') + R(36, 100, 288, 244, fill, `rx="${rx}" stroke="${edge}" stroke-width="2"`)
+    + R(36, 100, 288, 244, K(u, 'cardlit'), `rx="${rx}"`) + R(39.5, 103.5, 281, 237, 'none', `rx="${Math.max(0, rx - 2)}" stroke="#fff" stroke-opacity=".16" stroke-width="1.2"`)
+    + [96, 264].map(x => R(x - 1, 90, 2, 12, '#3a3226') + R(x - 12, 94, 24, 11, '#8a7a55', 'rx="2" stroke="#3a3226" stroke-width="1.2"') + L(x - 8, 97.5, x + 8, 97.5, '#d9c89a', 1, 'opacity=".6"')).join('');
   if (k === 'cloth' || k === 'leather') out += R(44, 108, 272, 228, 'none', `rx="${rx}" stroke="${edge}" stroke-width="1" stroke-dasharray="3 4"`) + L(48, 110, 312, 110, '#fff', 1, 'opacity=".12"');
   if (k === 'wood') out += [106, 337].map(y => L(43, y, 317, y, '#23170d', 2)).join('') + [48, 312].flatMap(x => [114, 330].map(y => C(x, y, 2.2, '#5c503b'))).join('');
   if (k === 'stone') out += P('M37 116L51 101M310 101L323 115M37 329L51 343M310 343L323 329', 'none', 'stroke="#d7d5ca" stroke-width="2" opacity=".5"');

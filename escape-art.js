@@ -1,13 +1,13 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
 // 그림체 기준은 2026-10-04 18시 공개판(사서의 방)입니다. 그라데이션과 평면 그림자만 쓰고, 질감 타일과 늘 흐르는 움직임은 쓰지 않습니다.
-import { check, cleanInput, freshState, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-9';
-import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-9';
-import { LOCK_FORMS, STAR_POINTS } from './escape-locks.js?v=escape-9';
-import { ICONS, icon } from './escape-icons.js?v=escape-9';
-import { sceneView, sceneZoom } from './escape-scenes.js?v=escape-9';
-import { clueMark } from './escape-clues.js?v=escape-9';
+import { check, cleanInput, freshState, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-10';
+import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-10';
+import { LOCK_FORMS, STAR_POINTS } from './escape-locks.js?v=escape-10';
+import { ICONS, icon } from './escape-icons.js?v=escape-10';
+import { sceneView, sceneZoom } from './escape-scenes.js?v=escape-10';
+import { clueMark } from './escape-clues.js?v=escape-10';
 
-import { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-names.js?v=escape-9';
+import { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-names.js?v=escape-10';
 export { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES };
 // 색을 구분하기 어려운 사람도 같은 색을 찾을 수 있게 색마다 무늬를 함께 씁니다.
 const PATTERN = { red: 'dots', blue: 'lines', green: 'diag', yellow: null };
@@ -262,10 +262,16 @@ const fg = svg => (LAYER.mode === 'bake' ? '' : svg);
 // 그 상태의 판 조각(patch)을 얹고, 조각이 없으면 SVG로 그립니다.
 // 여러 조건에 따라 모양이 바뀌는 부분입니다. 판에는 처음 상태가 구워져 있으므로, over 층에서는
 // 조건 중 하나라도 처음과 달라졌을 때만 조각(patch)을 얹고, 조각이 없으면 지금 상태를 SVG로 그립니다.
-function swAll(key, conds, render) {
+// renderFresh를 주면, 조각이 없을 때 처음 모습과 그림이 같으면(상태가 바뀌어도 그림은 그대로인 소품) 아무것도 덧그리지 않습니다.
+// 판에 이미 그려진 물건을 SVG로 한 번 더 그려 두 개로 보이던 문제를 막습니다.
+const KIT_EXITS = new Set(['door', 'gate', 'hatch', 'ladder', 'elevator', 'stonedoor', 'sliding', 'curtainexit']);
+function swAll(key, conds, render, renderFresh = null) {
   if (LAYER.mode !== 'over') return render();
   if (conds.every(c => LAYER.is(c) === LAYER.fresh(c))) return '';
-  return LAYER.patch(key, true) ?? render();
+  const patch = LAYER.patch(key, true);
+  if (patch !== null && patch !== undefined) return patch;
+  const now = render();
+  return renderFresh && now === renderFresh() ? '' : now;
 }
 // 키트 방의 소품과 판자(plate, inside) 중 상태에 따라 바뀌는 것의 조건 목록입니다. 판 사양(scripts/plates)도 이 함수를 씁니다.
 export const PROP_STATES = ['on', 'empty', 'frost', 'bloom'];
@@ -907,11 +913,13 @@ function kitView(u, room, viewId, is) {
     : (sc ? sceneZoom(u, sc, v.tone) : zoomBase(u, v.tone ?? 'wall')));
   (v.props ?? []).forEach((p, i) => {
     if (!ok(p.if) || !PROPS[p.kind]) return;
-    const draw = () => PROPS[p.kind](u, p.x, p.y, p.w, p.h, { on: p.on ? is(p.on) : false, empty: p.empty ? is(p.empty) : false, frost: p.frost ? is(p.frost) : false, tone: p.bloom && !is(p.bloom) ? undefined : p.tone, time: p.time, blank: p.blank });
+    const drawAt = at => PROPS[p.kind](u, p.x, p.y, p.w, p.h, { on: p.on ? at(p.on) : false, empty: p.empty ? at(p.empty) : false, frost: p.frost ? at(p.frost) : false, tone: p.bloom && !at(p.bloom) ? undefined : p.tone, time: p.time, blank: p.blank });
+    const draw = () => drawAt(is);
     const conds = propConds(p);
     // 시계는 바늘이 정답이거나 정답처럼 읽힐 수 있어서 늘 코드로 그립니다(판에는 시계를 그리지 않음).
     if (p.time !== undefined || p.kind === 'clock') out += fg(draw());
-    else if (conds.length) out += swAll(kitPatchKey('p', i), conds, draw);
+    // 판 위에서 조각 그림이 없는 소품은 SVG로 다시 그리지 않습니다(판의 물건과 겹쳐 두 개로 보임). 출구만 열린 모습을 그립니다.
+    else if (conds.length) out += swAll(kitPatchKey('p', i), conds, draw, KIT_EXITS.has(p.kind) ? () => drawAt(LAYER.mode === 'over' ? LAYER.fresh : is) : () => draw());
     else out += bg(draw());
   });
   (v.marks ?? []).forEach(m => {

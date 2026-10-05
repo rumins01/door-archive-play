@@ -847,7 +847,7 @@
    }
   },
   "z-clock-wc": {
-   "src": "plates/r024/z-clock-wc.webp?h=5359977616",
+   "src": "plates/r024/z-clock-wc.webp?h=eba6dc08a6",
    "bake": "5b14c00719f21a1c",
    "patches": {}
   },
@@ -2658,23 +2658,23 @@
       78
      ],
      "cond": [
-      "got:torch"
+      "got:match"
      ],
      "bake": "9fa98b8933045975"
     }
    }
   },
   "z-box-sl": {
-   "src": "plates/r062/z-box-sl.webp?h=40460600f5",
+   "src": "plates/r062/z-box-sl.webp?h=35f48caf44",
    "bake": "18f293e7d19a14b5",
    "patches": {
     "m40_64": {
-     "src": "plates/r062/z-box-sl~m40_64.webp?h=71742a0779",
+     "src": "plates/r062/z-box-sl~m40_64.webp?h=6293d179f1",
      "rect": [
-      96,
-      57,
-      220,
-      286
+      53,
+      59,
+      252,
+      319
      ],
      "cond": [
       "open:box-sl"
@@ -2856,21 +2856,7 @@
   "south": {
    "src": "plates/r064/south.webp?h=98145ae806",
    "bake": "99d328629bdf416b",
-   "patches": {
-    "p0": {
-     "src": "plates/r064/south~p0.webp?h=497e318165",
-     "rect": [
-      11,
-      96,
-      349,
-      255
-     ],
-     "cond": [
-      "lift"
-     ],
-     "bake": "8b0648825b15097a"
-    }
-   }
+   "patches": {}
   },
   "west": {
    "src": "plates/r064/west.webp?h=e883d0c7d1",
@@ -2916,7 +2902,7 @@
    "patches": {}
   },
   "z-door-nc": {
-   "src": "plates/r064/z-door-nc.webp?h=6882f6fa4a",
+   "src": "plates/r064/z-door-nc.webp?h=cd008fe9c4",
    "bake": "c441079fe4c0b424",
    "patches": {}
   },
@@ -2948,7 +2934,7 @@
   },
   "east": {
    "src": "plates/r065/east.webp?h=20560254c7",
-   "bake": "6a23d2782a042336",
+   "bake": "84dccf0542bb1ada",
    "patches": {}
   },
   "south": {
@@ -3354,7 +3340,7 @@
    "patches": {}
   },
   "z-gramophone-wc": {
-   "src": "plates/r073/z-gramophone-wc.webp?h=83e2a74c75",
+   "src": "plates/r073/z-gramophone-wc.webp?h=c63f295459",
    "bake": "e60762f198219af6",
    "patches": {}
   }
@@ -3615,7 +3601,7 @@
    "patches": {}
   },
   "z-clock-sr": {
-   "src": "plates/r075/z-clock-sr.webp?h=dbeacb2e77",
+   "src": "plates/r075/z-clock-sr.webp?h=2cec81801d",
    "bake": "9f1b78bec12a5c91",
    "patches": {}
   }
@@ -4903,7 +4889,7 @@
    "patches": {}
   },
   "z-sign-sc": {
-   "src": "plates/r102/z-sign-sc.webp?h=db5d450cc0",
+   "src": "plates/r102/z-sign-sc.webp?h=e2da5474b0",
    "bake": "22a4184bd9369169",
    "patches": {}
   }
@@ -5142,7 +5128,7 @@
    }
   },
   "z-telescope-el": {
-   "src": "plates/r104/z-telescope-el.webp?h=1469535fb1",
+   "src": "plates/r104/z-telescope-el.webp?h=2a440feaaa",
    "bake": "b95b273306f33977",
    "patches": {}
   },
@@ -5278,21 +5264,7 @@
   "south": {
    "src": "plates/r112/south.webp?h=73ae5f25ea",
    "bake": "f637716a38864e7c",
-   "patches": {
-    "p0": {
-     "src": "plates/r112/south~p0.webp?h=ca42009a2c",
-     "rect": [
-      119,
-      239,
-      118,
-      86
-     ],
-     "cond": [
-      "react"
-     ],
-     "bake": "31ad365aa0ceab72"
-    }
-   }
+   "patches": {}
   },
   "west": {
    "src": "plates/r112/west.webp?h=4208b32234",
@@ -5569,7 +5541,7 @@
    }
   },
   "z-map-wr": {
-   "src": "plates/r114/z-map-wr.webp?h=58f625ee37",
+   "src": "plates/r114/z-map-wr.webp?h=379865904e",
    "bake": "4958eb99257c992a",
    "patches": {}
   },
@@ -5680,7 +5652,7 @@
    }
   },
   "z-dish-wr": {
-   "src": "plates/r115/z-dish-wr.webp?h=c95582a1c9",
+   "src": "plates/r115/z-dish-wr.webp?h=2134f11f0a",
    "bake": "b4808f5dd9abb2ee",
    "patches": {}
   },
@@ -5690,7 +5662,7 @@
    "patches": {}
   },
   "z-telescope-sc": {
-   "src": "plates/r115/z-telescope-sc.webp?h=c88ab2b760",
+   "src": "plates/r115/z-telescope-sc.webp?h=1726c7ac63",
    "bake": "e86f2ad1abbf180b",
    "patches": {}
   }
@@ -5731,7 +5703,7 @@
    "patches": {}
   },
   "z-elevator-nc": {
-   "src": "plates/r121/z-elevator-nc.webp?h=5547b68ac3",
+   "src": "plates/r121/z-elevator-nc.webp?h=b7fbaaad61",
    "bake": "b817da4903cc69c7",
    "patches": {}
   },
