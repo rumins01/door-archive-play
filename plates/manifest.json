@@ -1,0 +1,6193 @@
+{
+ "1": {
+  "north": {
+   "src": "plates/r001/north.webp?h=d49c2f0d48",
+   "bake": "2e2e97e3f3b438b9",
+   "patches": {
+    "door": {
+     "src": "plates/r001/north~door.webp?h=ac65ed7251",
+     "rect": [
+      56,
+      124,
+      248,
+      356
+     ],
+     "cond": "door-open",
+     "bake": "f01823904c2aa7b0"
+    },
+    "safe": {
+     "src": "plates/r001/north~safe.webp?h=b4bd523a63",
+     "rect": [
+      6,
+      232,
+      104,
+      84
+     ],
+     "cond": "open:safe",
+     "bake": "f4ce08494b618282"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r001/east.webp?h=63cbced3de",
+   "bake": "f3233e8f1563e14b",
+   "patches": {
+    "book": {
+     "src": "plates/r001/east~book.webp?h=5648a48ce3",
+     "rect": [
+      204,
+      56,
+      60,
+      108
+     ],
+     "cond": "book-pulled",
+     "bake": "0cd1e1c3c98a6c3b"
+    },
+    "box": {
+     "src": "plates/r001/east~box.webp?h=bafc224ccc",
+     "rect": [
+      188,
+      286,
+      126,
+      34
+     ],
+     "cond": "open:box",
+     "bake": "9f101cb8a781ffc9"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r001/south.webp?h=6f5f45d29c",
+   "bake": "0b9f4c154d8e1d91",
+   "patches": {
+    "drawer": {
+     "src": "plates/r001/south~drawer.webp?h=c55a4c2794",
+     "rect": [
+      104,
+      304,
+      152,
+      94
+     ],
+     "cond": "open:drawer",
+     "bake": "9324099b9dd83822"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r001/west.webp?h=a3f96dd972",
+   "bake": "06cb65d206d245a9",
+   "patches": {
+    "panel": {
+     "src": "plates/r001/west~panel.webp?h=ee19ddfb08",
+     "rect": [
+      144,
+      282,
+      196,
+      112
+     ],
+     "cond": "panel-open",
+     "bake": "8f48557cb1b38244"
+    }
+   }
+  },
+  "clock": {
+   "src": "plates/r001/clock.webp?h=86e6402d90",
+   "bake": "c457839a89256c2f",
+   "patches": {}
+  },
+  "safe": {
+   "src": "plates/r001/safe.webp?h=f8fdd6890f",
+   "bake": "ca1528ec936f8bb4",
+   "patches": {
+    "safe": {
+     "src": "plates/r001/safe~safe.webp?h=09e60caef3",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": "open:safe",
+     "bake": "2bc19027ad657a2f"
+    }
+   }
+  },
+  "books": {
+   "src": "plates/r001/books.webp?h=b4b21d56e4",
+   "bake": "f31845e72beb691d",
+   "patches": {}
+  },
+  "box": {
+   "src": "plates/r001/box.webp?h=4512c04b58",
+   "bake": "d10e28563bfa1daa",
+   "patches": {
+    "box": {
+     "src": "plates/r001/box~box.webp?h=e02c163c60",
+     "rect": [
+      20,
+      6,
+      320,
+      176
+     ],
+     "cond": "open:box",
+     "bake": "e3c7215c03a4396a"
+    }
+   }
+  },
+  "drawer": {
+   "src": "plates/r001/drawer.webp?h=9d1e137eac",
+   "bake": "3a2193038597123a",
+   "patches": {
+    "drawer": {
+     "src": "plates/r001/drawer~drawer.webp?h=180482cef8",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": "open:drawer",
+     "bake": "c91481dc8ea80a03"
+    }
+   }
+  },
+  "poster": {
+   "src": "plates/r001/poster.webp?h=68757b6bef",
+   "bake": "31f56ca80d1ea034",
+   "patches": {}
+  },
+  "panel": {
+   "src": "plates/r001/panel.webp?h=e24f211c72",
+   "bake": "4a5a3c86d20b1ca5",
+   "patches": {
+    "panel": {
+     "src": "plates/r001/panel~panel.webp?h=50847bc647",
+     "rect": [
+      28,
+      88,
+      304,
+      284
+     ],
+     "cond": "panel-open",
+     "bake": "d57690a4438d69ee"
+    }
+   }
+  },
+  "lamp": {
+   "src": "plates/r001/lamp.webp?h=0fc68e2872",
+   "bake": "bbe0e220a98421c1",
+   "patches": {}
+  }
+ },
+ "2": {
+  "north": {
+   "src": "plates/r002/north.webp?h=05712054ed",
+   "bake": "bf5c1bb0c9e16fc9",
+   "patches": {}
+  },
+  "east": {
+   "src": "plates/r002/east.webp?h=41e0367323",
+   "bake": "55be724e2cdb6e8d",
+   "patches": {
+    "door": {
+     "src": "plates/r002/east~door.webp?h=c9b22dc81d",
+     "rect": [
+      0,
+      50,
+      256,
+      430
+     ],
+     "cond": "open:door",
+     "bake": "7310a2552c9434c2"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r002/south.webp?h=bbfddbc64a",
+   "bake": "d7f5fa182fa30231",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r002/west.webp?h=e808586780",
+   "bake": "be8d4ebf35ef50cc",
+   "patches": {}
+  },
+  "chart": {
+   "src": "plates/r002/chart.webp?h=a2012e7522",
+   "bake": "0d463a484d697f64",
+   "patches": {}
+  },
+  "tray": {
+   "src": "plates/r002/tray.webp?h=0adec3576b",
+   "bake": "d26c78d1ac012816",
+   "patches": {}
+  },
+  "panel": {
+   "src": "plates/r002/panel.webp?h=93584fed1d",
+   "bake": "7a1e3be4d085df47",
+   "patches": {}
+  },
+  "door": {
+   "src": "plates/r002/door.webp?h=67217b40b6",
+   "bake": "03fb1dce47eaf89e",
+   "patches": {}
+  },
+  "photos": {
+   "src": "plates/r002/photos.webp?h=9c3ac5cdd2",
+   "bake": "f90367550ccbfc6a",
+   "patches": {}
+  },
+  "enlarger": {
+   "src": "plates/r002/enlarger.webp?h=f5bb1efbf0",
+   "bake": "47688e6a3a1225d5",
+   "patches": {}
+  },
+  "negbox": {
+   "src": "plates/r002/negbox.webp?h=81bbcc51e1",
+   "bake": "0fa31df6cacb302c",
+   "patches": {
+    "negbox": {
+     "src": "plates/r002/negbox~negbox.webp?h=d6cdaee913",
+     "rect": [
+      23,
+      23,
+      312,
+      257
+     ],
+     "cond": "open:negbox",
+     "bake": "b0ccb01dd2621c43"
+    }
+   }
+  }
+ },
+ "3": {
+  "north": {
+   "src": "plates/r003/north.webp?h=7a95407240",
+   "bake": "65e60a460e543ff4",
+   "patches": {
+    "door": {
+     "src": "plates/r003/north~door.webp?h=74c3f92ae7",
+     "rect": [
+      137,
+      112,
+      223,
+      339
+     ],
+     "cond": "door-open",
+     "bake": "8c048f91a566f460"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r003/east.webp?h=f1c4df2935",
+   "bake": "30cc191804e99eab",
+   "patches": {
+    "case": {
+     "src": "plates/r003/east~case.webp?h=6b4653c892",
+     "rect": [
+      127,
+      173,
+      63,
+      67
+     ],
+     "cond": "open:case",
+     "bake": "5fc4184e32b0713a"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r003/south.webp?h=269400057d",
+   "bake": "4dc1d4721b6e0afe",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r003/west.webp?h=7c5df4d2fe",
+   "bake": "9c339ed0f23de372",
+   "patches": {
+    "cabinet": {
+     "src": "plates/r003/west~cabinet.webp?h=f78f5d5572",
+     "rect": [
+      67,
+      224,
+      201,
+      173
+     ],
+     "cond": "open:cabinet",
+     "bake": "188302b4d6e85e53"
+    }
+   }
+  },
+  "press": {
+   "src": "plates/r003/press.webp?h=c6fda526ce",
+   "bake": "8b1c34a19798a6ac",
+   "patches": {}
+  },
+  "case": {
+   "src": "plates/r003/case.webp?h=7e587b81de",
+   "bake": "75d1dcd370eda145",
+   "patches": {
+    "case": {
+     "src": "plates/r003/case~case.webp?h=c41cdd1ff0",
+     "rect": [
+      13,
+      190,
+      332,
+      122
+     ],
+     "cond": "open:case",
+     "bake": "d02dee4544c25212"
+    }
+   }
+  },
+  "proofs": {
+   "src": "plates/r003/proofs.webp?h=6efa0ff1ac",
+   "bake": "445e91d5defa114a",
+   "patches": {}
+  },
+  "plate": {
+   "src": "plates/r003/plate.webp?h=e2aeb4dbce",
+   "bake": "beb7ce9212afc638",
+   "patches": {}
+  },
+  "cabinet": {
+   "src": "plates/r003/cabinet.webp?h=03e08bc93b",
+   "bake": "baf5d0d43e5b216c",
+   "patches": {
+    "cabinet": {
+     "src": "plates/r003/cabinet~cabinet.webp?h=3e470a95f3",
+     "rect": [
+      22,
+      28,
+      294,
+      413
+     ],
+     "cond": "open:cabinet",
+     "bake": "a7977dde71b9fcab"
+    }
+   }
+  }
+ },
+ "21": {
+  "north": {
+   "src": "plates/r021/north.webp?h=ea06e03b64",
+   "bake": "e6a85b3d274a524c",
+   "patches": {
+    "p1": {
+     "src": "plates/r021/north~p1.webp?h=09b922301f",
+     "rect": [
+      103,
+      63,
+      140,
+      303
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "54a52c08e78c41fd"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r021/east.webp?h=26082ae1db",
+   "bake": "b60732348b4bdd18",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r021/south.webp?h=a25ec35768",
+   "bake": "79477226de433eea",
+   "patches": {
+    "p0": {
+     "src": "plates/r021/south~p0.webp?h=c632b2a09a",
+     "rect": [
+      154,
+      278,
+      49,
+      110
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "cbd1b82421451cea"
+    },
+    "p1": {
+     "src": "plates/r021/south~p1.webp?h=cf4bf72956",
+     "rect": [
+      230,
+      250,
+      109,
+      106
+     ],
+     "cond": [
+      "open:safe-sr"
+     ],
+     "bake": "053505a329f20ee8"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r021/west.webp?h=6b8cf2dc5b",
+   "bake": "2e1d63a31991a288",
+   "patches": {
+    "p1": {
+     "src": "plates/r021/west~p1.webp?h=40a2f575e0",
+     "rect": [
+      238,
+      217,
+      103,
+      101
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "f6ab90d7520e3913"
+    }
+   }
+  },
+  "z-safe-sr": {
+   "src": "plates/r021/z-safe-sr.webp?h=572551475a",
+   "bake": "b817da4903cc69c7",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r021/z-safe-sr~m40_64.webp?h=5c992077ab",
+     "rect": [
+      101,
+      301,
+      158,
+      69
+     ],
+     "cond": [
+      "open:safe-sr"
+     ],
+     "bake": "e889a7a141e189c3"
+    }
+   }
+  },
+  "z-table-ec": {
+   "src": "plates/r021/z-table-ec.webp?h=54b07d03b1",
+   "bake": "8428848114c9655e",
+   "patches": {}
+  }
+ },
+ "22": {
+  "north": {
+   "src": "plates/r022/north.webp?h=27c8984299",
+   "bake": "e152a8797987d1a2",
+   "patches": {
+    "p0": {
+     "src": "plates/r022/north~p0.webp?h=2bbe8ea397",
+     "rect": [
+      112,
+      117,
+      134,
+      255
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "e41b4e4f0e7efba6"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r022/east.webp?h=cb0bfae3aa",
+   "bake": "8079d0ebb8d04675",
+   "patches": {
+    "p0": {
+     "src": "plates/r022/east~p0.webp?h=1aaaf80159",
+     "rect": [
+      8,
+      252,
+      125,
+      85
+     ],
+     "cond": [
+      "open:chest-el"
+     ],
+     "bake": "248604e23b4751c5"
+    },
+    "p1": {
+     "src": "plates/r022/east~p1.webp?h=e8fe6acf1e",
+     "rect": [
+      208,
+      209,
+      89,
+      170
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "b806717baad07547"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r022/south.webp?h=57c4c18112",
+   "bake": "6aaaad856456fba0",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r022/west.webp?h=39acb49022",
+   "bake": "ee6f2aa2cefd1c4b",
+   "patches": {
+    "p0": {
+     "src": "plates/r022/west~p0.webp?h=9eabdb43b5",
+     "rect": [
+      247,
+      290,
+      95,
+      53
+     ],
+     "cond": [
+      "got:scissors"
+     ],
+     "bake": "ea12201f5e26c806"
+    }
+   }
+  },
+  "z-chest-el": {
+   "src": "plates/r022/z-chest-el.webp?h=a3ea6fd661",
+   "bake": "8aa8730f2e09eeca",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r022/z-chest-el~m40_64.webp?h=143d2bfc67",
+     "rect": [
+      54,
+      73,
+      252,
+      312
+     ],
+     "cond": [
+      "open:chest-el"
+     ],
+     "bake": "5be62858ee7190d7"
+    }
+   }
+  },
+  "z-frame-sr": {
+   "src": "plates/r022/z-frame-sr.webp?h=8692201da0",
+   "bake": "42bcb9f5c57165dc",
+   "patches": {}
+  },
+  "z-cabinet-er": {
+   "src": "plates/r022/z-cabinet-er.webp?h=1f1b7350f4",
+   "bake": "8aa8730f2e09eeca",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r022/z-cabinet-er~m40_64.webp?h=576fa80ca8",
+     "rect": [
+      42,
+      52,
+      276,
+      349
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "5be62858ee7190d7"
+    }
+   }
+  },
+  "z-board-wc": {
+   "src": "plates/r022/z-board-wc.webp?h=5344430792",
+   "bake": "d7ca1b0d1dc6e4a2",
+   "patches": {}
+  },
+  "z-paper-er": {
+   "src": "plates/r022/z-paper-er.webp?h=5991735576",
+   "bake": "69d4eb5b2a8aa2ad",
+   "patches": {}
+  }
+ },
+ "23": {
+  "north": {
+   "src": "plates/r023/north.webp?h=2ce14852f0",
+   "bake": "02a5ebbc6698d196",
+   "patches": {
+    "p0": {
+     "src": "plates/r023/north~p0.webp?h=47a562a552",
+     "rect": [
+      110,
+      115,
+      80,
+      237
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "9c7d79208ca05b59"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r023/east.webp?h=1f8b535e9e",
+   "bake": "822a6b2a735e8fc8",
+   "patches": {
+    "p1": {
+     "src": "plates/r023/east~p1.webp?h=a1a44d53e2",
+     "rect": [
+      93,
+      66,
+      32,
+      99
+     ],
+     "cond": [
+      "baked"
+     ],
+     "bake": "052e7e82a183d94e"
+    },
+    "p2": {
+     "src": "plates/r023/east~p2.webp?h=13e1836b2d",
+     "rect": [
+      9,
+      255,
+      124,
+      34
+     ],
+     "cond": [
+      "open:cart-el"
+     ],
+     "bake": "0cabfd8a79c8248d"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r023/south.webp?h=978bcd652c",
+   "bake": "751c45e0efc95754",
+   "patches": {
+    "p1": {
+     "src": "plates/r023/south~p1.webp?h=cacf37ab5a",
+     "rect": [
+      115,
+      263,
+      143,
+      125
+     ],
+     "cond": [
+      "baked"
+     ],
+     "bake": "e66050d27d35d47e"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r023/west.webp?h=8c531a7dbe",
+   "bake": "d7ae236f611d8d52",
+   "patches": {
+    "p1": {
+     "src": "plates/r023/west~p1.webp?h=3e7f9411eb",
+     "rect": [
+      269,
+      267,
+      25,
+      21
+     ],
+     "cond": [
+      "open:jar-wr"
+     ],
+     "bake": "6cfc39094305e0dc"
+    }
+   }
+  },
+  "z-cart-el": {
+   "src": "plates/r023/z-cart-el.webp?h=481cdf7d70",
+   "bake": "0526d2ded9b77387",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r023/z-cart-el~m40_64.webp?h=9fad130512",
+     "rect": [
+      46,
+      66,
+      266,
+      316
+     ],
+     "cond": [
+      "open:cart-el"
+     ],
+     "bake": "e8bb5b62521b7ebf"
+    }
+   }
+  },
+  "z-window-ec": {
+   "src": "plates/r023/z-window-ec.webp?h=99748c4df9",
+   "bake": "a47982d31d785921",
+   "patches": {
+    "p0": {
+     "src": "plates/r023/z-window-ec~p0.webp?h=675e5e6cb6",
+     "rect": [
+      28,
+      44,
+      316,
+      352
+     ],
+     "cond": [
+      "baked"
+     ],
+     "bake": "76f1e7fc1e80842c"
+    }
+   }
+  },
+  "z-jar-wr": {
+   "src": "plates/r023/z-jar-wr.webp?h=9acaf6e509",
+   "bake": "f17831b67afc1d1b",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r023/z-jar-wr~m40_64.webp?h=e10ad72981",
+     "rect": [
+      56,
+      59,
+      246,
+      339
+     ],
+     "cond": [
+      "open:jar-wr"
+     ],
+     "bake": "2a07eb8ead3590c6"
+    }
+   }
+  },
+  "z-sign-wl": {
+   "src": "plates/r023/z-sign-wl.webp?h=654b2e5be3",
+   "bake": "80f59b55ecd2a051",
+   "patches": {}
+  }
+ },
+ "24": {
+  "north": {
+   "src": "plates/r024/north.webp?h=88d0aca802",
+   "bake": "6b33d5bbcde8ecfb",
+   "patches": {
+    "p1": {
+     "src": "plates/r024/north~p1.webp?h=77e42f418a",
+     "rect": [
+      147,
+      80,
+      61,
+      112
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "6ad40647eb91b17e"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r024/east.webp?h=c1f15b62f2",
+   "bake": "dfa2da587608b4a0",
+   "patches": {
+    "p0": {
+     "src": "plates/r024/east~p0.webp?h=a746e5a90a",
+     "rect": [
+      260,
+      192,
+      67,
+      153
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "eafb0f5f858405b6"
+    },
+    "p1": {
+     "src": "plates/r024/east~p1.webp?h=aadb5ce219",
+     "rect": [
+      30,
+      311,
+      78,
+      34
+     ],
+     "cond": [
+      "running"
+     ],
+     "bake": "f86f5db5790283cf"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r024/south.webp?h=111239d495",
+   "bake": "d570f6ad9f14bdcf",
+   "patches": {
+    "p0": {
+     "src": "plates/r024/south~p0.webp?h=d6128a93b7",
+     "rect": [
+      9,
+      249,
+      131,
+      120
+     ],
+     "cond": [
+      "got:hands"
+     ],
+     "bake": "8bb3348de8b727ae"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r024/west.webp?h=bdf5485cd4",
+   "bake": "802529a3c0d9e15f",
+   "patches": {}
+  },
+  "z-rack-er": {
+   "src": "plates/r024/z-rack-er.webp?h=a0cab7fb43",
+   "bake": "2938ee08322fc873",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r024/z-rack-er~m40_64.webp?h=7835d11587",
+     "rect": [
+      61,
+      59,
+      237,
+      307
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "11408ce5038aa82e"
+    }
+   }
+  },
+  "z-clock-wc": {
+   "src": "plates/r024/z-clock-wc.webp?h=5359977616",
+   "bake": "5b14c00719f21a1c",
+   "patches": {}
+  },
+  "z-machine-el": {
+   "src": "plates/r024/z-machine-el.webp?h=ffc6c8a441",
+   "bake": "2938ee08322fc873",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r024/z-machine-el~m40_64.webp?h=a8c80de511",
+     "rect": [
+      108,
+      214,
+      145,
+      192
+     ],
+     "cond": [
+      "open:machine-el"
+     ],
+     "bake": "11408ce5038aa82e"
+    }
+   }
+  },
+  "z-lens-ec": {
+   "src": "plates/r024/z-lens-ec.webp?h=88e37ce68f",
+   "bake": "cbd6296ac75b6a3d",
+   "patches": {}
+  }
+ },
+ "25": {
+  "north": {
+   "src": "plates/r025/north.webp?h=31ea40e627",
+   "bake": "ea8771e8d5ca3099",
+   "patches": {
+    "p1": {
+     "src": "plates/r025/north~p1.webp?h=cc80521777",
+     "rect": [
+      117,
+      80,
+      164,
+      316
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "34d0be9d6ea818d8"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r025/east.webp?h=55f4820bf7",
+   "bake": "9a2cb8e56f566c43",
+   "patches": {
+    "p0": {
+     "src": "plates/r025/east~p0.webp?h=7b0a700f0d",
+     "rect": [
+      253,
+      250,
+      86,
+      108
+     ],
+     "cond": [
+      "open:sarcophagus-er"
+     ],
+     "bake": "692d7d5f5d0b6fec"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r025/south.webp?h=7f4a707fbd",
+   "bake": "8f5bc1075973e034",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r025/west.webp?h=dce16ac0ae",
+   "bake": "395b9538536e3572",
+   "patches": {}
+  },
+  "z-sarcophagus-er": {
+   "src": "plates/r025/z-sarcophagus-er.webp?h=5a815ac0f8",
+   "bake": "57b8b6d624e6ff14",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r025/z-sarcophagus-er~m40_64.webp?h=9d5973e8b6",
+     "rect": [
+      62,
+      65,
+      235,
+      342
+     ],
+     "cond": [
+      "open:sarcophagus-er"
+     ],
+     "bake": "3cd490ef819f7be3"
+    }
+   }
+  },
+  "z-mirror-wc": {
+   "src": "plates/r025/z-mirror-wc.webp?h=60da5fd0bf",
+   "bake": "887c701395cd44be",
+   "patches": {}
+  },
+  "z-organ-el": {
+   "src": "plates/r025/z-organ-el.webp?h=612acd4368",
+   "bake": "57b8b6d624e6ff14",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r025/z-organ-el~m40_64.webp?h=ba17d70b74",
+     "rect": [
+      119,
+      205,
+      121,
+      65
+     ],
+     "cond": [
+      "open:organ-el"
+     ],
+     "bake": "3cd490ef819f7be3"
+    }
+   }
+  },
+  "z-portrait-sl": {
+   "src": "plates/r025/z-portrait-sl.webp?h=0102d40334",
+   "bake": "b6134b60b615a9cf",
+   "patches": {}
+  },
+  "z-portrait-sr": {
+   "src": "plates/r025/z-portrait-sr.webp?h=22885a8cc8",
+   "bake": "b6134b60b615a9cf",
+   "patches": {}
+  }
+ },
+ "31": {
+  "north": {
+   "src": "plates/r031/north.webp?h=34a6c5d8c7",
+   "bake": "18fc257ab9fb76af",
+   "patches": {
+    "p0": {
+     "src": "plates/r031/north~p0.webp?h=2a896939af",
+     "rect": [
+      117,
+      67,
+      98,
+      111
+     ],
+     "cond": [
+      "open:ladder-nc"
+     ],
+     "bake": "c0d9385ba28d9b71"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r031/east.webp?h=ceefe574d4",
+   "bake": "d3fa5a758a84d861",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r031/south.webp?h=24a154e440",
+   "bake": "8d038701192d4bc1",
+   "patches": {
+    "p1": {
+     "src": "plates/r031/south~p1.webp?h=d9e415bb6c",
+     "rect": [
+      0,
+      248,
+      164,
+      128
+     ],
+     "cond": [
+      "open:chest-sl"
+     ],
+     "bake": "7c5357d9b2324827"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r031/west.webp?h=ba008faa31",
+   "bake": "f3263d73a9862400",
+   "patches": {}
+  },
+  "z-chest-sl": {
+   "src": "plates/r031/z-chest-sl.webp?h=eedd714988",
+   "bake": "b8936996cc64a86e",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r031/z-chest-sl~m40_64.webp?h=638d3bbc0e",
+     "rect": [
+      7,
+      52,
+      338,
+      374
+     ],
+     "cond": [
+      "open:chest-sl"
+     ],
+     "bake": "9b1e05864fb47b22"
+    }
+   }
+  },
+  "z-buoy-er": {
+   "src": "plates/r031/z-buoy-er.webp?h=0ba3e07999",
+   "bake": "c0baee08d696d67c",
+   "patches": {}
+  },
+  "z-ladder-nc": {
+   "src": "plates/r031/z-ladder-nc.webp?h=2d945f384a",
+   "bake": "b8936996cc64a86e",
+   "patches": {}
+  },
+  "z-noticeboard-ec": {
+   "src": "plates/r031/z-noticeboard-ec.webp?h=6e660e03af",
+   "bake": "72e1eefb52713214",
+   "patches": {}
+  }
+ },
+ "32": {
+  "north": {
+   "src": "plates/r032/north.webp?h=e2520da396",
+   "bake": "bfcff2c8dfc2192a",
+   "patches": {
+    "p0": {
+     "src": "plates/r032/north~p0.webp?h=c882475402",
+     "rect": [
+      49,
+      82,
+      311,
+      318
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "abd1cba352ac2af1"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r032/east.webp?h=15760cf53b",
+   "bake": "47f2d24f727ad28b",
+   "patches": {
+    "p1": {
+     "src": "plates/r032/east~p1.webp?h=bfac005a0a",
+     "rect": [
+      32,
+      252,
+      73,
+      99
+     ],
+     "cond": [
+      "open:mailbox-el"
+     ],
+     "bake": "a987e503f6c9a404"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r032/south.webp?h=b8ba94a4be",
+   "bake": "51d62106ddc1e06d",
+   "patches": {
+    "p0": {
+     "src": "plates/r032/south~p0.webp?h=0489804400",
+     "rect": [
+      300,
+      110,
+      39,
+      48
+     ],
+     "cond": [
+      "drained"
+     ],
+     "bake": "d4f1fdab912c7609"
+    },
+    "p1": {
+     "src": "plates/r032/south~p1.webp?h=0489804400",
+     "rect": [
+      300,
+      110,
+      39,
+      48
+     ],
+     "cond": [
+      "drained"
+     ],
+     "bake": "d4f1fdab912c7609"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r032/west.webp?h=128fc87c19",
+   "bake": "f5bd5f664ab563ec",
+   "patches": {
+    "p1": {
+     "src": "plates/r032/west~p1.webp?h=5effc09b7d",
+     "rect": [
+      19,
+      270,
+      95,
+      75
+     ],
+     "cond": [
+      "got:crank"
+     ],
+     "bake": "190db261bcd59dc0"
+    }
+   }
+  },
+  "z-mailbox-el": {
+   "src": "plates/r032/z-mailbox-el.webp?h=c74a656a90",
+   "bake": "583af19b16444fb2",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r032/z-mailbox-el~m40_64.webp?h=36c749b15b",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:mailbox-el"
+     ],
+     "bake": "92bca7f85566259a"
+    }
+   }
+  },
+  "z-tank-sc": {
+   "src": "plates/r032/z-tank-sc.webp?h=e56e3618df",
+   "bake": "99e9e24172f6ff62",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r032/z-sliding-nc.webp?h=3d6ed68ad5",
+   "bake": "ab6b0f16cbdacbb3",
+   "patches": {}
+  },
+  "z-paper-wc": {
+   "src": "plates/r032/z-paper-wc.webp?h=c80b2a3027",
+   "bake": "af43c4b3d2963ffb",
+   "patches": {}
+  }
+ },
+ "33": {
+  "north": {
+   "src": "plates/r033/north.webp?h=d30c0690ec",
+   "bake": "e17e8c60df3ac23f",
+   "patches": {
+    "p1": {
+     "src": "plates/r033/north~p1.webp?h=d58edce91c",
+     "rect": [
+      74,
+      231,
+      214,
+      179
+     ],
+     "cond": [
+      "open:hatch-nc"
+     ],
+     "bake": "ff599f9c8366f20a"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r033/east.webp?h=cc6ad48a71",
+   "bake": "8dce40d2a200c8e6",
+   "patches": {
+    "p0": {
+     "src": "plates/r033/east~p0.webp?h=887e1da17a",
+     "rect": [
+      9,
+      253,
+      118,
+      100
+     ],
+     "cond": [
+      "got:torn"
+     ],
+     "bake": "a20a0dddce2fb263"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r033/south.webp?h=1dac820376",
+   "bake": "742f1274ea9965ba",
+   "patches": {
+    "p1": {
+     "src": "plates/r033/south~p1.webp?h=260d6c6971",
+     "rect": [
+      0,
+      241,
+      146,
+      161
+     ],
+     "cond": [
+      "open:safe-sl"
+     ],
+     "bake": "607f4781b8d42cf9"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r033/west.webp?h=670a88db7c",
+   "bake": "a7c4e2ce4dcdb776",
+   "patches": {}
+  },
+  "z-safe-sl": {
+   "src": "plates/r033/z-safe-sl.webp?h=9cbe1cd1e3",
+   "bake": "27ac29a0488bacd1",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r033/z-safe-sl~m40_64.webp?h=c58b70a748",
+     "rect": [
+      8,
+      48,
+      352,
+      355
+     ],
+     "cond": [
+      "open:safe-sl"
+     ],
+     "bake": "90ed35ccdcd187a8"
+    }
+   }
+  },
+  "z-board-wc": {
+   "src": "plates/r033/z-board-wc.webp?h=33771a84ec",
+   "bake": "0c8a4fa4d32a5315",
+   "patches": {}
+  },
+  "z-hatch-nc": {
+   "src": "plates/r033/z-hatch-nc.webp?h=5fd13e856d",
+   "bake": "49727a83a18ff2c4",
+   "patches": {}
+  },
+  "z-map-wr": {
+   "src": "plates/r033/z-map-wr.webp?h=56d31e8078",
+   "bake": "3364876e08ec80d8",
+   "patches": {}
+  }
+ },
+ "34": {
+  "north": {
+   "src": "plates/r034/north.webp?h=4f92645adf",
+   "bake": "29e0fafa1f367bf6",
+   "patches": {
+    "p0": {
+     "src": "plates/r034/north~p0.webp?h=11d6e481b5",
+     "rect": [
+      229,
+      269,
+      128,
+      129
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "da87558292915e11"
+    },
+    "p1": {
+     "src": "plates/r034/north~p1.webp?h=7add4f4d85",
+     "rect": [
+      82,
+      43,
+      198,
+      155
+     ],
+     "cond": [
+      "open:ladder-nc"
+     ],
+     "bake": "4cda336e1b53bcab"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r034/east.webp?h=df3d90cb45",
+   "bake": "7964e8d12dd24550",
+   "patches": {
+    "p1": {
+     "src": "plates/r034/east~p1.webp?h=9e2804ae53",
+     "rect": [
+      225,
+      86,
+      130,
+      117
+     ],
+     "cond": [
+      "open:panel-er"
+     ],
+     "bake": "316db68f88157b8b"
+    },
+    "p2": {
+     "src": "plates/r034/east~p2.webp?h=3006f33188",
+     "rect": [
+      8,
+      111,
+      119,
+      153
+     ],
+     "cond": [
+      "beam"
+     ],
+     "bake": "75aee2481cdf77cf"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r034/south.webp?h=e92e959460",
+   "bake": "044ec53037644563",
+   "patches": {
+    "p1": {
+     "src": "plates/r034/south~p1.webp?h=f3d2ae2bf7",
+     "rect": [
+      80,
+      78,
+      66,
+      96
+     ],
+     "cond": [
+      "open:bigbell-sl"
+     ],
+     "bake": "4a152f7193a7aa3a"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r034/west.webp?h=396077a8cd",
+   "bake": "b201e4272db8b876",
+   "patches": {}
+  },
+  "z-panel-er": {
+   "src": "plates/r034/z-panel-er.webp?h=db442a7e53",
+   "bake": "1f95df2fa5dd02b9",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r034/z-panel-er~m40_64.webp?h=a86fefe5d9",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:panel-er"
+     ],
+     "bake": "ef08b79880d52a41"
+    }
+   }
+  },
+  "z-window-wl": {
+   "src": "plates/r034/z-window-wl.webp?h=b5ac5f3678",
+   "bake": "ed927d1df6c39c52",
+   "patches": {}
+  },
+  "z-bigbell-sl": {
+   "src": "plates/r034/z-bigbell-sl.webp?h=f0b7bcea28",
+   "bake": "70841e36696a976e",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r034/z-bigbell-sl~m40_64.webp?h=1495cbd629",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:bigbell-sl"
+     ],
+     "bake": "2ddb5d38c05ba9e7"
+    }
+   }
+  },
+  "z-lens-wr": {
+   "src": "plates/r034/z-lens-wr.webp?h=9e3c8deb48",
+   "bake": "3f08d28ff5877006",
+   "patches": {}
+  },
+  "z-ladder-nc": {
+   "src": "plates/r034/z-ladder-nc.webp?h=80cd6cadf1",
+   "bake": "57b8b6d624e6ff14",
+   "patches": {}
+  },
+  "z-clock-sr": {
+   "src": "plates/r034/z-clock-sr.webp?h=1b7ea39730",
+   "bake": "0512e26c3ce0cf2c",
+   "patches": {}
+  }
+ },
+ "41": {
+  "north": {
+   "src": "plates/r041/north.webp?h=bf5fa8337b",
+   "bake": "849e51d6e158899e",
+   "patches": {
+    "p0": {
+     "src": "plates/r041/north~p0.webp?h=3909dee8e4",
+     "rect": [
+      9,
+      68,
+      250,
+      385
+     ],
+     "cond": [
+      "open:door-nc"
+     ],
+     "bake": "6592fcd3d77baadb"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r041/east.webp?h=f161bec5b9",
+   "bake": "da997d957ab566ba",
+   "patches": {
+    "p0": {
+     "src": "plates/r041/east~p0.webp?h=cc9729d012",
+     "rect": [
+      71,
+      306,
+      44,
+      40
+     ],
+     "cond": [
+      "on"
+     ],
+     "bake": "453d6870268311fa"
+    },
+    "p1": {
+     "src": "plates/r041/east~p1.webp?h=be25f14357",
+     "rect": [
+      184,
+      175,
+      148,
+      239
+     ],
+     "cond": [
+      "open:locker-er"
+     ],
+     "bake": "adfa053d90d8f0f6"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r041/south.webp?h=277a6ff0b7",
+   "bake": "865eb581dee80bcc",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r041/west.webp?h=e91d3acd0c",
+   "bake": "d72a2ea47f8da11d",
+   "patches": {
+    "p1": {
+     "src": "plates/r041/west~p1.webp?h=63e5c65eec",
+     "rect": [
+      237,
+      239,
+      116,
+      92
+     ],
+     "cond": [
+      "got:battery"
+     ],
+     "bake": "6c3269169a265969"
+    }
+   }
+  },
+  "z-locker-er": {
+   "src": "plates/r041/z-locker-er.webp?h=c1e2c64f04",
+   "bake": "bcb0b324e1346f54",
+   "patches": {}
+  },
+  "z-radio-el": {
+   "src": "plates/r041/z-radio-el.webp?h=51dede0e3e",
+   "bake": "02755cce82188c40",
+   "patches": {
+    "p0": {
+     "src": "plates/r041/z-radio-el~p0.webp?h=302e6a6787",
+     "rect": [
+      206,
+      157,
+      117,
+      63
+     ],
+     "cond": [
+      "on"
+     ],
+     "bake": "b97845ccd62b618b"
+    }
+   }
+  },
+  "z-door-nc": {
+   "src": "plates/r041/z-door-nc.webp?h=751a529487",
+   "bake": "bcb0b324e1346f54",
+   "patches": {}
+  },
+  "z-board-sc": {
+   "src": "plates/r041/z-board-sc.webp?h=b08c9a62d9",
+   "bake": "13dd524634292cd6",
+   "patches": {}
+  }
+ },
+ "42": {
+  "north": {
+   "src": "plates/r042/north.webp?h=3c4ad90412",
+   "bake": "c832535dd56c104f",
+   "patches": {
+    "p0": {
+     "src": "plates/r042/north~p0.webp?h=76eb1bf6d2",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:gate-nc"
+     ],
+     "bake": "7f2b5f64acd0b035"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r042/east.webp?h=124d8c9737",
+   "bake": "844237c6d04a88dc",
+   "patches": {
+    "p0": {
+     "src": "plates/r042/east~p0.webp?h=a3fbfac958",
+     "rect": [
+      253,
+      283,
+      96,
+      117
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "1c6a83290925c812"
+    },
+    "p1": {
+     "src": "plates/r042/east~p1.webp?h=3feac5557a",
+     "rect": [
+      17,
+      236,
+      92,
+      69
+     ],
+     "cond": [
+      "open:dish-el"
+     ],
+     "bake": "6fa6652be7ab0ceb"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r042/south.webp?h=6eba27fa0a",
+   "bake": "90f91a4bc6f42720",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r042/west.webp?h=faf88f74c2",
+   "bake": "8a3c85e34edca484",
+   "patches": {
+    "p0": {
+     "src": "plates/r042/west~p0.webp?h=e265497bee",
+     "rect": [
+      21,
+      257,
+      96,
+      64
+     ],
+     "cond": [
+      "got:fuse"
+     ],
+     "bake": "d97d565d1e5b0875"
+    }
+   }
+  },
+  "z-dish-el": {
+   "src": "plates/r042/z-dish-el.webp?h=8619b5bd6b",
+   "bake": "1a9831a100c2557d",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r042/z-dish-el~m40_64.webp?h=a294d9c533",
+     "rect": [
+      15,
+      21,
+      322,
+      379
+     ],
+     "cond": [
+      "open:dish-el"
+     ],
+     "bake": "9d103fa9f266b560"
+    }
+   }
+  },
+  "z-horn-er": {
+   "src": "plates/r042/z-horn-er.webp?h=4cdc537507",
+   "bake": "9db687961e6c7176",
+   "patches": {
+    "p0": {
+     "src": "plates/r042/z-horn-er~p0.webp?h=50b3530194",
+     "rect": [
+      153,
+      203,
+      119,
+      97
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "eb83833a6254916e"
+    }
+   }
+  },
+  "z-gate-nc": {
+   "src": "plates/r042/z-gate-nc.webp?h=28768849ba",
+   "bake": "1a9831a100c2557d",
+   "patches": {}
+  },
+  "z-signpost-wr": {
+   "src": "plates/r042/z-signpost-wr.webp?h=f3333bdb85",
+   "bake": "0ebb824cd35c15c2",
+   "patches": {}
+  }
+ },
+ "43": {
+  "north": {
+   "src": "plates/r043/north.webp?h=efb0ab650e",
+   "bake": "e9dfe9ddb91a79a3",
+   "patches": {}
+  },
+  "east": {
+   "src": "plates/r043/east.webp?h=017c1ad816",
+   "bake": "672acb139b5aff7d",
+   "patches": {
+    "p1": {
+     "src": "plates/r043/east~p1.webp?h=a2b99cfcf3",
+     "rect": [
+      11,
+      226,
+      94,
+      107
+     ],
+     "cond": [
+      "paid"
+     ],
+     "bake": "ae8e2686945f74ac"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r043/south.webp?h=0e072a704e",
+   "bake": "a7655ed790be8386",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r043/west.webp?h=e500900afd",
+   "bake": "5ede95e3c2b2f455",
+   "patches": {
+    "p0": {
+     "src": "plates/r043/west~p0.webp?h=24a6ea6ccc",
+     "rect": [
+      107,
+      81,
+      242,
+      364
+     ],
+     "cond": [
+      "open:sliding-wc"
+     ],
+     "bake": "6b6a03539905d131"
+    }
+   }
+  },
+  "z-ticketmachine-el": {
+   "src": "plates/r043/z-ticketmachine-el.webp?h=99ad0559ab",
+   "bake": "1e94d3868c7ff5c1",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r043/z-ticketmachine-el~m40_64.webp?h=96eb06a59e",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:ticketmachine-el"
+     ],
+     "bake": "e2df99f1085004d0"
+    }
+   }
+  },
+  "z-cart-nc": {
+   "src": "plates/r043/z-cart-nc.webp?h=baadc8803a",
+   "bake": "1a7a5cb72513983e",
+   "patches": {}
+  },
+  "z-sliding-wc": {
+   "src": "plates/r043/z-sliding-wc.webp?h=a192e4c8ee",
+   "bake": "4db22386295d736d",
+   "patches": {}
+  },
+  "z-noticeboard-ec": {
+   "src": "plates/r043/z-noticeboard-ec.webp?h=ee4f3bad4b",
+   "bake": "3a6c3e227c5b3b16",
+   "patches": {}
+  }
+ },
+ "44": {
+  "north": {
+   "src": "plates/r044/north.webp?h=986bb33350",
+   "bake": "b208049dd781be83",
+   "patches": {
+    "p0": {
+     "src": "plates/r044/north~p0.webp?h=6a31951fc2",
+     "rect": [
+      115,
+      46,
+      130,
+      151
+     ],
+     "cond": [
+      "open:ladder-nc"
+     ],
+     "bake": "15d97f26b362ce80"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r044/east.webp?h=f6238d4bc9",
+   "bake": "1d1fe9466b9450d6",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r044/south.webp?h=d27b341da1",
+   "bake": "977ef217f28256ad",
+   "patches": {
+    "p0": {
+     "src": "plates/r044/south~p0.webp?h=7265a2a740",
+     "rect": [
+      11,
+      251,
+      118,
+      143
+     ],
+     "cond": [
+      "got:torch"
+     ],
+     "bake": "d3b4ce4b669a7c23"
+    },
+    "p1": {
+     "src": "plates/r044/south~p1.webp?h=6574322070",
+     "rect": [
+      241,
+      266,
+      103,
+      80
+     ],
+     "cond": [
+      "got:battery"
+     ],
+     "bake": "1f53c32baaa9a7d2"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r044/west.webp?h=3daf609ad0",
+   "bake": "f612c19ee976d44e",
+   "patches": {
+    "p0": {
+     "src": "plates/r044/west~p0.webp?h=f65001852f",
+     "rect": [
+      217,
+      238,
+      128,
+      103
+     ],
+     "cond": [
+      "open:safe-wr"
+     ],
+     "bake": "7484cc8c4137466b"
+    }
+   }
+  },
+  "z-safe-wr": {
+   "src": "plates/r044/z-safe-wr.webp?h=d2687cabe4",
+   "bake": "8edc5bd22126ff24",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r044/z-safe-wr~m40_64.webp?h=c94ef2d02a",
+     "rect": [
+      25,
+      13,
+      306,
+      440
+     ],
+     "cond": [
+      "open:safe-wr"
+     ],
+     "bake": "c9ab166ad74bbdd3"
+    }
+   }
+  },
+  "z-easel-el": {
+   "src": "plates/r044/z-easel-el.webp?h=f59ec43804",
+   "bake": "fab7a55b08e076af",
+   "patches": {}
+  },
+  "z-ladder-nc": {
+   "src": "plates/r044/z-ladder-nc.webp?h=32179fd2c4",
+   "bake": "70e5c472dc55239f",
+   "patches": {}
+  },
+  "z-telescope-er": {
+   "src": "plates/r044/z-telescope-er.webp?h=41f60bd65c",
+   "bake": "b5c6f2c122cd518c",
+   "patches": {}
+  }
+ },
+ "45": {
+  "north": {
+   "src": "plates/r045/north.webp?h=aeea5a1c91",
+   "bake": "238f395ce5d75e34",
+   "patches": {
+    "p0": {
+     "src": "plates/r045/north~p0.webp?h=f8d9fdda9e",
+     "rect": [
+      14,
+      76,
+      339,
+      395
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "ebd1a634ffef17b5"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r045/east.webp?h=29d326d68e",
+   "bake": "baddc31130c18489",
+   "patches": {
+    "p0": {
+     "src": "plates/r045/east~p0.webp?h=7ea30e5371",
+     "rect": [
+      54,
+      240,
+      58,
+      38
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "0b939a0b919873df"
+    },
+    "p1": {
+     "src": "plates/r045/east~p1.webp?h=f4b09237ad",
+     "rect": [
+      260,
+      172,
+      58,
+      165
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "bcbad9e92a256b07"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r045/south.webp?h=07362e702c",
+   "bake": "c40eebc88e40ef1b",
+   "patches": {
+    "p0": {
+     "src": "plates/r045/south~p0.webp?h=e4a00b5436",
+     "rect": [
+      21,
+      268,
+      92,
+      70
+     ],
+     "cond": [
+      "got:battery"
+     ],
+     "bake": "73fca43cd40036f8"
+    },
+    "p2": {
+     "src": "plates/r045/south~p2.webp?h=09158eb204",
+     "rect": [
+      143,
+      318,
+      78,
+      33
+     ],
+     "cond": [
+      "tx"
+     ],
+     "bake": "33286a82087ab1a7"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r045/west.webp?h=7b1d9131b2",
+   "bake": "c672cee8059cb104",
+   "patches": {
+    "p0": {
+     "src": "plates/r045/west~p0.webp?h=284229f439",
+     "rect": [
+      22,
+      299,
+      88,
+      46
+     ],
+     "cond": [
+      "got:fuse"
+     ],
+     "bake": "fc92ca57afcb1d4c"
+    }
+   }
+  },
+  "z-rack-er": {
+   "src": "plates/r045/z-rack-er.webp?h=51ad8f2b9f",
+   "bake": "7b90fc8d80201bfa",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r045/z-rack-er~m40_64.webp?h=3f49cd72a2",
+     "rect": [
+      30,
+      35,
+      300,
+      383
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "98b535fb29109662"
+    }
+   }
+  },
+  "z-panel-sr": {
+   "src": "plates/r045/z-panel-sr.webp?h=931d640efd",
+   "bake": "c3d01a3cd53155a1",
+   "patches": {}
+  },
+  "z-machine-sc": {
+   "src": "plates/r045/z-machine-sc.webp?h=ffe29aca4f",
+   "bake": "7b90fc8d80201bfa",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r045/z-machine-sc~m40_64.webp?h=e5cac41cff",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:machine-sc"
+     ],
+     "bake": "98b535fb29109662"
+    }
+   }
+  },
+  "z-console-el": {
+   "src": "plates/r045/z-console-el.webp?h=169dddce0e",
+   "bake": "e5c32464fd21f5a5",
+   "patches": {
+    "p0": {
+     "src": "plates/r045/z-console-el~p0.webp?h=65a130cee5",
+     "rect": [
+      51,
+      108,
+      237,
+      64
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "478035d6b79eafe6"
+    }
+   }
+  }
+ },
+ "51": {
+  "north": {
+   "src": "plates/r051/north.webp?h=2c5dc4d841",
+   "bake": "869a6ef6a754405c",
+   "patches": {
+    "p0": {
+     "src": "plates/r051/north~p0.webp?h=2ea2dac96f",
+     "rect": [
+      115,
+      313,
+      128,
+      95
+     ],
+     "cond": [
+      "open:hatch-nc"
+     ],
+     "bake": "6954162856e3cdc8"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r051/east.webp?h=85550007ad",
+   "bake": "0067be1b01adbcb5",
+   "patches": {
+    "p1": {
+     "src": "plates/r051/east~p1.webp?h=f680abbec6",
+     "rect": [
+      208,
+      260,
+      122,
+      73
+     ],
+     "cond": [
+      "orbit"
+     ],
+     "bake": "674b71c87557d0e1"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r051/south.webp?h=e8f6b544a6",
+   "bake": "c2f611ac1373f60f",
+   "patches": {
+    "p0": {
+     "src": "plates/r051/south~p0.webp?h=4e9c022906",
+     "rect": [
+      24,
+      241,
+      92,
+      34
+     ],
+     "cond": [
+      "open:console-sl"
+     ],
+     "bake": "f987f18b47c09c63"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r051/west.webp?h=d88e99d64a",
+   "bake": "5a05ae00d7f1a16f",
+   "patches": {}
+  },
+  "z-console-sl": {
+   "src": "plates/r051/z-console-sl.webp?h=481e5d58d3",
+   "bake": "e6cbda561a6430dd",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r051/z-console-sl~m40_64.webp?h=dbbc1cf555",
+     "rect": [
+      43,
+      86,
+      275,
+      314
+     ],
+     "cond": [
+      "open:console-sl"
+     ],
+     "bake": "8274d6461931f7ad"
+    }
+   }
+  },
+  "z-telescope-ec": {
+   "src": "plates/r051/z-telescope-ec.webp?h=3f1224495b",
+   "bake": "52c34ff13f921957",
+   "patches": {}
+  },
+  "z-hatch-nc": {
+   "src": "plates/r051/z-hatch-nc.webp?h=8646b9b297",
+   "bake": "28e64d575e310f2b",
+   "patches": {}
+  },
+  "z-globe-wr": {
+   "src": "plates/r051/z-globe-wr.webp?h=0562f009cd",
+   "bake": "cfb01fc05be1e820",
+   "patches": {}
+  }
+ },
+ "52": {
+  "north": {
+   "src": "plates/r052/north.webp?h=b5dee2f206",
+   "bake": "e2ca1dd420075bfa",
+   "patches": {
+    "p1": {
+     "src": "plates/r052/north~p1.webp?h=9f35165f11",
+     "rect": [
+      111,
+      111,
+      137,
+      243
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "71a49bdf8e921f75"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r052/east.webp?h=10c541c072",
+   "bake": "04c148a3f4e7ec59",
+   "patches": {
+    "p0": {
+     "src": "plates/r052/east~p0.webp?h=6a576a8be9",
+     "rect": [
+      240,
+      284,
+      107,
+      53
+     ],
+     "cond": [
+      "open:vitrine-er"
+     ],
+     "bake": "82e358218364bb7d"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r052/south.webp?h=6d2a7d5327",
+   "bake": "60c4bd134ee751cd",
+   "patches": {
+    "p2": {
+     "src": "plates/r052/south~p2.webp?h=e9863503b6",
+     "rect": [
+      136,
+      316,
+      80,
+      47
+     ],
+     "cond": [
+      "copy"
+     ],
+     "bake": "c1d0fd5b042062d9"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r052/west.webp?h=6ef5ee219f",
+   "bake": "43c3cd2608b4ca47",
+   "patches": {}
+  },
+  "z-vitrine-er": {
+   "src": "plates/r052/z-vitrine-er.webp?h=f36ea0bbac",
+   "bake": "b7388adb28f23ac0",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r052/z-vitrine-er~m40_64.webp?h=1942ad2890",
+     "rect": [
+      61,
+      63,
+      266,
+      329
+     ],
+     "cond": [
+      "open:vitrine-er"
+     ],
+     "bake": "cc6bffa31cbd3243"
+    }
+   }
+  },
+  "z-flasks-el": {
+   "src": "plates/r052/z-flasks-el.webp?h=41275aa827",
+   "bake": "da6f991c3bf47b81",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r052/z-sliding-nc.webp?h=fdd07f497e",
+   "bake": "b7388adb28f23ac0",
+   "patches": {}
+  },
+  "z-frame-wl": {
+   "src": "plates/r052/z-frame-wl.webp?h=d9235d1017",
+   "bake": "5701fdd7ea85c051",
+   "patches": {}
+  },
+  "z-frame-wr": {
+   "src": "plates/r052/z-frame-wr.webp?h=8cc8ba6a2d",
+   "bake": "5701fdd7ea85c051",
+   "patches": {}
+  }
+ },
+ "53": {
+  "north": {
+   "src": "plates/r053/north.webp?h=8d4e5bf1b2",
+   "bake": "a1b6d9b3aedf4f6f",
+   "patches": {
+    "p0": {
+     "src": "plates/r053/north~p0.webp?h=72d65b5c31",
+     "rect": [
+      0,
+      127,
+      360,
+      301
+     ],
+     "cond": [
+      "open:gate-nc"
+     ],
+     "bake": "2095c53927d27037"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r053/east.webp?h=e17eb6296a",
+   "bake": "6d958a1fa0df4b7f",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r053/south.webp?h=e686daca2c",
+   "bake": "6004555a6893dfe6",
+   "patches": {
+    "p2": {
+     "src": "plates/r053/south~p2.webp?h=d2dbb5ab2f",
+     "rect": [
+      255,
+      303,
+      73,
+      31
+     ],
+     "cond": [
+      "grow"
+     ],
+     "bake": "2bc318745c90d67a"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r053/west.webp?h=ad0682b0b0",
+   "bake": "60242a974ec1b05a",
+   "patches": {
+    "p0": {
+     "src": "plates/r053/west~p0.webp?h=82bfc35751",
+     "rect": [
+      171,
+      190,
+      189,
+      230
+     ],
+     "cond": [
+      "open:cabinet-wr"
+     ],
+     "bake": "a6c3e2b2bc318882"
+    },
+    "p2": {
+     "src": "plates/r053/west~p2.webp?h=462c9dcbca",
+     "rect": [
+      129,
+      257,
+      121,
+      89
+     ],
+     "cond": [
+      "got:fuse_white"
+     ],
+     "bake": "78d29580532870d3"
+    }
+   }
+  },
+  "z-cabinet-wr": {
+   "src": "plates/r053/z-cabinet-wr.webp?h=4bc655ac97",
+   "bake": "c0fb4a20c5bf9601",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r053/z-cabinet-wr~m40_64.webp?h=8cc0a476ce",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:cabinet-wr"
+     ],
+     "bake": "0db7e31e8d28e69b"
+    }
+   }
+  },
+  "z-bookcase-wl": {
+   "src": "plates/r053/z-bookcase-wl.webp?h=3d205469a6",
+   "bake": "608a354d9aa3216c",
+   "patches": {}
+  },
+  "z-gate-nc": {
+   "src": "plates/r053/z-gate-nc.webp?h=a6e2675130",
+   "bake": "dc182776f94c55c2",
+   "patches": {}
+  },
+  "z-noticeboard-ec": {
+   "src": "plates/r053/z-noticeboard-ec.webp?h=634b4dfc4c",
+   "bake": "2c47a304ac628134",
+   "patches": {}
+  }
+ },
+ "54": {
+  "north": {
+   "src": "plates/r054/north.webp?h=458b85616d",
+   "bake": "e5ed4db506134dad",
+   "patches": {
+    "p0": {
+     "src": "plates/r054/north~p0.webp?h=1fc5c910ab",
+     "rect": [
+      23,
+      80,
+      217,
+      285
+     ],
+     "cond": [
+      "open:elevator-nc"
+     ],
+     "bake": "15d40bf73bbfa3a1"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r054/east.webp?h=10c64e496f",
+   "bake": "ee92c5512d300e18",
+   "patches": {
+    "p1": {
+     "src": "plates/r054/east~p1.webp?h=ffedd2778e",
+     "rect": [
+      242,
+      245,
+      96,
+      104
+     ],
+     "cond": [
+      "aligned"
+     ],
+     "bake": "7e0cdadbc036f3bf"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r054/south.webp?h=6614a815d7",
+   "bake": "7362c760eecdf75f",
+   "patches": {
+    "p0": {
+     "src": "plates/r054/south~p0.webp?h=f5777b5ddf",
+     "rect": [
+      35,
+      283,
+      78,
+      50
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "9a385184b3400943"
+    },
+    "p1": {
+     "src": "plates/r054/south~p1.webp?h=f7e787032e",
+     "rect": [
+      229,
+      269,
+      87,
+      69
+     ],
+     "cond": [
+      "got:candle"
+     ],
+     "bake": "a7e6f65acf1a1f62"
+    },
+    "p2": {
+     "src": "plates/r054/south~p2.webp?h=20cc60da8a",
+     "rect": [
+      145,
+      278,
+      68,
+      126
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "8388a60305163ea7"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r054/west.webp?h=4086b636b0",
+   "bake": "7f01e91c52da6468",
+   "patches": {}
+  },
+  "z-sled-el": {
+   "src": "plates/r054/z-sled-el.webp?h=e2afb957fc",
+   "bake": "5d8455f58f735bf1",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r054/z-sled-el~m40_64.webp?h=c99b4e105f",
+     "rect": [
+      60,
+      52,
+      238,
+      315
+     ],
+     "cond": [
+      "open:sled-el"
+     ],
+     "bake": "3c6f0e4af20600bc"
+    }
+   }
+  },
+  "z-signpost-wc": {
+   "src": "plates/r054/z-signpost-wc.webp?h=ce87fc914a",
+   "bake": "f04ef7e60ffcc276",
+   "patches": {}
+  },
+  "z-elevator-nc": {
+   "src": "plates/r054/z-elevator-nc.webp?h=23b70b7924",
+   "bake": "54c5d5950bf9f0b0",
+   "patches": {}
+  },
+  "z-rack-wr": {
+   "src": "plates/r054/z-rack-wr.webp?h=01ea079026",
+   "bake": "958f0c3fc7d5fda1",
+   "patches": {}
+  }
+ },
+ "61": {
+  "north": {
+   "src": "plates/r061/north.webp?h=13493fb02a",
+   "bake": "5b70021787645aa2",
+   "patches": {
+    "p1": {
+     "src": "plates/r061/north~p1.webp?h=56ddc30949",
+     "rect": [
+      7,
+      110,
+      338,
+      274
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "51a911559430a36b"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r061/east.webp?h=247f33eec4",
+   "bake": "c25ead9971ebcef4",
+   "patches": {
+    "p1": {
+     "src": "plates/r061/east~p1.webp?h=66dde1eeaf",
+     "rect": [
+      15,
+      233,
+      331,
+      135
+     ],
+     "cond": [
+      "rain"
+     ],
+     "bake": "2668ef5019165288"
+    },
+    "p2": {
+     "src": "plates/r061/east~p2.webp?h=66dde1eeaf",
+     "rect": [
+      15,
+      233,
+      331,
+      135
+     ],
+     "cond": [
+      "rain"
+     ],
+     "bake": "2668ef5019165288"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r061/south.webp?h=a091fcaa93",
+   "bake": "304fab0393b580c5",
+   "patches": {
+    "p1": {
+     "src": "plates/r061/south~p1.webp?h=5bb682965e",
+     "rect": [
+      117,
+      246,
+      161,
+      115
+     ],
+     "cond": [
+      "open:chest-sc"
+     ],
+     "bake": "60072ebf93eef05c"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r061/west.webp?h=39635b05b1",
+   "bake": "2d3bf24d04b24778",
+   "patches": {}
+  },
+  "z-well-wl": {
+   "src": "plates/r061/z-well-wl.webp?h=2efca971ee",
+   "bake": "c7415849b0535b35",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r061/z-well-wl~m40_64.webp?h=87ae6fc110",
+     "rect": [
+      23,
+      38,
+      293,
+      343
+     ],
+     "cond": [
+      "open:well-wl"
+     ],
+     "bake": "37f6ef460b90ef69"
+    }
+   }
+  },
+  "z-noticeboard-sl": {
+   "src": "plates/r061/z-noticeboard-sl.webp?h=f4d087f55d",
+   "bake": "9b000c1bf6cfc52b",
+   "patches": {}
+  },
+  "z-chest-sc": {
+   "src": "plates/r061/z-chest-sc.webp?h=3b268c64e4",
+   "bake": "c7415849b0535b35",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r061/z-chest-sc~m40_64.webp?h=1be0aabdee",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:chest-sc"
+     ],
+     "bake": "37f6ef460b90ef69"
+    }
+   }
+  }
+ },
+ "62": {
+  "north": {
+   "src": "plates/r062/north.webp?h=d52348fef0",
+   "bake": "525988886507f70e",
+   "patches": {
+    "p0": {
+     "src": "plates/r062/north~p0.webp?h=4f85819b50",
+     "rect": [
+      104,
+      129,
+      153,
+      242
+     ],
+     "cond": [
+      "open:gate-nc"
+     ],
+     "bake": "86bc8a1ba1c9402d"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r062/east.webp?h=ee59959b3c",
+   "bake": "c8ee8111ad68dd95",
+   "patches": {
+    "p0": {
+     "src": "plates/r062/east~p0.webp?h=2ada37c2cb",
+     "rect": [
+      15,
+      266,
+      110,
+      107
+     ],
+     "cond": [
+      "shadow"
+     ],
+     "bake": "c55026dcac2e8d43"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r062/south.webp?h=d6db4c77af",
+   "bake": "1a63619f368e6272",
+   "patches": {
+    "p1": {
+     "src": "plates/r062/south~p1.webp?h=8c41935c70",
+     "rect": [
+      17,
+      290,
+      99,
+      49
+     ],
+     "cond": [
+      "open:box-sl"
+     ],
+     "bake": "fbb9aa16f4612254"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r062/west.webp?h=db562880f9",
+   "bake": "585dad168457ffa3",
+   "patches": {
+    "p1": {
+     "src": "plates/r062/west~p1.webp?h=b29aca2386",
+     "rect": [
+      12,
+      265,
+      113,
+      78
+     ],
+     "cond": [
+      "got:torch"
+     ],
+     "bake": "9fa98b8933045975"
+    }
+   }
+  },
+  "z-box-sl": {
+   "src": "plates/r062/z-box-sl.webp?h=40460600f5",
+   "bake": "18f293e7d19a14b5",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r062/z-box-sl~m40_64.webp?h=71742a0779",
+     "rect": [
+      96,
+      57,
+      220,
+      286
+     ],
+     "cond": [
+      "open:box-sl"
+     ],
+     "bake": "ab1dfe97aab875d1"
+    }
+   }
+  },
+  "z-easel-ec": {
+   "src": "plates/r062/z-easel-ec.webp?h=e15fa049eb",
+   "bake": "b6e38084b3d310d3",
+   "patches": {}
+  },
+  "z-gate-nc": {
+   "src": "plates/r062/z-gate-nc.webp?h=c0c5715bd8",
+   "bake": "146e35c1d4ce50a3",
+   "patches": {}
+  },
+  "z-portrait-sc": {
+   "src": "plates/r062/z-portrait-sc.webp?h=3d8386e769",
+   "bake": "80af1b5b017e2133",
+   "patches": {}
+  }
+ },
+ "63": {
+  "north": {
+   "src": "plates/r063/north.webp?h=40bb73270d",
+   "bake": "f5d06b650ef63c3b",
+   "patches": {
+    "p0": {
+     "src": "plates/r063/north~p0.webp?h=f58a218799",
+     "rect": [
+      23,
+      77,
+      337,
+      358
+     ],
+     "cond": [
+      "open:stonedoor-nc"
+     ],
+     "bake": "2befef4729817617"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r063/east.webp?h=a60b9854f9",
+   "bake": "3ab0ad4f1561a683",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r063/south.webp?h=4e024b3cb7",
+   "bake": "7cf190c0c1bc908f",
+   "patches": {
+    "p1": {
+     "src": "plates/r063/south~p1.webp?h=847c03525d",
+     "rect": [
+      118,
+      269,
+      122,
+      60
+     ],
+     "cond": [
+      "got:magnifier"
+     ],
+     "bake": "10de5dff82a86bfb"
+    },
+    "p2": {
+     "src": "plates/r063/south~p2.webp?h=7c0ebc89d5",
+     "rect": [
+      3,
+      196,
+      145,
+      132
+     ],
+     "cond": [
+      "open:vitrine-sl"
+     ],
+     "bake": "f439d9b17d69ab4d"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r063/west.webp?h=64550233b3",
+   "bake": "0bfab9ea06c230df",
+   "patches": {}
+  },
+  "z-vitrine-sl": {
+   "src": "plates/r063/z-vitrine-sl.webp?h=8b7d64ad51",
+   "bake": "984f9e9ee365a308",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r063/z-vitrine-sl~m40_64.webp?h=372b03dbc7",
+     "rect": [
+      45,
+      55,
+      264,
+      342
+     ],
+     "cond": [
+      "open:vitrine-sl"
+     ],
+     "bake": "6eb84677b2e45104"
+    }
+   }
+  },
+  "z-paper-el": {
+   "src": "plates/r063/z-paper-el.webp?h=39e5c4e09d",
+   "bake": "fa8d81a9a404e2b1",
+   "patches": {}
+  },
+  "z-paper-er": {
+   "src": "plates/r063/z-paper-er.webp?h=ef90ee8149",
+   "bake": "fa8d81a9a404e2b1",
+   "patches": {}
+  },
+  "z-stonedoor-nc": {
+   "src": "plates/r063/z-stonedoor-nc.webp?h=773d381938",
+   "bake": "984f9e9ee365a308",
+   "patches": {}
+  },
+  "z-board-wc": {
+   "src": "plates/r063/z-board-wc.webp?h=18f3c866b2",
+   "bake": "9d81d6d7345e9f12",
+   "patches": {}
+  }
+ },
+ "64": {
+  "north": {
+   "src": "plates/r064/north.webp?h=0237868139",
+   "bake": "d2343c9c5128d7ec",
+   "patches": {
+    "p0": {
+     "src": "plates/r064/north~p0.webp?h=6f8ebd8dd0",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:door-nc"
+     ],
+     "bake": "a0ac1ebcefc51e70"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r064/east.webp?h=68ab5b7958",
+   "bake": "d3197e26d611700f",
+   "patches": {
+    "p0": {
+     "src": "plates/r064/east~p0.webp?h=3d9aaf77e5",
+     "rect": [
+      234,
+      217,
+      119,
+      124
+     ],
+     "cond": [
+      "got:hands"
+     ],
+     "bake": "9886b88d53ec719b"
+    },
+    "p1": {
+     "src": "plates/r064/east~p1.webp?h=ed52e4d41e",
+     "rect": [
+      8,
+      162,
+      99,
+      196
+     ],
+     "cond": [
+      "open:locker-el"
+     ],
+     "bake": "362d5f9ed53c6ddb"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r064/south.webp?h=98145ae806",
+   "bake": "99d328629bdf416b",
+   "patches": {
+    "p0": {
+     "src": "plates/r064/south~p0.webp?h=497e318165",
+     "rect": [
+      11,
+      96,
+      349,
+      255
+     ],
+     "cond": [
+      "lift"
+     ],
+     "bake": "8b0648825b15097a"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r064/west.webp?h=e883d0c7d1",
+   "bake": "6e51118230cca33c",
+   "patches": {
+    "p1": {
+     "src": "plates/r064/west~p1.webp?h=d2db2906db",
+     "rect": [
+      29,
+      255,
+      94,
+      47
+     ],
+     "cond": [
+      "got:card_yellow"
+     ],
+     "bake": "0c5c018bd0abe493"
+    }
+   }
+  },
+  "z-locker-el": {
+   "src": "plates/r064/z-locker-el.webp?h=20d05b0fce",
+   "bake": "c441079fe4c0b424",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r064/z-locker-el~m40_64.webp?h=e251e8243c",
+     "rect": [
+      45,
+      54,
+      258,
+      332
+     ],
+     "cond": [
+      "open:locker-el"
+     ],
+     "bake": "b4a9d20a3e06e4b5"
+    }
+   }
+  },
+  "z-panel-sr": {
+   "src": "plates/r064/z-panel-sr.webp?h=35d6c61b57",
+   "bake": "5fc3ed38726aaf3b",
+   "patches": {}
+  },
+  "z-door-nc": {
+   "src": "plates/r064/z-door-nc.webp?h=6882f6fa4a",
+   "bake": "c441079fe4c0b424",
+   "patches": {}
+  },
+  "z-clock-wr": {
+   "src": "plates/r064/z-clock-wr.webp?h=104f9ba837",
+   "bake": "559a718bea424aa4",
+   "patches": {}
+  }
+ },
+ "65": {
+  "north": {
+   "src": "plates/r065/north.webp?h=03c587e079",
+   "bake": "e7fc85388a272018",
+   "patches": {
+    "p1": {
+     "src": "plates/r065/north~p1.webp?h=63e3fb7e8b",
+     "rect": [
+      110,
+      119,
+      250,
+      243
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "50b483141c4cadef"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r065/east.webp?h=20560254c7",
+   "bake": "6a23d2782a042336",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r065/south.webp?h=c65e541274",
+   "bake": "24ddc792719fce73",
+   "patches": {
+    "p0": {
+     "src": "plates/r065/south~p0.webp?h=fda69e0ec4",
+     "rect": [
+      305,
+      172,
+      28,
+      153
+     ],
+     "cond": [
+      "open:rack-sr"
+     ],
+     "bake": "205bcdd521d3435f"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r065/west.webp?h=4a6f68410c",
+   "bake": "6623189474f0a856",
+   "patches": {
+    "p1": {
+     "src": "plates/r065/west~p1.webp?h=3ad593cb6f",
+     "rect": [
+      221,
+      245,
+      120,
+      121
+     ],
+     "cond": [
+      "open:safe-wr"
+     ],
+     "bake": "07879aca54a39c99"
+    }
+   }
+  },
+  "z-rack-sr": {
+   "src": "plates/r065/z-rack-sr.webp?h=cf3626521f",
+   "bake": "b12d8c8435970065",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r065/z-rack-sr~m40_64.webp?h=58f98838ea",
+     "rect": [
+      23,
+      41,
+      310,
+      324
+     ],
+     "cond": [
+      "open:rack-sr"
+     ],
+     "bake": "a54e7cf859fec4fe"
+    }
+   }
+  },
+  "z-map-wc": {
+   "src": "plates/r065/z-map-wc.webp?h=0fa64beaaf",
+   "bake": "0338fcf3577a3abf",
+   "patches": {}
+  },
+  "z-safe-wr": {
+   "src": "plates/r065/z-safe-wr.webp?h=c32b6be59a",
+   "bake": "b12d8c8435970065",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r065/z-safe-wr~m40_64.webp?h=39358866de",
+     "rect": [
+      11,
+      43,
+      295,
+      345
+     ],
+     "cond": [
+      "open:safe-wr"
+     ],
+     "bake": "a54e7cf859fec4fe"
+    }
+   }
+  },
+  "z-sign-er": {
+   "src": "plates/r065/z-sign-er.webp?h=1a503106a7",
+   "bake": "f8653ce4ae693344",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r065/z-sliding-nc.webp?h=5e09ec0237",
+   "bake": "b84eb74757c0922e",
+   "patches": {}
+  },
+  "z-window-sl": {
+   "src": "plates/r065/z-window-sl.webp?h=3a1ad993f1",
+   "bake": "5bf11b5f30ded9c1",
+   "patches": {}
+  }
+ },
+ "71": {
+  "north": {
+   "src": "plates/r071/north.webp?h=8a13fbe628",
+   "bake": "2b5a3c212efa0ed0",
+   "patches": {
+    "p1": {
+     "src": "plates/r071/north~p1.webp?h=84ab66b13e",
+     "rect": [
+      114,
+      91,
+      194,
+      285
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "a0707bf8a451058b"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r071/east.webp?h=39fe8679e5",
+   "bake": "7b38b2b69cf5f43e",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r071/south.webp?h=0c96185fd8",
+   "bake": "d48955ed34c4a610",
+   "patches": {
+    "p0": {
+     "src": "plates/r071/south~p0.webp?h=234ca8411e",
+     "rect": [
+      11,
+      255,
+      111,
+      52
+     ],
+     "cond": [
+      "open:drawers-sl"
+     ],
+     "bake": "dd21b2dc2923a6f6"
+    },
+    "p1": {
+     "src": "plates/r071/south~p1.webp?h=a54753ab86",
+     "rect": [
+      235,
+      278,
+      113,
+      95
+     ],
+     "cond": [
+      "open:suitcase-sr"
+     ],
+     "bake": "b6024644abe9f9a9"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r071/west.webp?h=6d0d3ee366",
+   "bake": "0ddd732c56ab3868",
+   "patches": {}
+  },
+  "z-drawers-sl": {
+   "src": "plates/r071/z-drawers-sl.webp?h=2dceccb0ff",
+   "bake": "3374953d632bb009",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r071/z-drawers-sl~m40_64.webp?h=4e6d440799",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:drawers-sl"
+     ],
+     "bake": "72b2b90521ede667"
+    }
+   }
+  },
+  "z-mirror-el": {
+   "src": "plates/r071/z-mirror-el.webp?h=3086049cfe",
+   "bake": "2af71f4dc0963ee3",
+   "patches": {}
+  },
+  "z-suitcase-sr": {
+   "src": "plates/r071/z-suitcase-sr.webp?h=40036ddb6f",
+   "bake": "3374953d632bb009",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r071/z-suitcase-sr~m40_64.webp?h=6e0337c240",
+     "rect": [
+      46,
+      35,
+      267,
+      373
+     ],
+     "cond": [
+      "open:suitcase-sr"
+     ],
+     "bake": "72b2b90521ede667"
+    }
+   }
+  },
+  "z-mannequin-er": {
+   "src": "plates/r071/z-mannequin-er.webp?h=ea749364d0",
+   "bake": "e8bcaa9f5a7f97ec",
+   "patches": {}
+  }
+ },
+ "72": {
+  "north": {
+   "src": "plates/r072/north.webp?h=941765386c",
+   "bake": "2c02acee9e65f7e5",
+   "patches": {
+    "p1": {
+     "src": "plates/r072/north~p1.webp?h=51a3ecef8b",
+     "rect": [
+      112,
+      240,
+      135,
+      116
+     ],
+     "cond": [
+      "open:hatch-nc"
+     ],
+     "bake": "5e440a8cd71374ee"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r072/east.webp?h=076fa9793a",
+   "bake": "37686b8ad521863a",
+   "patches": {
+    "p0": {
+     "src": "plates/r072/east~p0.webp?h=d6afe88ebe",
+     "rect": [
+      133,
+      240,
+      93,
+      99
+     ],
+     "cond": [
+      "open:console-ec"
+     ],
+     "bake": "2f5bb000e0bcb6c0"
+    },
+    "p2": {
+     "src": "plates/r072/east~p2.webp?h=1c54f7724c",
+     "rect": [
+      239,
+      110,
+      71,
+      50
+     ],
+     "cond": [
+      "beam"
+     ],
+     "bake": "cd3a37a63e2a4352"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r072/south.webp?h=b45342e8c6",
+   "bake": "1d17334cb17fa8e1",
+   "patches": {
+    "p1": {
+     "src": "plates/r072/south~p1.webp?h=b6066d78cc",
+     "rect": [
+      109,
+      73,
+      108,
+      115
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "b0de4aca2eee4cec"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r072/west.webp?h=5219695255",
+   "bake": "0b72b5b32519cc79",
+   "patches": {}
+  },
+  "z-console-ec": {
+   "src": "plates/r072/z-console-ec.webp?h=5287e04b98",
+   "bake": "5e60c2f55e83877f",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r072/z-console-ec~m40_64.webp?h=8e37baaf4a",
+     "rect": [
+      94,
+      51,
+      172,
+      308
+     ],
+     "cond": [
+      "open:console-ec"
+     ],
+     "bake": "459e82720ea61b7f"
+    }
+   }
+  },
+  "z-projector-el": {
+   "src": "plates/r072/z-projector-el.webp?h=c722f10c16",
+   "bake": "916296f5f4f526ad",
+   "patches": {}
+  },
+  "z-hatch-nc": {
+   "src": "plates/r072/z-hatch-nc.webp?h=85bde5901a",
+   "bake": "d86bfec6d7b2b8ec",
+   "patches": {}
+  },
+  "z-board-wl": {
+   "src": "plates/r072/z-board-wl.webp?h=afac694227",
+   "bake": "8a92e348767dfa5c",
+   "patches": {}
+  },
+  "z-frame-wr": {
+   "src": "plates/r072/z-frame-wr.webp?h=ae48880c5e",
+   "bake": "62a9f4f84a396023",
+   "patches": {}
+  }
+ },
+ "73": {
+  "north": {
+   "src": "plates/r073/north.webp?h=9a6a7b3dcf",
+   "bake": "ce3d798f92041e1f",
+   "patches": {
+    "p0": {
+     "src": "plates/r073/north~p0.webp?h=46aa6310f8",
+     "rect": [
+      113,
+      66,
+      133,
+      132
+     ],
+     "cond": [
+      "open:ladder-nc"
+     ],
+     "bake": "4babb68b4520b900"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r073/east.webp?h=96b48753ee",
+   "bake": "438cb4256d72aebe",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r073/south.webp?h=7a0913f09a",
+   "bake": "7ff4b50208c571d0",
+   "patches": {
+    "p1": {
+     "src": "plates/r073/south~p1.webp?h=a7b9c4e3fd",
+     "rect": [
+      16,
+      251,
+      112,
+      88
+     ],
+     "cond": [
+      "open:chest-sl"
+     ],
+     "bake": "c95e19cff0447b91"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r073/west.webp?h=dc14cea2e8",
+   "bake": "03bbe06b7c60cebc",
+   "patches": {}
+  },
+  "z-chest-sl": {
+   "src": "plates/r073/z-chest-sl.webp?h=175481087a",
+   "bake": "10f8c283d08dcaf4",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r073/z-chest-sl~m40_64.webp?h=3d67b6649f",
+     "rect": [
+      28,
+      43,
+      282,
+      361
+     ],
+     "cond": [
+      "open:chest-sl"
+     ],
+     "bake": "6e989fb23db1e7f6"
+    }
+   }
+  },
+  "z-piano-el": {
+   "src": "plates/r073/z-piano-el.webp?h=668e4435da",
+   "bake": "d95664d0d2fd2895",
+   "patches": {}
+  },
+  "z-ladder-nc": {
+   "src": "plates/r073/z-ladder-nc.webp?h=1869836bff",
+   "bake": "10f8c283d08dcaf4",
+   "patches": {}
+  },
+  "z-gramophone-wc": {
+   "src": "plates/r073/z-gramophone-wc.webp?h=83e2a74c75",
+   "bake": "e60762f198219af6",
+   "patches": {}
+  }
+ },
+ "74": {
+  "north": {
+   "src": "plates/r074/north.webp?h=e886f3cbc4",
+   "bake": "fbe5f53b356ce7fe",
+   "patches": {
+    "p0": {
+     "src": "plates/r074/north~p0.webp?h=4525e0138d",
+     "rect": [
+      113,
+      99,
+      134,
+      279
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "a3170ef146bbd18b"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r074/east.webp?h=d3022cc2e1",
+   "bake": "135403c17ba150f3",
+   "patches": {
+    "p2": {
+     "src": "plates/r074/east~p2.webp?h=ea645946e7",
+     "rect": [
+      114,
+      252,
+      130,
+      50
+     ],
+     "cond": [
+      "opened"
+     ],
+     "bake": "fbe0c4a98da62b74"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r074/south.webp?h=2801d831a7",
+   "bake": "cb49844a1e718fb3",
+   "patches": {
+    "p0": {
+     "src": "plates/r074/south~p0.webp?h=224e7d45c0",
+     "rect": [
+      190,
+      261,
+      151,
+      119
+     ],
+     "cond": [
+      "open:safe-sr"
+     ],
+     "bake": "ba0997ded75e321d"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r074/west.webp?h=70fe27ca1a",
+   "bake": "aa07e8bb0bc4bc06",
+   "patches": {
+    "p0": {
+     "src": "plates/r074/west~p0.webp?h=904538a147",
+     "rect": [
+      129,
+      193,
+      102,
+      99
+     ],
+     "cond": [
+      "masked"
+     ],
+     "bake": "b6d945f4d710f4ad"
+    }
+   }
+  },
+  "z-safe-sr": {
+   "src": "plates/r074/z-safe-sr.webp?h=19218761c0",
+   "bake": "c6af2ef4691e43e3",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r074/z-safe-sr~m40_64.webp?h=f9c0c18da5",
+     "rect": [
+      58,
+      62,
+      245,
+      346
+     ],
+     "cond": [
+      "open:safe-sr"
+     ],
+     "bake": "f72e39f66a794d5a"
+    }
+   }
+  },
+  "z-shelf-sl": {
+   "src": "plates/r074/z-shelf-sl.webp?h=93b781caaa",
+   "bake": "673bab7fedf8dd27",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r074/z-sliding-nc.webp?h=8f417d30e7",
+   "bake": "01adbe06ba72e4eb",
+   "patches": {}
+  },
+  "z-vitrine-wc": {
+   "src": "plates/r074/z-vitrine-wc.webp?h=35384ee527",
+   "bake": "5004e08f126bd8f4",
+   "patches": {
+    "p0": {
+     "src": "plates/r074/z-vitrine-wc~p0.webp?h=34fd7f8e01",
+     "rect": [
+      35,
+      29,
+      290,
+      210
+     ],
+     "cond": [
+      "masked"
+     ],
+     "bake": "ecdf49c0cf89b678"
+    }
+   }
+  }
+ },
+ "75": {
+  "north": {
+   "src": "plates/r075/north.webp?h=322e35115d",
+   "bake": "7d54c841a59083a6",
+   "patches": {
+    "p0": {
+     "src": "plates/r075/north~p0.webp?h=ea3c2f788d",
+     "rect": [
+      55,
+      82,
+      204,
+      288
+     ],
+     "cond": [
+      "open:curtainexit-nc"
+     ],
+     "bake": "81d9e8ca8ad1ea10"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r075/east.webp?h=5c2c64649b",
+   "bake": "4a607d987b30d3cf",
+   "patches": {
+    "p0": {
+     "src": "plates/r075/east~p0.webp?h=8e483d97fc",
+     "rect": [
+      150,
+      304,
+      60,
+      52
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "ee5096eedbdb2003"
+    },
+    "p1": {
+     "src": "plates/r075/east~p1.webp?h=5b474b8082",
+     "rect": [
+      278,
+      172,
+      71,
+      173
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "1564b4a08a76b74f"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r075/south.webp?h=1d48d6b2d5",
+   "bake": "02ebb67b4470d608",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r075/west.webp?h=bab66a113a",
+   "bake": "b37ab01d16779a5c",
+   "patches": {
+    "p0": {
+     "src": "plates/r075/west~p0.webp?h=719da6289d",
+     "rect": [
+      8,
+      248,
+      116,
+      53
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "b086524014b21cc5"
+    }
+   }
+  },
+  "z-machine-sl": {
+   "src": "plates/r075/z-machine-sl.webp?h=60b9e626bb",
+   "bake": "4fc8f49c473ba38b",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r075/z-machine-sl~m40_64.webp?h=cc5f982fbe",
+     "rect": [
+      85,
+      63,
+      209,
+      237
+     ],
+     "cond": [
+      "open:machine-sl"
+     ],
+     "bake": "8cc584ef5d88dcd7"
+    }
+   }
+  },
+  "z-map-wr": {
+   "src": "plates/r075/z-map-wr.webp?h=0f4ea67187",
+   "bake": "2b0c375b24dad486",
+   "patches": {}
+  },
+  "z-rack-er": {
+   "src": "plates/r075/z-rack-er.webp?h=06ce88cdca",
+   "bake": "4fc8f49c473ba38b",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r075/z-rack-er~m40_64.webp?h=ed9b1f09df",
+     "rect": [
+      43,
+      49,
+      273,
+      353
+     ],
+     "cond": [
+      "open:rack-er"
+     ],
+     "bake": "8cc584ef5d88dcd7"
+    }
+   }
+  },
+  "z-curtain-el": {
+   "src": "plates/r075/z-curtain-el.webp?h=c51365fea1",
+   "bake": "f354d4a4f3798906",
+   "patches": {}
+  },
+  "z-curtainexit-nc": {
+   "src": "plates/r075/z-curtainexit-nc.webp?h=734ed7d291",
+   "bake": "ff549912c506c9e8",
+   "patches": {}
+  },
+  "z-clock-sr": {
+   "src": "plates/r075/z-clock-sr.webp?h=dbeacb2e77",
+   "bake": "9f1b78bec12a5c91",
+   "patches": {}
+  }
+ },
+ "81": {
+  "north": {
+   "src": "plates/r081/north.webp?h=6d9627c02c",
+   "bake": "82e9a8d9357ffa72",
+   "patches": {
+    "p0": {
+     "src": "plates/r081/north~p0.webp?h=7cc76655a1",
+     "rect": [
+      84,
+      80,
+      133,
+      259
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "d05b8f819634d11d"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r081/east.webp?h=d373dba7bc",
+   "bake": "76676ce832d3707c",
+   "patches": {
+    "p1": {
+     "src": "plates/r081/east~p1.webp?h=66cec8728f",
+     "rect": [
+      266,
+      251,
+      50,
+      119
+     ],
+     "cond": [
+      "checked"
+     ],
+     "bake": "dd88de1c4117d087"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r081/south.webp?h=02c2aca339",
+   "bake": "24d09abf744b6266",
+   "patches": {
+    "p0": {
+     "src": "plates/r081/south~p0.webp?h=7666055df2",
+     "rect": [
+      91,
+      243,
+      149,
+      61
+     ],
+     "cond": [
+      "open:suitcase-sc"
+     ],
+     "bake": "425780ad530c14e7"
+    },
+    "p1": {
+     "src": "plates/r081/south~p1.webp?h=745fc7e004",
+     "rect": [
+      20,
+      281,
+      89,
+      23
+     ],
+     "cond": [
+      "shade"
+     ],
+     "bake": "0448ddcad910a892"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r081/west.webp?h=46fae0db4a",
+   "bake": "9925b0f009c10a74",
+   "patches": {}
+  },
+  "z-suitcase-sc": {
+   "src": "plates/r081/z-suitcase-sc.webp?h=038d94ef73",
+   "bake": "17ac976fed39314b",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r081/z-suitcase-sc~m40_64.webp?h=0013fc7633",
+     "rect": [
+      9,
+      56,
+      301,
+      341
+     ],
+     "cond": [
+      "open:suitcase-sc"
+     ],
+     "bake": "d1ee6edb83a07e8c"
+    }
+   }
+  },
+  "z-board-wr": {
+   "src": "plates/r081/z-board-wr.webp?h=966e105b4b",
+   "bake": "d5b6ed5c8ef4e1c8",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r081/z-sliding-nc.webp?h=a1a79387f1",
+   "bake": "17ac976fed39314b",
+   "patches": {}
+  },
+  "z-curtain-sr": {
+   "src": "plates/r081/z-curtain-sr.webp?h=8e40c74d1b",
+   "bake": "cc7ca30ddb86e634",
+   "patches": {}
+  }
+ },
+ "82": {
+  "north": {
+   "src": "plates/r082/north.webp?h=ec3592cab3",
+   "bake": "e536cb9885a81d3d",
+   "patches": {
+    "p1": {
+     "src": "plates/r082/north~p1.webp?h=e6035a45e4",
+     "rect": [
+      110,
+      125,
+      72,
+      233
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "97f848e32091f97d"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r082/east.webp?h=2cfb22adfc",
+   "bake": "d4436a14a8161d51",
+   "patches": {
+    "p0": {
+     "src": "plates/r082/east~p0.webp?h=4f6070ff1f",
+     "rect": [
+      16,
+      259,
+      105,
+      58
+     ],
+     "cond": [
+      "open:desk-el"
+     ],
+     "bake": "1f6f0224a55183b7"
+    },
+    "p2": {
+     "src": "plates/r082/east~p2.webp?h=6f1e5aff8c",
+     "rect": [
+      214,
+      178,
+      86,
+      177
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "9e4d742947862997"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r082/south.webp?h=1b9cac3778",
+   "bake": "b5e26833c317fc5e",
+   "patches": {
+    "p1": {
+     "src": "plates/r082/south~p1.webp?h=da6b0a4b1c",
+     "rect": [
+      157,
+      307,
+      41,
+      52
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "250c08b3c17c356d"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r082/west.webp?h=a5b9329f3b",
+   "bake": "d29d63275139d103",
+   "patches": {
+    "p0": {
+     "src": "plates/r082/west~p0.webp?h=561d4296de",
+     "rect": [
+      5,
+      229,
+      120,
+      64
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "7b3b9ead92eff125"
+    }
+   }
+  },
+  "z-desk-el": {
+   "src": "plates/r082/z-desk-el.webp?h=6309eecbfe",
+   "bake": "594b8c3189bcae32",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r082/z-desk-el~m40_64.webp?h=0322871a7c",
+     "rect": [
+      54,
+      44,
+      262,
+      344
+     ],
+     "cond": [
+      "open:desk-el"
+     ],
+     "bake": "f4543a33e9c7708d"
+    }
+   }
+  },
+  "z-table-ec": {
+   "src": "plates/r082/z-table-ec.webp?h=02ce026308",
+   "bake": "70ef3db174728449",
+   "patches": {}
+  },
+  "z-cabinet-er": {
+   "src": "plates/r082/z-cabinet-er.webp?h=43049ae1f5",
+   "bake": "594b8c3189bcae32",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r082/z-cabinet-er~m40_64.webp?h=875010aba1",
+     "rect": [
+      53,
+      48,
+      254,
+      346
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "f4543a33e9c7708d"
+    }
+   }
+  },
+  "z-candle-sc": {
+   "src": "plates/r082/z-candle-sc.webp?h=e4542dd21a",
+   "bake": "77475ed59f918eff",
+   "patches": {
+    "p0": {
+     "src": "plates/r082/z-candle-sc~p0.webp?h=3f44346e80",
+     "rect": [
+      142,
+      93,
+      74,
+      82
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "321478798bc9c60a"
+    }
+   }
+  }
+ },
+ "83": {
+  "north": {
+   "src": "plates/r083/north.webp?h=9bf280e50e",
+   "bake": "e235b9d33d68135b",
+   "patches": {
+    "p1": {
+     "src": "plates/r083/north~p1.webp?h=1bb7a27bf0",
+     "rect": [
+      3,
+      160,
+      123,
+      248
+     ],
+     "cond": [
+      "route"
+     ],
+     "bake": "a8a06922e0bc2d48"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r083/east.webp?h=8d0891643c",
+   "bake": "60236b2b60db5511",
+   "patches": {
+    "p1": {
+     "src": "plates/r083/east~p1.webp?h=fe26288901",
+     "rect": [
+      118,
+      255,
+      126,
+      36
+     ],
+     "cond": [
+      "got:keyshaft"
+     ],
+     "bake": "3ffc0e834a079969"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r083/south.webp?h=32a2d96123",
+   "bake": "fb318283f41303eb",
+   "patches": {
+    "p0": {
+     "src": "plates/r083/south~p0.webp?h=ff5c22da31",
+     "rect": [
+      0,
+      135,
+      359,
+      226
+     ],
+     "cond": [
+      "open:elevator-sc"
+     ],
+     "bake": "ebebcbfa25c62c06"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r083/west.webp?h=111f3f5218",
+   "bake": "1698927b9f19b33f",
+   "patches": {
+    "p0": {
+     "src": "plates/r083/west~p0.webp?h=1f0dfc75cc",
+     "rect": [
+      24,
+      268,
+      93,
+      35
+     ],
+     "cond": [
+      "got:fuse"
+     ],
+     "bake": "67f27ef5e9480655"
+    },
+    "p1": {
+     "src": "plates/r083/west~p1.webp?h=0189f29998",
+     "rect": [
+      250,
+      78,
+      72,
+      101
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "e5bb40b440e5eb94"
+    }
+   }
+  },
+  "z-panel-wr": {
+   "src": "plates/r083/z-panel-wr.webp?h=31c8efa447",
+   "bake": "bcb0b324e1346f54",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r083/z-panel-wr~m40_64.webp?h=6dab8733a8",
+     "rect": [
+      19,
+      67,
+      277,
+      328
+     ],
+     "cond": [
+      "open:panel-wr"
+     ],
+     "bake": "594a508feaec2889"
+    }
+   }
+  },
+  "z-spotlight-er": {
+   "src": "plates/r083/z-spotlight-er.webp?h=9a7751c79c",
+   "bake": "b135767bebd1687d",
+   "patches": {}
+  },
+  "z-elevator-sc": {
+   "src": "plates/r083/z-elevator-sc.webp?h=f6a36be7e2",
+   "bake": "bcb0b324e1346f54",
+   "patches": {}
+  },
+  "z-map-el": {
+   "src": "plates/r083/z-map-el.webp?h=a1ebbb0d6b",
+   "bake": "052047484c7f90fb",
+   "patches": {}
+  }
+ },
+ "84": {
+  "north": {
+   "src": "plates/r084/north.webp?h=d5e63005a2",
+   "bake": "50c25effef23ca0f",
+   "patches": {
+    "p1": {
+     "src": "plates/r084/north~p1.webp?h=0ba02f95f6",
+     "rect": [
+      51,
+      108,
+      304,
+      272
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "4490959905774c0d"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r084/east.webp?h=534151f1db",
+   "bake": "beadf1c8788ee681",
+   "patches": {
+    "p1": {
+     "src": "plates/r084/east~p1.webp?h=6eb17d5b91",
+     "rect": [
+      56,
+      74,
+      49,
+      76
+     ],
+     "cond": [
+      "oiled"
+     ],
+     "bake": "169cc76e81ff1fcd"
+    },
+    "p3": {
+     "src": "plates/r084/east~p3.webp?h=853d3c8b5f",
+     "rect": [
+      117,
+      250,
+      125,
+      89
+     ],
+     "cond": [
+      "steam"
+     ],
+     "bake": "431e1846efde486c"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r084/south.webp?h=f51dc640bc",
+   "bake": "950903c65164e044",
+   "patches": {
+    "p1": {
+     "src": "plates/r084/south~p1.webp?h=c2d3124016",
+     "rect": [
+      142,
+      303,
+      76,
+      28
+     ],
+     "cond": [
+      "open:machine-sc"
+     ],
+     "bake": "19f29a6a1a0fd932"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r084/west.webp?h=3226b13522",
+   "bake": "5da33b1fa47bb05a",
+   "patches": {}
+  },
+  "z-machine-sc": {
+   "src": "plates/r084/z-machine-sc.webp?h=0f31d11323",
+   "bake": "6f16d24e5217dc33",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r084/z-machine-sc~m40_64.webp?h=30706e66f5",
+     "rect": [
+      44,
+      43,
+      274,
+      327
+     ],
+     "cond": [
+      "open:machine-sc"
+     ],
+     "bake": "774bd06533406f92"
+    }
+   }
+  },
+  "z-console-er": {
+   "src": "plates/r084/z-console-er.webp?h=b90dbdd355",
+   "bake": "e631f474c87f6a35",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r084/z-sliding-nc.webp?h=7007c4d276",
+   "bake": "a372feb9f6b9059a",
+   "patches": {}
+  },
+  "z-window-wr": {
+   "src": "plates/r084/z-window-wr.webp?h=b395dda9e4",
+   "bake": "909f099a155aa120",
+   "patches": {}
+  }
+ },
+ "91": {
+  "north": {
+   "src": "plates/r091/north.webp?h=921520d5ba",
+   "bake": "a1c7f85ea47167a3",
+   "patches": {
+    "p0": {
+     "src": "plates/r091/north~p0.webp?h=6705295c84",
+     "rect": [
+      119,
+      161,
+      204,
+      259
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "2b5d4e0af47d34e2"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r091/east.webp?h=d19b9817ae",
+   "bake": "6abea3ae2574a59e",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r091/south.webp?h=6e5f1c9d8c",
+   "bake": "77eba78068c66373",
+   "patches": {
+    "p0": {
+     "src": "plates/r091/south~p0.webp?h=62ea0f0015",
+     "rect": [
+      140,
+      253,
+      81,
+      102
+     ],
+     "cond": [
+      "got:magnifier"
+     ],
+     "bake": "92ef53d2702be615"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r091/west.webp?h=b4b1c5d219",
+   "bake": "c77808ebe8181154",
+   "patches": {
+    "p0": {
+     "src": "plates/r091/west~p0.webp?h=3575d021bb",
+     "rect": [
+      238,
+      260,
+      95,
+      44
+     ],
+     "cond": [
+      "open:drawers-wr"
+     ],
+     "bake": "3a70ef5966bcbc12"
+    }
+   }
+  },
+  "z-drawers-wr": {
+   "src": "plates/r091/z-drawers-wr.webp?h=50c7bc08f9",
+   "bake": "984f9e9ee365a308",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r091/z-drawers-wr~m40_64.webp?h=13f3855c00",
+     "rect": [
+      59,
+      68,
+      243,
+      320
+     ],
+     "cond": [
+      "open:drawers-wr"
+     ],
+     "bake": "6eb84677b2e45104"
+    }
+   }
+  },
+  "z-portrait-ec": {
+   "src": "plates/r091/z-portrait-ec.webp?h=ca90b9c443",
+   "bake": "c10225737ad38b1a",
+   "patches": {}
+  }
+ },
+ "92": {
+  "north": {
+   "src": "plates/r092/north.webp?h=ea6448b44a",
+   "bake": "ce4ff08b34c7c197",
+   "patches": {
+    "p0": {
+     "src": "plates/r092/north~p0.webp?h=d42e850651",
+     "rect": [
+      241,
+      102,
+      47,
+      90
+     ],
+     "cond": [
+      "access"
+     ],
+     "bake": "eb7752088dc3c497"
+    },
+    "p1": {
+     "src": "plates/r092/north~p1.webp?h=3930563888",
+     "rect": [
+      116,
+      102,
+      172,
+      270
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "d4ee1fddf274a19b"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r092/east.webp?h=0b8ea69b07",
+   "bake": "0f983d93488c8c68",
+   "patches": {
+    "p0": {
+     "src": "plates/r092/east~p0.webp?h=87ffff9f56",
+     "rect": [
+      185,
+      191,
+      134,
+      184
+     ],
+     "cond": [
+      "open:locker-er"
+     ],
+     "bake": "9722c414c3c29335"
+    },
+    "p1": {
+     "src": "plates/r092/east~p1.webp?h=639cd67c5f",
+     "rect": [
+      130,
+      191,
+      128,
+      146
+     ],
+     "cond": [
+      "complete"
+     ],
+     "bake": "4b885317160d31b5"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r092/south.webp?h=41da5b1d36",
+   "bake": "217d2eda425e385d",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r092/west.webp?h=b41597c0dd",
+   "bake": "7cc4d0d88a639e7f",
+   "patches": {
+    "p1": {
+     "src": "plates/r092/west~p1.webp?h=7afe3295a5",
+     "rect": [
+      24,
+      273,
+      94,
+      37
+     ],
+     "cond": [
+      "got:brush"
+     ],
+     "bake": "88f98a81dbd0e265"
+    }
+   }
+  },
+  "z-locker-er": {
+   "src": "plates/r092/z-locker-er.webp?h=7236cdefce",
+   "bake": "948de9cb161e3295",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r092/z-locker-er~m40_64.webp?h=7659c8153e",
+     "rect": [
+      51,
+      48,
+      266,
+      345
+     ],
+     "cond": [
+      "open:locker-er"
+     ],
+     "bake": "fd8ce40d4f374c79"
+    }
+   }
+  },
+  "z-board-sl": {
+   "src": "plates/r092/z-board-sl.webp?h=98ec16f5b1",
+   "bake": "88780c99a39da454",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r092/z-sliding-nc.webp?h=72dc709c87",
+   "bake": "a3cb878b8d48a171",
+   "patches": {}
+  },
+  "z-rock-sr": {
+   "src": "plates/r092/z-rock-sr.webp?h=5e0abedf5e",
+   "bake": "257bfe792490f177",
+   "patches": {}
+  }
+ },
+ "93": {
+  "north": {
+   "src": "plates/r093/north.webp?h=203c3c6ef1",
+   "bake": "2a3a8066edcfb31c",
+   "patches": {
+    "p0": {
+     "src": "plates/r093/north~p0.webp?h=b945ed3211",
+     "rect": [
+      113,
+      137,
+      134,
+      227
+     ],
+     "cond": [
+      "open:gate-nc"
+     ],
+     "bake": "96ef9a875c709002"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r093/east.webp?h=13df842ffa",
+   "bake": "a933a7ead21848c4",
+   "patches": {
+    "p0": {
+     "src": "plates/r093/east~p0.webp?h=1f62cb5f3b",
+     "rect": [
+      18,
+      208,
+      106,
+      95
+     ],
+     "cond": [
+      "open:vitrine-el"
+     ],
+     "bake": "459e3004425ed764"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r093/south.webp?h=cc16f756de",
+   "bake": "6535c1885e2ebdcb",
+   "patches": {
+    "p2": {
+     "src": "plates/r093/south~p2.webp?h=1ee50ebf49",
+     "rect": [
+      134,
+      255,
+      92,
+      37
+     ],
+     "cond": [
+      "alarm"
+     ],
+     "bake": "a7ebef9aeb74948b"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r093/west.webp?h=f18c62fa1f",
+   "bake": "a50874b539e1bd2e",
+   "patches": {}
+  },
+  "z-vitrine-el": {
+   "src": "plates/r093/z-vitrine-el.webp?h=a181c67050",
+   "bake": "8af49f6c8fe17228",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r093/z-vitrine-el~m40_64.webp?h=a780c6110f",
+     "rect": [
+      50,
+      56,
+      260,
+      332
+     ],
+     "cond": [
+      "open:vitrine-el"
+     ],
+     "bake": "c484912139ead218"
+    }
+   }
+  },
+  "z-frame-sl": {
+   "src": "plates/r093/z-frame-sl.webp?h=5b057ae5bc",
+   "bake": "218bc47739bea5b8",
+   "patches": {}
+  },
+  "z-easel-sr": {
+   "src": "plates/r093/z-easel-sr.webp?h=426b64a1d0",
+   "bake": "ac5e96f3e8ca926c",
+   "patches": {}
+  },
+  "z-gate-nc": {
+   "src": "plates/r093/z-gate-nc.webp?h=c98f47e7c7",
+   "bake": "9cc65f52c8bcba26",
+   "patches": {}
+  },
+  "z-window-er": {
+   "src": "plates/r093/z-window-er.webp?h=78be3cf8e9",
+   "bake": "912a8b66698dc2ac",
+   "patches": {}
+  }
+ },
+ "94": {
+  "north": {
+   "src": "plates/r094/north.webp?h=7d2eef428c",
+   "bake": "0660a2133da2edec",
+   "patches": {
+    "p1": {
+     "src": "plates/r094/north~p1.webp?h=e6727ff001",
+     "rect": [
+      64,
+      119,
+      178,
+      261
+     ],
+     "cond": [
+      "open:stonedoor-nc"
+     ],
+     "bake": "59bf4cd51cc22481"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r094/east.webp?h=14874bf2cc",
+   "bake": "46b3d14684e5b6a7",
+   "patches": {
+    "p0": {
+     "src": "plates/r094/east~p0.webp?h=2d905e4f95",
+     "rect": [
+      148,
+      259,
+      82,
+      135
+     ],
+     "cond": [
+      "open:sarcophagus-ec"
+     ],
+     "bake": "e1849fda99b8e12c"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r094/south.webp?h=097417bd5a",
+   "bake": "9bb56ca347f7f403",
+   "patches": {
+    "p0": {
+     "src": "plates/r094/south~p0.webp?h=f5215b1bbf",
+     "rect": [
+      146,
+      281,
+      56,
+      122
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "fb505483d01b8f2e"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r094/west.webp?h=fb46f76b43",
+   "bake": "309b8525d0b695f9",
+   "patches": {
+    "p0": {
+     "src": "plates/r094/west~p0.webp?h=d1f5ed324e",
+     "rect": [
+      16,
+      290,
+      101,
+      94
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "7d3cc99b98b1eff1"
+    }
+   }
+  },
+  "z-sarcophagus-ec": {
+   "src": "plates/r094/z-sarcophagus-ec.webp?h=7841755d99",
+   "bake": "0609def128bd4b72",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r094/z-sarcophagus-ec~m40_64.webp?h=0760e887ad",
+     "rect": [
+      125,
+      135,
+      110,
+      257
+     ],
+     "cond": [
+      "open:sarcophagus-ec"
+     ],
+     "bake": "d1f45ea0c26dfaf7"
+    }
+   }
+  },
+  "z-jar-el": {
+   "src": "plates/r094/z-jar-el.webp?h=9c05b31c30",
+   "bake": "1d18c9fe2ecf185c",
+   "patches": {}
+  },
+  "z-stonedoor-nc": {
+   "src": "plates/r094/z-stonedoor-nc.webp?h=f1d264bc43",
+   "bake": "0609def128bd4b72",
+   "patches": {}
+  },
+  "z-sign-sr": {
+   "src": "plates/r094/z-sign-sr.webp?h=9829672c48",
+   "bake": "5436aa14612fbaf8",
+   "patches": {}
+  }
+ },
+ "95": {
+  "north": {
+   "src": "plates/r095/north.webp?h=ac0f81f115",
+   "bake": "d5c665c9889a1c95",
+   "patches": {
+    "p1": {
+     "src": "plates/r095/north~p1.webp?h=4752d9f993",
+     "rect": [
+      31,
+      128,
+      280,
+      239
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "0cb0ff16d2cc5880"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r095/east.webp?h=a3b9804831",
+   "bake": "1d8eba143a7e7070",
+   "patches": {
+    "p0": {
+     "src": "plates/r095/east~p0.webp?h=a6c03759a8",
+     "rect": [
+      15,
+      263,
+      104,
+      73
+     ],
+     "cond": [
+      "got:glasses"
+     ],
+     "bake": "4b2840f7a539a782"
+    },
+    "p2": {
+     "src": "plates/r095/east~p2.webp?h=c488e348ae",
+     "rect": [
+      78,
+      265,
+      152,
+      104
+     ],
+     "cond": [
+      "open:safe-ec"
+     ],
+     "bake": "c9ab88d95900ee0d"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r095/south.webp?h=dda73983a8",
+   "bake": "29e5da24dd8560d1",
+   "patches": {
+    "p0": {
+     "src": "plates/r095/south~p0.webp?h=535e55bda4",
+     "rect": [
+      0,
+      218,
+      167,
+      153
+     ],
+     "cond": [
+      "open:cabinet-sl"
+     ],
+     "bake": "1f5903e1628fbfad"
+    },
+    "p1": {
+     "src": "plates/r095/south~p1.webp?h=20f65f35ad",
+     "rect": [
+      124,
+      265,
+      117,
+      63
+     ],
+     "cond": [
+      "opened"
+     ],
+     "bake": "c58d0a05737ea528"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r095/west.webp?h=39b6701c78",
+   "bake": "721c3cd789a78815",
+   "patches": {}
+  },
+  "z-cabinet-sl": {
+   "src": "plates/r095/z-cabinet-sl.webp?h=12bf63f814",
+   "bake": "55307fac561e15f2",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r095/z-cabinet-sl~m40_64.webp?h=140495d3c2",
+     "rect": [
+      62,
+      60,
+      263,
+      326
+     ],
+     "cond": [
+      "open:cabinet-sl"
+     ],
+     "bake": "47264c5f9ba4cf5b"
+    }
+   }
+  },
+  "z-bookcase-wl": {
+   "src": "plates/r095/z-bookcase-wl.webp?h=971b33775f",
+   "bake": "cdbbf13b3a1372b4",
+   "patches": {}
+  },
+  "z-safe-ec": {
+   "src": "plates/r095/z-safe-ec.webp?h=29dc842090",
+   "bake": "c441079fe4c0b424",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r095/z-safe-ec~m40_64.webp?h=f753b34f2e",
+     "rect": [
+      69,
+      49,
+      237,
+      380
+     ],
+     "cond": [
+      "open:safe-ec"
+     ],
+     "bake": "b4a9d20a3e06e4b5"
+    }
+   }
+  },
+  "z-clock-er": {
+   "src": "plates/r095/z-clock-er.webp?h=b7f4903339",
+   "bake": "559a718bea424aa4",
+   "patches": {}
+  }
+ },
+ "101": {
+  "north": {
+   "src": "plates/r101/north.webp?h=5c85725d1b",
+   "bake": "04153bb71b9849ea",
+   "patches": {
+    "p0": {
+     "src": "plates/r101/north~p0.webp?h=696d0e82e6",
+     "rect": [
+      26,
+      252,
+      101,
+      100
+     ],
+     "cond": [
+      "open:mailbox-nl"
+     ],
+     "bake": "461ff5099564ae63"
+    },
+    "p1": {
+     "src": "plates/r101/north~p1.webp?h=8f5e85eefb",
+     "rect": [
+      9,
+      121,
+      351,
+      243
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "f31918c881bf1aa6"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r101/east.webp?h=65eb2f3372",
+   "bake": "ddc3daf747796a94",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r101/south.webp?h=be90cb9abc",
+   "bake": "930831bc5a558ab3",
+   "patches": {
+    "p0": {
+     "src": "plates/r101/south~p0.webp?h=f117dfcfe0",
+     "rect": [
+      100,
+      246,
+      147,
+      68
+     ],
+     "cond": [
+      "open:chest-sc"
+     ],
+     "bake": "4485d4e4e1afe9c1"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r101/west.webp?h=6c312961fa",
+   "bake": "a30be5da3b883121",
+   "patches": {}
+  },
+  "z-chest-sc": {
+   "src": "plates/r101/z-chest-sc.webp?h=218c8163ba",
+   "bake": "5d8455f58f735bf1",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r101/z-chest-sc~m40_64.webp?h=edbea966a8",
+     "rect": [
+      45,
+      62,
+      267,
+      356
+     ],
+     "cond": [
+      "open:chest-sc"
+     ],
+     "bake": "3c6f0e4af20600bc"
+    }
+   }
+  },
+  "z-sled-ec": {
+   "src": "plates/r101/z-sled-ec.webp?h=c29bd57f49",
+   "bake": "f16d64e4dceb7f41",
+   "patches": {}
+  },
+  "z-mailbox-nl": {
+   "src": "plates/r101/z-mailbox-nl.webp?h=d9f0324a30",
+   "bake": "54c5d5950bf9f0b0",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r101/z-mailbox-nl~m40_64.webp?h=eb9113b368",
+     "rect": [
+      0,
+      0,
+      360,
+      480
+     ],
+     "cond": [
+      "open:mailbox-nl"
+     ],
+     "bake": "4f55849cbcadf628"
+    }
+   }
+  },
+  "z-noticeboard-wr": {
+   "src": "plates/r101/z-noticeboard-wr.webp?h=b13ebe63b7",
+   "bake": "863dcd8a100d8203",
+   "patches": {}
+  }
+ },
+ "102": {
+  "north": {
+   "src": "plates/r102/north.webp?h=db2825a140",
+   "bake": "c61668fbc863d93d",
+   "patches": {
+    "p0": {
+     "src": "plates/r102/north~p0.webp?h=8282e7ae90",
+     "rect": [
+      82,
+      112,
+      145,
+      250
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "7d2bb1617ff7c5ef"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r102/east.webp?h=cc9d528a70",
+   "bake": "64099f1e743a4818",
+   "patches": {
+    "p1": {
+     "src": "plates/r102/east~p1.webp?h=f0b77eb859",
+     "rect": [
+      74,
+      83,
+      36,
+      97
+     ],
+     "cond": [
+      "pulled"
+     ],
+     "bake": "c04d4ea86ce66315"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r102/south.webp?h=bdc23c1376",
+   "bake": "8f209ebfb1c84c63",
+   "patches": {
+    "p1": {
+     "src": "plates/r102/south~p1.webp?h=229586fe22",
+     "rect": [
+      0,
+      160,
+      110,
+      216
+     ],
+     "cond": [
+      "open:locker-sl"
+     ],
+     "bake": "9cca25d5d521aeab"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r102/west.webp?h=d989dd23ed",
+   "bake": "572259b89bb8107a",
+   "patches": {
+    "p1": {
+     "src": "plates/r102/west~p1.webp?h=24df09b9e3",
+     "rect": [
+      0,
+      243,
+      129,
+      171
+     ],
+     "cond": [
+      "got:torch"
+     ],
+     "bake": "21f52b103d7d20ef"
+    }
+   }
+  },
+  "z-locker-sl": {
+   "src": "plates/r102/z-locker-sl.webp?h=6db6693ca6",
+   "bake": "3c6c2d50423e226e",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r102/z-locker-sl~m40_64.webp?h=5e96a84bf6",
+     "rect": [
+      21,
+      41,
+      277,
+      422
+     ],
+     "cond": [
+      "open:locker-sl"
+     ],
+     "bake": "87a6eb301679ea9f"
+    }
+   }
+  },
+  "z-map-ec": {
+   "src": "plates/r102/z-map-ec.webp?h=8c559b9ac9",
+   "bake": "94226d6665df056d",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r102/z-sliding-nc.webp?h=5b722220f0",
+   "bake": "6cf227bdcd13efd9",
+   "patches": {}
+  },
+  "z-sign-sc": {
+   "src": "plates/r102/z-sign-sc.webp?h=db5d450cc0",
+   "bake": "22a4184bd9369169",
+   "patches": {}
+  }
+ },
+ "103": {
+  "north": {
+   "src": "plates/r103/north.webp?h=3b9024c122",
+   "bake": "f79082a9382372b8",
+   "patches": {
+    "p0": {
+     "src": "plates/r103/north~p0.webp?h=511effceee",
+     "rect": [
+      9,
+      57,
+      351,
+      340
+     ],
+     "cond": [
+      "open:stonedoor-nc"
+     ],
+     "bake": "4f0ac37f9919f9e7"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r103/east.webp?h=f35851e08a",
+   "bake": "9b05995786e3a234",
+   "patches": {
+    "p0": {
+     "src": "plates/r103/east~p0.webp?h=b6001f061c",
+     "rect": [
+      218,
+      263,
+      142,
+      137
+     ],
+     "cond": [
+      "open:safe-er"
+     ],
+     "bake": "e7c8a18f7fbb4994"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r103/south.webp?h=341d3c177f",
+   "bake": "6b237f987bdb6bbe",
+   "patches": {
+    "p2": {
+     "src": "plates/r103/south~p2.webp?h=cec3a992e4",
+     "rect": [
+      152,
+      297,
+      55,
+      63
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "142614ede4550e6b"
+    },
+    "p3": {
+     "src": "plates/r103/south~p3.webp?h=419b3c6380",
+     "rect": [
+      37,
+      104,
+      71,
+      71
+     ],
+     "cond": [
+      "thaw"
+     ],
+     "bake": "6a32a24c3b03a510"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r103/west.webp?h=55c6a3ece4",
+   "bake": "18e45bcab9c11aa5",
+   "patches": {}
+  },
+  "z-safe-er": {
+   "src": "plates/r103/z-safe-er.webp?h=6c3b975fa4",
+   "bake": "f0a97ec35bba7499",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r103/z-safe-er~m40_64.webp?h=f962ca5ef6",
+     "rect": [
+      33,
+      7,
+      316,
+      431
+     ],
+     "cond": [
+      "open:safe-er"
+     ],
+     "bake": "af19426d1749e0ad"
+    }
+   }
+  },
+  "z-tank-ec": {
+   "src": "plates/r103/z-tank-ec.webp?h=38e0c08a5f",
+   "bake": "a9d221d65d400a7e",
+   "patches": {}
+  },
+  "z-stonedoor-nc": {
+   "src": "plates/r103/z-stonedoor-nc.webp?h=30f718d3cd",
+   "bake": "fefaee8d21944f45",
+   "patches": {}
+  },
+  "z-jar-wr": {
+   "src": "plates/r103/z-jar-wr.webp?h=6c3a13f553",
+   "bake": "8c940dd72c602044",
+   "patches": {}
+  }
+ },
+ "104": {
+  "north": {
+   "src": "plates/r104/north.webp?h=e7ecbe82c7",
+   "bake": "e83d60621e05948f",
+   "patches": {
+    "p0": {
+     "src": "plates/r104/north~p0.webp?h=6bd4e0d53a",
+     "rect": [
+      96,
+      267,
+      190,
+      98
+     ],
+     "cond": [
+      "open:hatch-nc"
+     ],
+     "bake": "00082152a0ac6889"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r104/east.webp?h=a8e57dc72b",
+   "bake": "35ac8441591b535b",
+   "patches": {
+    "p0": {
+     "src": "plates/r104/east~p0.webp?h=46b49cb983",
+     "rect": [
+      274,
+      236,
+      26,
+      27
+     ],
+     "cond": [
+      "open:dish-er"
+     ],
+     "bake": "c0ebcda854e6420e"
+    },
+    "p2": {
+     "src": "plates/r104/east~p2.webp?h=e2a59520e1",
+     "rect": [
+      140,
+      303,
+      80,
+      33
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "7a2c95a5e1ad69fc"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r104/south.webp?h=ef67b1d059",
+   "bake": "39a15441eb6f3506",
+   "patches": {
+    "p1": {
+     "src": "plates/r104/south~p1.webp?h=5e83dbabfb",
+     "rect": [
+      21,
+      283,
+      92,
+      38
+     ],
+     "cond": [
+      "got:plug"
+     ],
+     "bake": "26a41e1c7edca86f"
+    },
+    "p2": {
+     "src": "plates/r104/south~p2.webp?h=75f16fa5ee",
+     "rect": [
+      182,
+      303,
+      43,
+      20
+     ],
+     "cond": [
+      "on"
+     ],
+     "bake": "6656fb5cb5774753"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r104/west.webp?h=384b1461fc",
+   "bake": "b4922f5f54d16efc",
+   "patches": {
+    "p0": {
+     "src": "plates/r104/west~p0.webp?h=1a6d9c82be",
+     "rect": [
+      11,
+      253,
+      120,
+      103
+     ],
+     "cond": [
+      "got:battery"
+     ],
+     "bake": "fe6f3799f59e6f54"
+    }
+   }
+  },
+  "z-dish-er": {
+   "src": "plates/r104/z-dish-er.webp?h=5af066cd4b",
+   "bake": "97ffb9040a18a489",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r104/z-dish-er~m40_64.webp?h=d66a21cda0",
+     "rect": [
+      55,
+      37,
+      259,
+      443
+     ],
+     "cond": [
+      "open:dish-er"
+     ],
+     "bake": "2081579788818fb6"
+    }
+   }
+  },
+  "z-telescope-el": {
+   "src": "plates/r104/z-telescope-el.webp?h=1469535fb1",
+   "bake": "b95b273306f33977",
+   "patches": {}
+  },
+  "z-hatch-nc": {
+   "src": "plates/r104/z-hatch-nc.webp?h=ee74822abf",
+   "bake": "9c7b4d279edacb64",
+   "patches": {}
+  },
+  "z-panel-wr": {
+   "src": "plates/r104/z-panel-wr.webp?h=6bd643d0d6",
+   "bake": "9be9a6fe8c4610d0",
+   "patches": {}
+  }
+ },
+ "111": {
+  "north": {
+   "src": "plates/r111/north.webp?h=abe54c5bf1",
+   "bake": "7b89f521e429f541",
+   "patches": {
+    "p2": {
+     "src": "plates/r111/north~p2.webp?h=b81a68791d",
+     "rect": [
+      126,
+      116,
+      113,
+      276
+     ],
+     "cond": [
+      "unlocked"
+     ],
+     "bake": "cefb56f41065ddd4"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r111/east.webp?h=271d6ffcbd",
+   "bake": "516bae479709ab92",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r111/south.webp?h=f8e61121c8",
+   "bake": "f7b912ae7c0b3102",
+   "patches": {
+    "p0": {
+     "src": "plates/r111/south~p0.webp?h=c96ea50333",
+     "rect": [
+      14,
+      180,
+      100,
+      201
+     ],
+     "cond": [
+      "open:locker-sl"
+     ],
+     "bake": "5e77b561dccaa86f"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r111/west.webp?h=7eeeb1739c",
+   "bake": "75e717b433f2c9db",
+   "patches": {
+    "p1": {
+     "src": "plates/r111/west~p1.webp?h=9651be64e1",
+     "rect": [
+      130,
+      274,
+      99,
+      74
+     ],
+     "cond": [
+      "got:chalk"
+     ],
+     "bake": "0a39350d634ea849"
+    }
+   }
+  },
+  "z-locker-sl": {
+   "src": "plates/r111/z-locker-sl.webp?h=1789c16cd8",
+   "bake": "949f49813520c59e",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r111/z-locker-sl~m40_64.webp?h=39e399f766",
+     "rect": [
+      39,
+      64,
+      320,
+      344
+     ],
+     "cond": [
+      "open:locker-sl"
+     ],
+     "bake": "3de647671ef20001"
+    }
+   }
+  },
+  "z-board-wl": {
+   "src": "plates/r111/z-board-wl.webp?h=62c58c2132",
+   "bake": "a57a7f61f7f147e0",
+   "patches": {}
+  },
+  "z-calendar-nr": {
+   "src": "plates/r111/z-calendar-nr.webp?h=50776a4026",
+   "bake": "9f7c34d500121a95",
+   "patches": {}
+  }
+ },
+ "112": {
+  "north": {
+   "src": "plates/r112/north.webp?h=2e00dc04a1",
+   "bake": "fb28ce416f1eac5a",
+   "patches": {
+    "p0": {
+     "src": "plates/r112/north~p0.webp?h=cc12b5529a",
+     "rect": [
+      111,
+      138,
+      74,
+      229
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "50069f616553bb8e"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r112/east.webp?h=3367504fd7",
+   "bake": "497bf99f8382c615",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r112/south.webp?h=73ae5f25ea",
+   "bake": "f637716a38864e7c",
+   "patches": {
+    "p0": {
+     "src": "plates/r112/south~p0.webp?h=ca42009a2c",
+     "rect": [
+      119,
+      239,
+      118,
+      86
+     ],
+     "cond": [
+      "react"
+     ],
+     "bake": "31ad365aa0ceab72"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r112/west.webp?h=4208b32234",
+   "bake": "d6ccf33766de037f",
+   "patches": {
+    "p0": {
+     "src": "plates/r112/west~p0.webp?h=a019286987",
+     "rect": [
+      5,
+      269,
+      116,
+      111
+     ],
+     "cond": [
+      "open:safe-wl"
+     ],
+     "bake": "974b5a3f9249748a"
+    },
+    "p1": {
+     "src": "plates/r112/west~p1.webp?h=32b052b82d",
+     "rect": [
+      208,
+      70,
+      135,
+      142
+     ],
+     "cond": [
+      "react"
+     ],
+     "bake": "03cb84defb65f173"
+    }
+   }
+  },
+  "z-safe-wl": {
+   "src": "plates/r112/z-safe-wl.webp?h=532cff223a",
+   "bake": "743695241ec1d719",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r112/z-safe-wl~m40_64.webp?h=075c6202a9",
+     "rect": [
+      35,
+      52,
+      282,
+      354
+     ],
+     "cond": [
+      "open:safe-wl"
+     ],
+     "bake": "27b83b205ae90439"
+    }
+   }
+  },
+  "z-flasks-el": {
+   "src": "plates/r112/z-flasks-el.webp?h=d39cb1c9c3",
+   "bake": "307c8edab78cc670",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r112/z-sliding-nc.webp?h=2193a42193",
+   "bake": "b09b5387e21f4cb7",
+   "patches": {}
+  },
+  "z-window-wr": {
+   "src": "plates/r112/z-window-wr.webp?h=ed55cd9b10",
+   "bake": "f7d9cfc21743994b",
+   "patches": {
+    "p0": {
+     "src": "plates/r112/z-window-wr~p0.webp?h=35a045f758",
+     "rect": [
+      35,
+      63,
+      291,
+      278
+     ],
+     "cond": [
+      "react"
+     ],
+     "bake": "d34b42e3090ec44d"
+    }
+   }
+  }
+ },
+ "113": {
+  "north": {
+   "src": "plates/r113/north.webp?h=2e0fadcb5e",
+   "bake": "df077881bf9d5a59",
+   "patches": {
+    "p1": {
+     "src": "plates/r113/north~p1.webp?h=ac8e7bdfdc",
+     "rect": [
+      98,
+      83,
+      190,
+      285
+     ],
+     "cond": [
+      "open:curtainexit-nc"
+     ],
+     "bake": "a0c63c24da5992b3"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r113/east.webp?h=5920ae02eb",
+   "bake": "fd4fba44d03762eb",
+   "patches": {
+    "p1": {
+     "src": "plates/r113/east~p1.webp?h=f66d26cfc3",
+     "rect": [
+      142,
+      307,
+      74,
+      32
+     ],
+     "cond": [
+      "open:machine-ec"
+     ],
+     "bake": "a8a31a59e6f2d2bc"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r113/south.webp?h=6d3c256aa0",
+   "bake": "ee6c0fe8dfe24f8a",
+   "patches": {
+    "p0": {
+     "src": "plates/r113/south~p0.webp?h=6f9d2ca589",
+     "rect": [
+      248,
+      113,
+      80,
+      100
+     ],
+     "cond": [
+      "power"
+     ],
+     "bake": "afa1796207ef86d3"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r113/west.webp?h=14d91fb9d5",
+   "bake": "d872f2b83fb5d7bf",
+   "patches": {
+    "p0": {
+     "src": "plates/r113/west~p0.webp?h=a0d061427e",
+     "rect": [
+      21,
+      264,
+      96,
+      41
+     ],
+     "cond": [
+      "got:fuse"
+     ],
+     "bake": "94dfac9a3d2dfec4"
+    }
+   }
+  },
+  "z-machine-ec": {
+   "src": "plates/r113/z-machine-ec.webp?h=d95ae574d6",
+   "bake": "1fdc13604e6f37ad",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r113/z-machine-ec~m40_64.webp?h=f89700deb3",
+     "rect": [
+      45,
+      98,
+      286,
+      322
+     ],
+     "cond": [
+      "open:machine-ec"
+     ],
+     "bake": "037e911c7e9391a6"
+    }
+   }
+  },
+  "z-piano-sc": {
+   "src": "plates/r113/z-piano-sc.webp?h=5186006dd3",
+   "bake": "045d3a75e4b60fd7",
+   "patches": {}
+  },
+  "z-curtainexit-nc": {
+   "src": "plates/r113/z-curtainexit-nc.webp?h=7d9e544e3c",
+   "bake": "98fd69c4d79f18b3",
+   "patches": {}
+  },
+  "z-organ-wc": {
+   "src": "plates/r113/z-organ-wc.webp?h=d3180376a2",
+   "bake": "16579797ad75930e",
+   "patches": {}
+  }
+ },
+ "114": {
+  "north": {
+   "src": "plates/r114/north.webp?h=77a2c29b3f",
+   "bake": "3b8e6452486aeb62",
+   "patches": {
+    "p2": {
+     "src": "plates/r114/north~p2.webp?h=2fa44b37a7",
+     "rect": [
+      116,
+      97,
+      126,
+      231
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "44c9274900981353"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r114/east.webp?h=b373f4a4da",
+   "bake": "a63287f592660201",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r114/south.webp?h=915c35ef8a",
+   "bake": "9e9f7cdf59638d7b",
+   "patches": {
+    "p0": {
+     "src": "plates/r114/south~p0.webp?h=f32391ef3a",
+     "rect": [
+      0,
+      177,
+      150,
+      174
+     ],
+     "cond": [
+      "open:cabinet-sl"
+     ],
+     "bake": "6c55c4c3c8f708bb"
+    },
+    "p1": {
+     "src": "plates/r114/south~p1.webp?h=827b2ff3c3",
+     "rect": [
+      230,
+      251,
+      117,
+      47
+     ],
+     "cond": [
+      "opened"
+     ],
+     "bake": "9ed16cebfacb91e8"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r114/west.webp?h=d11e688da0",
+   "bake": "ebaeeac01a44b6e6",
+   "patches": {}
+  },
+  "z-cabinet-sl": {
+   "src": "plates/r114/z-cabinet-sl.webp?h=0384efb5a0",
+   "bake": "4606bfc19b0c90a4",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r114/z-cabinet-sl~m40_64.webp?h=a5a893b85f",
+     "rect": [
+      61,
+      41,
+      239,
+      332
+     ],
+     "cond": [
+      "open:cabinet-sl"
+     ],
+     "bake": "e108793853c4f862"
+    }
+   }
+  },
+  "z-map-wr": {
+   "src": "plates/r114/z-map-wr.webp?h=58f625ee37",
+   "bake": "4958eb99257c992a",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r114/z-sliding-nc.webp?h=60469f1dc1",
+   "bake": "4606bfc19b0c90a4",
+   "patches": {}
+  },
+  "z-bookcase-el": {
+   "src": "plates/r114/z-bookcase-el.webp?h=fb635f7ebf",
+   "bake": "49ac5ff767f696cc",
+   "patches": {}
+  }
+ },
+ "115": {
+  "north": {
+   "src": "plates/r115/north.webp?h=87ea83a6c8",
+   "bake": "03ba96f344d6784e",
+   "patches": {
+    "p0": {
+     "src": "plates/r115/north~p0.webp?h=1dc29457dc",
+     "rect": [
+      84,
+      84,
+      193,
+      271
+     ],
+     "cond": [
+      "open:gate-nc"
+     ],
+     "bake": "aa9a66bff1e23291"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r115/east.webp?h=6baab018f5",
+   "bake": "8419c52c4c5e82d8",
+   "patches": {
+    "p0": {
+     "src": "plates/r115/east~p0.webp?h=7d3d178c4d",
+     "rect": [
+      117,
+      255,
+      122,
+      23
+     ],
+     "cond": [
+      "got:battery"
+     ],
+     "bake": "6a56b76ac53691d7"
+    },
+    "p1": {
+     "src": "plates/r115/east~p1.webp?h=9f569b46e3",
+     "rect": [
+      40,
+      175,
+      104,
+      156
+     ],
+     "cond": [
+      "open:rack-el"
+     ],
+     "bake": "4ff0135a2f255fb2"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r115/south.webp?h=23e3343a94",
+   "bake": "823a8de682ceaae4",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r115/west.webp?h=4fb98561c5",
+   "bake": "f2693d130e92f92f",
+   "patches": {
+    "p0": {
+     "src": "plates/r115/west~p0.webp?h=2477d220b0",
+     "rect": [
+      48,
+      141,
+      41,
+      34
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "df885b6b11c50dd6"
+    }
+   }
+  },
+  "z-rack-el": {
+   "src": "plates/r115/z-rack-el.webp?h=42c5631706",
+   "bake": "fd5f317b1c6cc6be",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r115/z-rack-el~m40_64.webp?h=21a1784aaf",
+     "rect": [
+      47,
+      5,
+      309,
+      442
+     ],
+     "cond": [
+      "open:rack-el"
+     ],
+     "bake": "91eb41cab4bd36a3"
+    }
+   }
+  },
+  "z-dish-wr": {
+   "src": "plates/r115/z-dish-wr.webp?h=c95582a1c9",
+   "bake": "b4808f5dd9abb2ee",
+   "patches": {}
+  },
+  "z-gate-nc": {
+   "src": "plates/r115/z-gate-nc.webp?h=c0b2eda924",
+   "bake": "fd5f317b1c6cc6be",
+   "patches": {}
+  },
+  "z-telescope-sc": {
+   "src": "plates/r115/z-telescope-sc.webp?h=c88ab2b760",
+   "bake": "e86f2ad1abbf180b",
+   "patches": {}
+  }
+ },
+ "121": {
+  "north": {
+   "src": "plates/r121/north.webp?h=c9781fb76d",
+   "bake": "655e0916fff03fb3",
+   "patches": {
+    "p0": {
+     "src": "plates/r121/north~p0.webp?h=056fed1942",
+     "rect": [
+      118,
+      115,
+      122,
+      237
+     ],
+     "cond": [
+      "open:elevator-nc"
+     ],
+     "bake": "49bc65b147f06ab6"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r121/east.webp?h=fa6d4a5412",
+   "bake": "d4bc22e7ed13c85c",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r121/south.webp?h=9532c511ff",
+   "bake": "619af18c3ed89ee4",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r121/west.webp?h=c7c5b6bfa1",
+   "bake": "07b4011da30fb111",
+   "patches": {}
+  },
+  "z-elevator-nc": {
+   "src": "plates/r121/z-elevator-nc.webp?h=5547b68ac3",
+   "bake": "b817da4903cc69c7",
+   "patches": {}
+  },
+  "z-board-wr": {
+   "src": "plates/r121/z-board-wr.webp?h=5fad44fda3",
+   "bake": "853a77a0f981a66d",
+   "patches": {}
+  }
+ },
+ "122": {
+  "north": {
+   "src": "plates/r122/north.webp?h=47a0658f2b",
+   "bake": "419766ddcfccf90c",
+   "patches": {
+    "p0": {
+     "src": "plates/r122/north~p0.webp?h=5ba857f5b4",
+     "rect": [
+      113,
+      149,
+      73,
+      228
+     ],
+     "cond": [
+      "open:sliding-nc"
+     ],
+     "bake": "7ecde2863745ee63"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r122/east.webp?h=4a71652c67",
+   "bake": "3f12824cd70aefb4",
+   "patches": {
+    "p1": {
+     "src": "plates/r122/east~p1.webp?h=0cf20b3eea",
+     "rect": [
+      223,
+      212,
+      137,
+      165
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "51b2bbb057d69385"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r122/south.webp?h=f058170608",
+   "bake": "bd6a1868bab63711",
+   "patches": {}
+  },
+  "west": {
+   "src": "plates/r122/west.webp?h=1b9a3f573a",
+   "bake": "7532d0b0980de2d5",
+   "patches": {
+    "p1": {
+     "src": "plates/r122/west~p1.webp?h=91c42f4b05",
+     "rect": [
+      18,
+      243,
+      143,
+      86
+     ],
+     "cond": [
+      "got:scissors"
+     ],
+     "bake": "e99453f82d99acff"
+    },
+    "p2": {
+     "src": "plates/r122/west~p2.webp?h=6e111561eb",
+     "rect": [
+      93,
+      243,
+      141,
+      105
+     ],
+     "cond": [
+      "unpacked"
+     ],
+     "bake": "3ca0e982b4483496"
+    }
+   }
+  },
+  "z-cabinet-er": {
+   "src": "plates/r122/z-cabinet-er.webp?h=1ece426704",
+   "bake": "8809503ca5e7b4bf",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r122/z-cabinet-er~m40_64.webp?h=eedde81af6",
+     "rect": [
+      35,
+      54,
+      272,
+      357
+     ],
+     "cond": [
+      "open:cabinet-er"
+     ],
+     "bake": "87144afe707f97c8"
+    }
+   }
+  },
+  "z-window-sr": {
+   "src": "plates/r122/z-window-sr.webp?h=8dd18e4b9d",
+   "bake": "aab29e7776fa0eea",
+   "patches": {}
+  },
+  "z-sliding-nc": {
+   "src": "plates/r122/z-sliding-nc.webp?h=1e80cb9bf3",
+   "bake": "8809503ca5e7b4bf",
+   "patches": {}
+  },
+  "z-suitcase-wc": {
+   "src": "plates/r122/z-suitcase-wc.webp?h=63226fec81",
+   "bake": "7df482a2ce0c5c38",
+   "patches": {
+    "p0": {
+     "src": "plates/r122/z-suitcase-wc~p0.webp?h=bbea0e77bf",
+     "rect": [
+      12,
+      58,
+      338,
+      178
+     ],
+     "cond": [
+      "unpacked"
+     ],
+     "bake": "fdbaea3c7fc8bbb9"
+    }
+   }
+  }
+ },
+ "123": {
+  "north": {
+   "src": "plates/r123/north.webp?h=f54f53644f",
+   "bake": "08008b7b3173812f",
+   "patches": {
+    "p0": {
+     "src": "plates/r123/north~p0.webp?h=7302774453",
+     "rect": [
+      141,
+      97,
+      77,
+      84
+     ],
+     "cond": [
+      "open:ladder-nc"
+     ],
+     "bake": "1fed19492ffc2231"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r123/east.webp?h=ad1427176a",
+   "bake": "b336342ef668b669",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r123/south.webp?h=e659896ddc",
+   "bake": "30d3212302078ef9",
+   "patches": {
+    "p2": {
+     "src": "plates/r123/south~p2.webp?h=6a5bae9e3c",
+     "rect": [
+      118,
+      245,
+      123,
+      120
+     ],
+     "cond": [
+      "open:oven-sc"
+     ],
+     "bake": "c7ae0d0708c7231e"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r123/west.webp?h=b2a460c2a9",
+   "bake": "d32c0c8bc91c2203",
+   "patches": {}
+  },
+  "z-oven-sc": {
+   "src": "plates/r123/z-oven-sc.webp?h=f1c4dad043",
+   "bake": "eaaf79fab76a2469",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r123/z-oven-sc~m40_64.webp?h=95f2cbf91c",
+     "rect": [
+      45,
+      44,
+      276,
+      339
+     ],
+     "cond": [
+      "open:oven-sc"
+     ],
+     "bake": "3c636395faf073fa"
+    }
+   }
+  },
+  "z-shelf-el": {
+   "src": "plates/r123/z-shelf-el.webp?h=c1fb1a57e1",
+   "bake": "06eac0b9357ba2c5",
+   "patches": {}
+  },
+  "z-ladder-nc": {
+   "src": "plates/r123/z-ladder-nc.webp?h=3642d45678",
+   "bake": "5b2761ceb5516a90",
+   "patches": {}
+  },
+  "z-map-wl": {
+   "src": "plates/r123/z-map-wl.webp?h=c058cb2ed3",
+   "bake": "c4ffa538d2d3e1d7",
+   "patches": {}
+  }
+ },
+ "124": {
+  "north": {
+   "src": "plates/r124/north.webp?h=f9ca8daccb",
+   "bake": "d065b15e7a9b9362",
+   "patches": {
+    "p0": {
+     "src": "plates/r124/north~p0.webp?h=a1ffba1d02",
+     "rect": [
+      119,
+      276,
+      120,
+      95
+     ],
+     "cond": [
+      "open:hatch-nc"
+     ],
+     "bake": "bdaeec14b8991d37"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r124/east.webp?h=e2fdf7e8d8",
+   "bake": "f0725f4c72d54b88",
+   "patches": {
+    "p1": {
+     "src": "plates/r124/east~p1.webp?h=ea75978539",
+     "rect": [
+      10,
+      251,
+      153,
+      66
+     ],
+     "cond": [
+      "open:chest-el"
+     ],
+     "bake": "6b2a688574595f7a"
+    },
+    "p2": {
+     "src": "plates/r124/east~p2.webp?h=c6c5ac80b0",
+     "rect": [
+      107,
+      268,
+      125,
+      44
+     ],
+     "cond": [
+      "got:keyshaft"
+     ],
+     "bake": "5980d9b4aa4a1e2b"
+    }
+   }
+  },
+  "south": {
+   "src": "plates/r124/south.webp?h=59cf11f6d6",
+   "bake": "12a542e78a0831c9",
+   "patches": {
+    "p0": {
+     "src": "plates/r124/south~p0.webp?h=2747d8c6d2",
+     "rect": [
+      12,
+      286,
+      115,
+      76
+     ],
+     "cond": [
+      "opened"
+     ],
+     "bake": "02cc86c83f871570"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r124/west.webp?h=eb42269279",
+   "bake": "f1db869ac26e9fe0",
+   "patches": {}
+  },
+  "z-chest-el": {
+   "src": "plates/r124/z-chest-el.webp?h=8b81cd2b82",
+   "bake": "be0bc965806422f7",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r124/z-chest-el~m40_64.webp?h=905029d979",
+     "rect": [
+      47,
+      39,
+      264,
+      345
+     ],
+     "cond": [
+      "open:chest-el"
+     ],
+     "bake": "27264bde9917bfec"
+    }
+   }
+  },
+  "z-gramophone-wc": {
+   "src": "plates/r124/z-gramophone-wc.webp?h=5bb4898ef8",
+   "bake": "e71baab77bef5292",
+   "patches": {}
+  },
+  "z-hatch-nc": {
+   "src": "plates/r124/z-hatch-nc.webp?h=d630b2004c",
+   "bake": "be0bc965806422f7",
+   "patches": {}
+  },
+  "z-mirror-sc": {
+   "src": "plates/r124/z-mirror-sc.webp?h=14484bc2e8",
+   "bake": "fa859771cc865679",
+   "patches": {}
+  }
+ },
+ "125": {
+  "north": {
+   "src": "plates/r125/north.webp?h=6e81c1826c",
+   "bake": "439efc8e60f6f167",
+   "patches": {
+    "p1": {
+     "src": "plates/r125/north~p1.webp?h=101fd29740",
+     "rect": [
+      31,
+      280,
+      112,
+      107
+     ],
+     "cond": [
+      "got:match"
+     ],
+     "bake": "a0439901c589bd92"
+    },
+    "p2": {
+     "src": "plates/r125/north~p2.webp?h=140676e99c",
+     "rect": [
+      31,
+      143,
+      260,
+      250
+     ],
+     "cond": [
+      "open:stonedoor-nc"
+     ],
+     "bake": "6afecd6078b39c53"
+    }
+   }
+  },
+  "east": {
+   "src": "plates/r125/east.webp?h=4d07c14765",
+   "bake": "c6657d6e5b5a8b97",
+   "patches": {}
+  },
+  "south": {
+   "src": "plates/r125/south.webp?h=0ed9e7ac66",
+   "bake": "d3db3a73391f5355",
+   "patches": {
+    "p0": {
+     "src": "plates/r125/south~p0.webp?h=7bdf639095",
+     "rect": [
+      3,
+      259,
+      118,
+      105
+     ],
+     "cond": [
+      "open:safe-sl"
+     ],
+     "bake": "bbefb77213a8d6e1"
+    },
+    "p1": {
+     "src": "plates/r125/south~p1.webp?h=0b22f3b48d",
+     "rect": [
+      252,
+      268,
+      41,
+      95
+     ],
+     "cond": [
+      "got:keyshaft"
+     ],
+     "bake": "74e9892fd267028e"
+    }
+   }
+  },
+  "west": {
+   "src": "plates/r125/west.webp?h=0e5bbcce30",
+   "bake": "26f087add6fe6519",
+   "patches": {
+    "p0": {
+     "src": "plates/r125/west~p0.webp?h=ff7220c09a",
+     "rect": [
+      144,
+      275,
+      71,
+      128
+     ],
+     "cond": [
+      "lit"
+     ],
+     "bake": "5ba5762ceb00778a"
+    }
+   }
+  },
+  "z-safe-sl": {
+   "src": "plates/r125/z-safe-sl.webp?h=e3afd454c5",
+   "bake": "1f95df2fa5dd02b9",
+   "patches": {
+    "m40_64": {
+     "src": "plates/r125/z-safe-sl~m40_64.webp?h=dc94a5d5fc",
+     "rect": [
+      51,
+      54,
+      247,
+      318
+     ],
+     "cond": [
+      "open:safe-sl"
+     ],
+     "bake": "ef08b79880d52a41"
+    }
+   }
+  },
+  "z-portrait-wr": {
+   "src": "plates/r125/z-portrait-wr.webp?h=060ac5dfc7",
+   "bake": "b6134b60b615a9cf",
+   "patches": {}
+  },
+  "z-stonedoor-nc": {
+   "src": "plates/r125/z-stonedoor-nc.webp?h=85cfac750c",
+   "bake": "57b8b6d624e6ff14",
+   "patches": {}
+  },
+  "z-calendar-er": {
+   "src": "plates/r125/z-calendar-er.webp?h=55ad11ee2a",
+   "bake": "541f4215a0f9165b",
+   "patches": {}
+  },
+  "z-typewriter-ec": {
+   "src": "plates/r125/z-typewriter-ec.webp?h=78699e8475",
+   "bake": "207018017614863e",
+   "patches": {}
+  }
+ }
+}

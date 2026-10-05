@@ -4,11 +4,14 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-7';
-import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-7';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-7';
+} from './escape-engine.js?v=escape-8';
+import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-8';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-8';
+import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-8';
+import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-8';
+import { GROWTH } from './escape-growth.js?v=escape-8';
 
-const VERSION = 'escape-7';
+const VERSION = 'escape-8';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -18,6 +21,60 @@ const slotName = params.get('slot');
 const KEY = slotName && /^[a-z0-9-]{1,24}$/i.test(slotName) ? `${SAVE_KEY_V2}.${slotName}` : SAVE_KEY_V2;
 // ?unlock=all은 검수용으로 잠긴 방을 모두 엽니다.
 const UNLOCK_ALL = params.get('unlock') === 'all';
+// 광고 기록도 저장 칸을 따라 나눕니다. ?ads=mock은 웹에서 광고 자리를 흉내 내고, ?debug=analytics는 로그를 콘솔에 보여 줍니다.
+const GROWTH_STORE = GROWTH_KEY + KEY.slice(SAVE_KEY_V2.length);
+const AD_MOCK = ['mock', 'fail'].includes(params.get('ads')) ? params.get('ads') : false;
+// 그림 판(plate)입니다. ?plates=0이면 끄고 예전 SVG 그림만 씁니다. DESIGN_v7.md 참고.
+const PLATES_ON = params.get('plates') !== '0';
+let plateIndex = null, plateIndexJob = null;
+const plateReady = {}, plateJobs = {};
+// 8초 안에 받지 못하면 실패로 봅니다. 그 방은 SVG로 그리고, 다음에 방을 열 때 다시 받습니다.
+const decodeImage = src => new Promise(resolve => { const img = new Image(); const timer = setTimeout(() => resolve(false), 8000); img.src = src; img.decode().then(() => { clearTimeout(timer); resolve(true); }, () => { clearTimeout(timer); resolve(false); }); });
+function loadPlateIndex() {
+  if (!PLATES_ON) return Promise.resolve(null);
+  return (plateIndexJob ??= fetch(`./plates/manifest.json?v=${VERSION}`).then(res => (res.ok ? res.json() : null)).catch(() => null).then(json => (plateIndex = json)));
+}
+// 방의 판을 모두 받아 둡니다. 판과 그 조각이 모두 받아진 시점만 쓰고, 나머지 시점은 SVG로 그립니다.
+// 받는 동안에는 SVG가 보이고, 다 받으면 true를 돌려줘 화면을 다시 그리게 합니다. 같은 방은 한 번만 받습니다.
+function preparePlates(roomId) {
+  return (plateJobs[roomId] ??= (async () => {
+    const views = (await loadPlateIndex())?.[roomId];
+    if (!views) return false;
+    const ok = {};
+    await Promise.all(Object.entries(views).map(async ([view, entry]) => {
+      const srcs = [entry.src, ...Object.values(entry.patches ?? {}).map(p => p.src)];
+      if ((await Promise.all(srcs.map(decodeImage))).every(Boolean)) ok[view] = entry;
+    }));
+    plateReady[roomId] = { ...plateReady[roomId], ...ok };
+    setPlates(plateReady);
+    if (!Object.keys(ok).length) delete plateJobs[roomId];
+    return Object.keys(ok).length > 0;
+  })());
+}
+// 시점 하나의 판만 받습니다. 홈 표지와 화 목록의 작은 그림에 씁니다. 방 전체를 받는 preparePlates와 따로 둡니다.
+const viewJobs = {};
+function prepareView(roomId, view) {
+  return (viewJobs[`${roomId}/${view}`] ??= (async () => {
+    const entry = (await loadPlateIndex())?.[roomId]?.[view];
+    if (!entry) return false;
+    if (plateReady[roomId]?.[view]) return true;
+    const srcs = [entry.src, ...Object.values(entry.patches ?? {}).map(p => p.src)];
+    if (!(await Promise.all(srcs.map(decodeImage))).every(Boolean)) { delete viewJobs[`${roomId}/${view}`]; return false; }
+    plateReady[roomId] = { ...plateReady[roomId], [view]: entry };
+    setPlates(plateReady);
+    return true;
+  })());
+}
+// 목록 속 그림(svg[data-layer])만 새 그림으로 바꿉니다. 버튼과 초점은 그대로 둡니다.
+function swapArt(list, html) {
+  if (!list) return;
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  const next = tpl.content.querySelectorAll('svg[data-layer]');
+  const now = list.querySelectorAll('svg[data-layer]');
+  if (next.length === now.length) now.forEach((el, i) => el.replaceWith(next[i]));
+}
+const coverOf = ep => { const first = roomById(ep.rooms.find(roomById)); if (!first) return null; return [first.id, ep.cover?.view && first.views[ep.cover.view] ? ep.cover.view : first.start]; };
 const NAV = { left: [0, NAV_TOP, 88, VIEW_H - NAV_TOP], right: [VIEW_W - 88, NAV_TOP, 88, VIEW_H - NAV_TOP], back: [128, NAV_TOP, 104, VIEW_H - NAV_TOP] };
 const NAV_LABEL = { left: '왼쪽으로 돌기', right: '오른쪽으로 돌기', back: '돌아가기' };
 
@@ -49,13 +106,22 @@ const stars = n => `<span class="stars" role="img" aria-label="난이도 5점 �
 
 let rooms = [], episodes = [], save = null, room = null, s = null;
 let selected = null, zoomItem = null, resume = false, pendingNote = null;
+// 합치기 버튼을 누른 물건입니다. 크게 보는 물건이 바뀌면 저절로 풀립니다.
+let combineFor = null;
+const combining = () => !!zoomItem && combineFor === zoomItem;
 let saveTimer = 0, toastTimer = 0, revealTimer = 0, audio = null, saveWarned = false, returnFocus = null;
 let artKey = '', pinKey = '';
 const fresh = new Set();
+// 로그와 광고입니다. init에서 만들고, 만들기 전에는 아무것도 하지 않는 빈 객체를 씁니다.
+let analytics = { track() {} }, ads = null, growth = recoverGrowth(null);
+let roomFails = 0, firstClear = false, adBusy = false, breakPending = false;
+const ROOM_AD = GROWTH.ads.roomAd;
 
 const roomById = id => rooms.find(r => r.id === id);
 const unlocked = id => roomUnlocked(episodes, save.rooms, id, UNLOCK_ALL);
 const cleared = id => save.rooms[id]?.cleared === true || save.rooms[id]?.escaped === true;
+// 아직 한 방도 탈출하지 않은 사람입니다. 처음 하는 방의 힌트에는 광고와 동의 창을 붙이지 않습니다.
+const firstRoom = () => !rooms.some(r => cleared(r.id));
 const playOrder = () => episodes.flatMap(ep => ep.rooms).map(roomById).filter(Boolean);
 const stateSig = () => JSON.stringify([s.flags, s.open, s.got]);
 const notesOf = () => s.got.filter(id => ['note', 'secret'].includes(room.items[id]?.kind));
@@ -214,6 +280,18 @@ function showEpisode(id) {
     ? `<button class="btn primary wide" data-act="open-room" data-id="${st.target.id}">${e(st.action)} · ${e(st.target.title)} ${icon('right', 18)}</button>`
     : '<p class="sheet-copy soon-note">이 에피소드는 준비 중이에요.</p>';
   openSheet(`${sheetHead(ep.title, 'book')}<p class="kicker">EPISODE ${ep.id} · ${st.total}화</p><p class="ep-tag">${e(ep.tagline)}</p><ol class="rooms">${rows}</ol>${play}`);
+  // 화 목록의 작은 그림은 시작 시점 판을 받은 뒤 그림만 바꿉니다.
+  const built = ep.rooms.map(roomById).filter(Boolean);
+  void Promise.all(built.map(r => prepareView(r.id, r.start))).then(done => {
+    const list = sheet.querySelector('ol.rooms');
+    if (done.some(Boolean) && list) swapArt(list, ep.rooms.map((rid, i) => (roomById(rid) ? roomRow(roomById(rid), ep, i) : soonRow(ep.upcoming[rid], i))).join(''));
+  });
+}
+// 홈의 그림만 바꿉니다. 판을 늦게 받았을 때 버튼, 초점, 스크롤을 건드리지 않기 위해서입니다.
+function refreshHomeArt() {
+  const list = app.querySelector('.episodes');
+  if (room || !list) return;
+  swapArt(list, episodes.map(episodeCard).join(''));
 }
 function renderHome() {
   document.body.dataset.screen = 'home';
@@ -228,7 +306,7 @@ function renderHome() {
   const marks = order.filter(r => save.rooms[r.id]?.secret).length;
   app.innerHTML = `<main class="home" id="main">
     <header class="home-top"><h1 class="brand">${icon('door', 26)}<span>문 너머</span></h1><button class="icon-btn" data-act="guide" aria-label="조작 안내">${icon('help')}</button></header>
-    <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
+    <section class="hero"><img src="assets/hero-library.webp" alt="" width="1200" height="900" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
     <h2 class="list-title">에피소드 <span>탈출 ${done} / ${total}${marks ? ` · 책갈피 ${marks}` : ''}</span></h2>
     <ul class="episodes">${episodes.map(episodeCard).join('')}</ul>
   </main>`;
@@ -293,6 +371,8 @@ function paintScene() {
   const lockOn = !!(lk && !s.open.includes(lk[0]) && lockReady(lk[1], s));
   if (lockOn) html += lockButtons(lk[0], lk[1], focus.lock);
   $('#stage').classList.toggle('has-lock', lockOn);
+  // 확대 화면은 아래 띠 가운데에 돌아가기 버튼이 있어서 말풍선을 위로 올립니다.
+  $('#stage').classList.toggle('is-zoom', view.kind !== 'wall');
   if (view.kind === 'wall') html += navButton('left', focus.nav) + navButton('right', focus.nav);
   else html += navButton('back', focus.nav);
   hits.innerHTML = html;
@@ -345,6 +425,9 @@ function resumeHtml() {
   return `<div class="panel resume"><p class="kicker">이어하기</p><h2>${e(room.title)}</h2><div class="recap-meter" role="img" aria-label="진행 ${done} / ${total}"><i style="width:${Math.round((done / total) * 100)}%"></i></div>${bag}${photos}<button class="btn primary wide" data-act="resume-go">계속하기 ${icon('right', 18)}</button></div>`;
 }
 function outroHtml() {
+  // 탈출 직후 광고가 뜰 차례면, 광고가 끝날 때까지 이야기와 버튼 없이 제목만 둡니다.
+  // AdMob 권장대로 광고가 휴식 화면과 다음 버튼보다 먼저 나오게 하기 위해서입니다.
+  if (breakPending) return `<div class="panel outro is-waiting" aria-busy="true"><span class="outro-mark">${icon('door', 40)}</span><h2>${e(room.outro.title)}</h2></div>`;
   const ep = episodeOf(episodes, room.id);
   const idx = ep?.index ?? 0, order = ep?.episode.rooms ?? [];
   const nextId = order[idx + 1];
@@ -377,7 +460,7 @@ function paintOverlay() {
   if (zoomItem && s.inv.includes(zoomItem)) {
     const item = room.items[zoomItem];
     overlay.classList.add('is-on', 'is-item');
-    overlay.innerHTML = `<section class="item-zoom" aria-label="${e(item.name)} 크게 보기"><button class="icon-btn item-close" data-act="zoom-close" aria-label="닫기">${icon('close')}</button><div class="item-big">${drawItem(zoomItem, item.name)}</div><p class="item-name">${e(item.name)}</p>${item.note ? `<p class="item-note">${e(item.note)}</p>` : ''}${room.recipes.some(r => r.a === zoomItem || r.b === zoomItem) ? `<p class="item-tip">${icon('plus', 16)}<span>가방의 다른 물건을 눌러 합쳐 보세요.</span></p>` : ''}</section>`;
+    overlay.innerHTML = `<section class="item-zoom" aria-label="${e(item.name)} 크게 보기"><button class="icon-btn item-close" data-act="zoom-close" aria-label="닫기">${icon('close')}</button><div class="item-big">${drawItem(zoomItem, item.name)}</div><p class="item-name">${e(item.name)}</p>${item.note ? `<p class="item-note">${e(item.note)}</p>` : ''}${s.inv.some(id => id !== zoomItem) ? `<button class="btn combine-btn" data-act="combine-pick" aria-pressed="${combining()}">${icon('plus', 18)}<span>${combining() ? '합칠 물건을 가방에서 고르세요' : '합치기'}</span></button>` : ''}${!combining() && room.recipes.some(r => r.a === zoomItem || r.b === zoomItem) ? `<p class="item-tip">${icon('plus', 16)}<span>가방의 다른 물건을 눌러 합쳐 보세요.</span></p>` : ''}</section>`;
     return;
   }
   zoomItem = null;
@@ -401,6 +484,7 @@ function paintBag() {
   }
   fresh.clear();
   bag.innerHTML = html;
+  bag.classList.toggle('is-combining', combining());
 }
 
 function onEscape() {
@@ -408,6 +492,36 @@ function onEscape() {
   if (!s.best || now.hints < s.best.hints || (now.hints === s.best.hints && now.seconds < s.best.seconds)) s.best = now;
   sfx('open');
   void persist();
+  const where = episodeOf(episodes, room.id);
+  analytics.track('room_escape', { room: room.id, episode: where?.episode.id, chapter: where ? where.index + 1 : undefined, seconds: s.seconds, hints: now.hints, fails: roomFails, first: firstClear });
+  if (firstClear) {
+    const milestone = MILESTONES[rooms.filter(r => cleared(r.id)).length];
+    if (milestone) analytics.track(milestone, milestone === 'tutorial_complete' ? { room: room.id, seconds: s.seconds } : { room: room.id });
+  }
+  firstClear = false;
+  // 첫 탈출 뒤에 광고 동의를 묻고 다음 광고를 미리 받아 둡니다.
+  void ads?.warmup();
+  escapeBreak();
+}
+// 방 한 판의 광고 자리(when: 'escape'): 탈출 결과 화면이 뜬 뒤, 다음 방 버튼이 켜지기 전에 전면 광고를 띄웁니다.
+// 광고를 띄울 차례면 결과 화면을 제목만 둔 대기 상태로 두고, 광고가 끝난 뒤 이야기와 다음 방 버튼을 보여 줍니다.
+function escapeBreak() {
+  if (!ads || ROOM_AD.when !== 'escape' || adBusy) return;
+  const willShow = ads.breakWillShow();
+  const at = room, startedAt = Date.now();
+  adBusy = true; breakPending = willShow;
+  const run = async () => {
+    // 기다리는 사이 방을 나갔다면 광고를 띄우지 않습니다. 다른 화면 위에 광고가 뜨면 예상하지 못한 광고가 됩니다.
+    if (room !== at || !s?.escaped) { adBusy = false; breakPending = false; return; }
+    let result;
+    // 광고를 받아 오는 사이 방을 나갔거나 앱이 뒤로 갔으면 띄우지 않습니다(cancelled).
+    const stillHere = () => room === at && s?.escaped === true && !document.hidden;
+    try { result = await ads.roomBreak(stillHere); } catch { result = { format: 'interstitial', outcome: 'failed' }; }
+    adBusy = false; breakPending = false;
+    logAd('room_end', result, startedAt);
+    if (room === at) paint();
+  };
+  if (willShow) setTimeout(() => { void run(); }, ROOM_AD.delayMs); else void run();
 }
 function play(events) {
   const gains = [], notes = [], secrets = [];
@@ -518,8 +632,8 @@ function onLock(button) {
   const result = inputLock(room, s, id, draft);
   if (!result.ok) return;
   sfx('click');
-  if (result.open) announce(`${lock.label}가 풀렸어요.`);
-  if (result.wrong) toast('맞지 않아요.');
+  if (result.open) { announce(`${lock.label}가 풀렸어요.`); analytics.track('lock_open', { room: room.id, lock: id, seconds: s.seconds }); }
+  if (result.wrong) { toast('맞지 않아요.'); roomFails++; analytics.track('lock_fail', { room: room.id, lock: id }); }
   play(result.events);
   changed(before, result.open || stateSig() !== prev);
 }
@@ -564,15 +678,58 @@ function openSheet(html, labelledBy = 'sheet-title') {
 function closeSheet() { if (sheet.open) sheet.close(); }
 const sheetHead = (title, glyph) => `<div class="sheet-head"><h2 id="sheet-title">${icon(glyph, 20)}<span>${e(title)}</span></h2><button class="icon-btn" data-act="close" aria-label="닫기">${icon('close')}</button></div>`;
 
-function showHint() {
+function showHint(notice = '') {
   const goal = activeGoal(room, s);
   if (!goal) { openSheet(`${sheetHead('힌트', 'bulb')}<p class="sheet-copy">이미 탈출했어요.</p>`); return; }
   const n = s.hints[goal.id] || 0;
-  const more = n >= HINT_MAX ? '모든 힌트를 열었어요' : n === 0 ? '힌트 보기' : '다음 힌트';
+  const paid = n < HINT_MAX && ads?.hintNeedsAd(hintsUsed(s), firstRoom());
+  const more = n >= HINT_MAX ? '모든 힌트를 열었어요' : adBusy ? '광고를 불러오는 중이에요' : `${paid ? '광고 보고 ' : ''}${n === 0 ? '힌트 보기' : '다음 힌트'}`;
   openSheet(`${sheetHead('힌트', 'bulb')}
     ${n ? `<ol class="hints">${goal.hints.slice(0, n).map((h, i) => `<li><b>${i + 1}</b><span>${e(h)}</span></li>`).join('')}</ol>` : '<p class="sheet-copy">막힌 곳이 있으면 한 단계씩 열어 보세요.</p>'}
     ${n === HINT_MAX - 1 ? '<p class="sheet-warn">다음 힌트는 정답이에요.</p>' : ''}
-    <button class="btn primary wide" data-act="hint-more" ${n >= HINT_MAX ? 'disabled' : ''}>${more}</button>`);
+    ${notice ? `<p class="sheet-warn" role="status">${e(notice)}</p>` : ''}
+    <button class="btn primary wide" data-act="hint-more" ${n >= HINT_MAX || adBusy ? 'disabled' : ''}>${more}</button>`);
+}
+// 광고 결과를 로그로 남깁니다. 웹처럼 광고가 없는 곳의 결과(unsupported)와 무료 힌트는 남기지 않습니다.
+function logAd(placement, result, startedAt) {
+  if (['unsupported', 'free'].includes(result.outcome)) return;
+  analytics.track('ad_result', { placement, format: result.format, outcome: result.outcome, ms: Date.now() - startedAt });
+}
+// 힌트 한 단계를 엽니다. 광고가 필요하면 먼저 보여 주고, 끝까지 봤거나 광고를 받지 못했을 때 엽니다.
+async function unlockHint() {
+  const goal = activeGoal(room, s);
+  if (!goal || (s.hints[goal.id] || 0) >= HINT_MAX || adBusy) return;
+  const atRoom = room, atState = s, startedAt = Date.now();
+  adBusy = true;
+  const first = firstRoom();
+  if (ads?.hintNeedsAd(hintsUsed(s), first)) showHint();
+  // 광고를 받아 오는 사이 힌트 창을 닫았거나 방을 나갔으면 광고를 띄우지 않습니다.
+  const stillHere = () => room === atRoom && s === atState && sheet.open && !document.hidden;
+  let result;
+  try { result = ads ? await ads.forHint(hintsUsed(s), { firstRoom: first, stillWanted: stillHere }) : { format: 'rewarded', outcome: 'unsupported', open: true, via: 'free' }; }
+  catch { result = { format: 'rewarded', outcome: 'failed', open: true, via: 'fallback' }; }
+  finally { adBusy = false; }
+  logAd('hint', result, startedAt);
+  if (room !== atRoom || s !== atState) return;
+  if (result.outcome === 'cancelled') { if (sheet.open) showHint(); return; }
+  if (!result.open) { showHint('광고를 끝까지 보면 힌트가 열려요.'); return; }
+  const opened = requestHint(room, s);
+  if (opened) analytics.track('hint_request', { room: room.id, goal: opened.id, level: s.hints[opened.id], via: result.via });
+  scheduleSave(); showHint(); paint();
+}
+// 방을 열기 직전의 광고 자리(when: 'open')입니다. 광고가 끝나거나 건너뛰면 열려던 일을 이어 합니다.
+async function adBreakThen(next) {
+  if (adBusy) return;
+  adBusy = true;
+  const startedAt = Date.now();
+  let result = { format: 'interstitial', outcome: 'unsupported' };
+  const at = location.hash;
+  try { if (ads) result = await ads.roomBreak(() => location.hash === at && !document.hidden); }
+  catch { result = { format: 'interstitial', outcome: 'failed' }; }
+  finally { adBusy = false; }
+  logAd('room_open', result, startedAt);
+  // 광고를 보는 사이 다른 곳으로 갔으면, 원래 하려던 이동은 하지 않습니다.
+  if (location.hash === at) next();
 }
 function showMenu() {
   openSheet(`${sheetHead('메뉴', 'menu')}<div class="menu-list">
@@ -581,6 +738,7 @@ function showMenu() {
     <button data-act="sound" aria-pressed="${save.sound}">${icon(save.sound ? 'sound' : 'mute')}<span>소리와 진동</span><small>${save.sound ? '켜짐' : '꺼짐'}</small></button>
     <button data-act="guide">${icon('help')}<span>조작 안내</span></button>
     <button data-act="reset">${icon('reset')}<span>처음부터</span></button>
+    ${ads?.privacyRequired() ? `<button data-act="ad-privacy">${icon('help')}<span>광고 개인정보 설정</span></button>` : ''}
     <button data-act="home">${icon('home')}<span>방 목록</span></button>
   </div>`);
 }
@@ -621,16 +779,19 @@ function confirmReset() {
   openSheet(`${sheetHead('처음부터 할까요?', 'reset')}<p class="sheet-copy">이 방의 물건, 사진, 힌트 기록이 지워져요. 탈출 기록과 책갈피는 남아요.</p><div class="row"><button class="btn" data-act="close">계속하기</button><button class="btn danger" data-act="confirm-reset">처음부터</button></div>`);
 }
 function restart() {
+  analytics.track('room_restart', { room: room.id, after_escape: s.escaped });
   const keep = { cleared: s.cleared || s.escaped, best: s.best, secret: s.secret };
   save.rooms[room.id] = { ...freshState(room), ...keep };
   s = save.rooms[room.id];
   selected = null; zoomItem = null; resume = false;
+  roomFails = 0; firstClear = !s.cleared;
   void persist();
   renderGame();
 }
 async function shareResult() {
   const text = `문 너머 「${room.title}」 탈출 ${clock(s.seconds)} · 힌트 ${hintsUsed(s)}개`;
   const result = await share({ title: '문 너머', text, url: `${location.origin}${location.pathname}` });
+  analytics.track('share_result', { room: room.id, result });
   if (result === 'copied') toast('결과를 복사했어요.');
   else if (result === 'failed') toast('공유하지 못했어요.');
 }
@@ -639,15 +800,21 @@ function route() {
   const match = location.hash.match(/^#room\/(\d+)$/);
   const next = match ? roomById(Number(match[1])) : null;
   closeSheet();
-  selected = null; zoomItem = null; resume = false; pendingNote = null;
+  selected = null; zoomItem = null; resume = false; pendingNote = null; combineFor = null;
   if (next && unlocked(next.id)) {
     room = next;
     save.rooms[room.id] ??= freshState(room);
     s = save.rooms[room.id];
     save.last = room.id;
     resume = s.started && !s.escaped;
+    roomFails = 0; firstClear = !cleared(room.id);
+    const where = episodeOf(episodes, room.id);
+    analytics.track('room_open', { room: room.id, episode: where?.episode.id, chapter: where ? where.index + 1 : undefined, difficulty: room.difficulty, resume, cleared: !firstClear });
     scheduleSave();
     renderGame();
+    const at = room;
+    // 장면은 상태가 바뀔 때만 다시 그리므로, 판을 다 받으면 그리기 기준(artKey)을 비워 한 번 다시 그립니다.
+    void preparePlates(room.id).then(changed => { if (changed && room === at) { artKey = ''; paint(); } });
   } else {
     if (match) history.replaceState(null, '', `${location.pathname}${location.search}`);
     room = null; s = null;
@@ -658,6 +825,10 @@ function route() {
 }
 function goHome() {
   closeSheet();
+  if (room && s?.started && !s.escaped) {
+    const { done, total } = progress(room, s);
+    analytics.track('room_exit', { room: room.id, seconds: s.seconds, progress: total ? Math.round((done / total) * 100) : 0, hints: hintsUsed(s) });
+  }
   void persist();
   if (location.hash) location.hash = '';
   else route();
@@ -678,15 +849,29 @@ document.addEventListener('click', event => {
   if (act === 'close') { closeSheet(); return; }
   if (act === 'guide') { showGuide(); return; }
   if (act === 'guide-done') { save.tutorial = true; scheduleSave(); closeSheet(); return; }
-  if (act === 'open-room' || act === 'next-room') { location.hash = `room/${b.dataset.id}`; return; }
-  if (act === 'episode') { showEpisode(Number(b.dataset.ep)); return; }
+  if (act === 'open-room' || act === 'next-room') {
+    const id = Number(b.dataset.id);
+    const go = () => { location.hash = `room/${id}`; };
+    // 기본값(when: 'escape')은 광고를 탈출 직후에 이미 거쳤으므로 바로 넘어갑니다.
+    // when: 'open'일 때만 방을 열기 직전에 광고 자리를 거칩니다. 잠긴 방과 이미 열려 있는 방은 광고 없이 넘어갑니다.
+    if (ROOM_AD.when !== 'open' || !roomById(id) || !unlocked(id) || room?.id === id) go(); else void adBreakThen(go);
+    return;
+  }
+  if (act === 'episode') { analytics.track('episode_view', { episode: Number(b.dataset.ep) }); showEpisode(Number(b.dataset.ep)); return; }
   if (act === 'home') { goHome(); return; }
   if (!room) return;
-  if (act === 'begin') { s.started = true; scheduleSave(); paint(); if (!save.tutorial) showGuide(); else afterMove(); return; }
+  if (act === 'begin') {
+    s.started = true; scheduleSave(); paint();
+    const where = episodeOf(episodes, room.id);
+    analytics.track('room_start', { room: room.id, episode: where?.episode.id, chapter: where ? where.index + 1 : undefined });
+    if (!save.tutorial) showGuide(); else afterMove();
+    return;
+  }
   if (act === 'resume-go') { resume = false; paint(); afterMove(); return; }
   if (act === 'menu') { showMenu(); return; }
+  if (act === 'ad-privacy') { closeSheet(); void ads?.openPrivacy(); return; }
   if (act === 'hint') { showHint(); return; }
-  if (act === 'hint-more') { requestHint(room, s); scheduleSave(); showHint(); paint(); return; }
+  if (act === 'hint-more') { void unlockHint(); return; }
   if (act === 'journal') { showJournal(b.dataset.tab ?? 'photos'); return; }
   if (act === 'photo-open') { showPhoto(Number(b.dataset.i)); return; }
   if (act === 'pin-open') { const i = s.photos.findIndex(p => p.sig === s.pin); if (i >= 0) showPhoto(i); return; }
@@ -708,12 +893,20 @@ document.addEventListener('click', event => {
   if (act === 'sound') { save.sound = !save.sound; scheduleSave(); sfx('open'); showMenu(); return; }
   if (act === 'auto-clue') { save.autoClue = !save.autoClue; scheduleSave(); showMenu(); return; }
   if (act === 'reset') { confirmReset(); return; }
-  if (act === 'confirm-reset' || act === 'replay') { closeSheet(); restart(); return; }
+  if (act === 'confirm-reset') { closeSheet(); restart(); return; }
+  // 탈출 뒤 다시 하기는 방을 새로 여는 것이라 방 열기 광고 자리를 거칩니다.
+  if (act === 'replay') {
+    closeSheet();
+    // 기본값(when: 'escape')은 이 판의 광고를 탈출 직후에 이미 거쳤습니다. 다시 하기를 누른 직후에는 광고를 띄우지 않습니다.
+    if (ROOM_AD.when === 'open') { const at = room; void adBreakThen(() => { if (room === at) restart(); }); } else restart();
+    return;
+  }
   if (act === 'share') { void shareResult(); return; }
   if (!s.started || s.escaped || resume) return;
   if (act === 'spot') onSpot(b.dataset.id);
   else if (act === 'item') onItem(b.dataset.id);
-  else if (act === 'zoom-close') { zoomItem = null; paint(); restoreFocus(`[data-act="item"][data-id="${CSS.escape(selected ?? '')}"]`); }
+  else if (act === 'combine-pick') { combineFor = combining() ? null : zoomItem; paint(); }
+  else if (act === 'zoom-close') { combineFor = null; zoomItem = null; paint(); restoreFocus(`[data-act="item"][data-id="${CSS.escape(selected ?? '')}"]`); }
   else if (act === 'lock') onLock(b);
   else if (act === 'nav') onNav(b.dataset.dir);
   else if (act === 'reveal') reveal();
@@ -756,6 +949,26 @@ function tick() {
   if (s.seconds % 15 === 0) scheduleSave();
 }
 
+// 로그와 광고를 준비합니다. 여기서 실패해도 게임은 광고와 로그 없이 그대로 돌아갑니다.
+async function startGrowth() {
+  try {
+    let raw = null;
+    try { raw = JSON.parse((await loadText(GROWTH_STORE)) || 'null'); } catch { raw = null; }
+    growth = recoverGrowth(raw);
+    const returning = growth.firstSeen > 0;
+    if (!returning) growth.firstSeen = Date.now();
+    const keep = () => { saveText(GROWTH_STORE, JSON.stringify(growth)).catch(() => {}); };
+    analytics = createAnalytics({ version: VERSION, debug: params.get('debug') === 'analytics' });
+    ads = createAds({ growth, persist: keep, mock: AD_MOCK });
+    keep();
+    analytics.track('app_open', { returning, cleared: rooms.filter(r => cleared(r.id)).length });
+    // 처음 설치한 사람에게는 첫 방을 깨기 전까지 광고 동의 창을 띄우지 않습니다.
+    if (growth.breaks > 0) void ads.warmup();
+  } catch {
+    analytics = { track() {} }; ads = null;
+  }
+}
+
 async function init() {
   try {
     const response = await fetch(`./escape.json?v=${VERSION}`);
@@ -766,6 +979,11 @@ async function init() {
     let raw = null;
     try { raw = JSON.parse((await loadText(KEY)) || 'null'); } catch { raw = null; }
     save = recoverSave(raw, rooms);
+    await startGrowth();
+    // 첫 방의 판은 홈 표지에도 쓰므로 시작하자마자 받기 시작합니다. 화면은 기다리지 않고 SVG로 먼저 그리고,
+    // 다 받았을 때 아직 홈이면 표지 그림만 바꿉니다(버튼과 초점은 그대로).
+    // 에피소드 표지는 표지 시점 판 하나씩만 받고, 다 받으면 한 번에 바꿉니다.
+    void Promise.all(episodes.map(coverOf).filter(Boolean).map(([id, view]) => prepareView(id, view))).then(done => { if (done.some(Boolean) && !room) refreshHomeArt(); });
     onPause(() => { void persist(); });
     onBack(handleBack);
     addEventListener('hashchange', route);

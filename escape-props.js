@@ -263,7 +263,7 @@ export const PROPS = {
   spotlight(u, x, y, w, h, o) {
     const cx = x + w / 2;
     let s = o.on ? poly([[cx - 8, y + h * .45], [cx + 8, y + h * .45], [cx + w * .6, y + h + 60], [cx - w * .6, y + h + 60]], K(u, 'ray')) : '';
-    return s + L(cx, y, cx, y + 12, '#1b1b1b', 3) + `<g transform="rotate(10 ${r(cx)} ${r(y + h * .3)})">${R(cx - w * .25, y + 12, w * .5, h * .42, '#1b1d1c', S + ' rx="5"')}${E(cx, y + h * .54, w * .2, 5, o.on ? '#f2d9a2' : '#3a3f3c')}</g>`;
+    return s + L(cx, y, cx, y + 12, '#1b1b1b', 3) + `<g transform="rotate(10 ${r(cx)} ${r(y + h * .3)})">${R(cx - w * .25, y + 12, w * .5, h * .42, K(u, 'steel'), S + ' rx="5"')}${L(cx - w * .2, y + 18, cx - w * .2, y + h * .38, '#d7dcd3', 2, 'opacity=".35"')}${E(cx, y + h * .54, w * .2, 5, o.on ? '#f2d9a2' : '#3a3f3c')}</g>`;
   },
   curtain(u, x, y, w, h) {
     let s = R(x, y, w, h, '#5a2a24');

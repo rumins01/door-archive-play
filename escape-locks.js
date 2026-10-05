@@ -1,6 +1,6 @@
 // 자물쇠 모양 등록부입니다. 작동 방식(type)은 엔진의 7가지를 그대로 쓰고, 모양(form)마다 그림과 버튼 배치를 달리합니다.
 // 버튼 자리는 layout이 정하고, 엔진의 lockControls가 같은 자리를 읽어 화면 버튼과 검증에 씁니다.
-import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-7';
+import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-8';
 
 const SERIF = 'font-family="Georgia, \'Times New Roman\', serif"';
 const MONO = 'font-family="ui-monospace, SFMono-Regular, Menlo, monospace"';
