@@ -1,8 +1,8 @@
 // 플레이 로그를 정해진 이름과 항목으로만 남깁니다. 보내는 곳(Firebase Analytics)은 platform.js가 맡습니다.
 // 이름과 항목은 Firebase(GA4) 제한을 지킵니다: 이벤트 이름 40자, 항목 25개, 글자 값 100자.
 // 개인정보(이름, 연락처, 기기 식별자)는 이벤트에 넣지 않습니다.
-import { GROWTH } from './escape-growth.js?v=escape-11';
-import { logNative, setLogEnabled, platformName } from './platform.js?v=escape-11';
+import { GROWTH } from './escape-growth.js?v=escape-12';
+import { logNative, setLogEnabled, platformName } from './platform.js?v=escape-12';
 
 // 이벤트 사전입니다. 새 이벤트는 여기에 먼저 적고, APP_GROWTH.md의 이벤트 표에도 같이 적습니다.
 export const EVENTS = Object.freeze({

@@ -1,8 +1,8 @@
 // 단서 그림 표식(mark)을 그립니다. 생성 방의 확대 화면에 놓이는 숫자판, 계기, 창문, 구슬, 그림자 같은 그림입니다.
 // escape-art.js의 kitMark가 먼저 이 함수를 부르고, null이면 기존 표식 그리기로 넘어갑니다.
 // h에는 escape-art.js의 도구가 들어옵니다: glyph(name, x, y, s, color), arrow(dir, x, y, s, fill), swatch(u, color, draw), shape(kind, x, y, s, fill, extra), colors.
-import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-11';
-import { icon, ICONS } from './escape-icons.js?v=escape-11';
+import { R, C, E, P, L, T, poly, K } from './escape-props.js?v=escape-12';
+import { icon, ICONS } from './escape-icons.js?v=escape-12';
 
 const EDGE = 'stroke="#211b15" stroke-width="1.3"';
 const round = n => Math.round(n * 100) / 100;

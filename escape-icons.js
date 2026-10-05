@@ -1,6 +1,6 @@
 // 단서와 자물쇠에 쓰는 작은 그림(아이콘)입니다. (x, y)를 가운데로, s를 반지름처럼 써서 그립니다.
 // 얼굴이나 표정은 넣지 않고, 한 가지 색과 얇은 어두운 선만 씁니다.
-import { R, C, E, P, L, poly } from './escape-props.js?v=escape-11';
+import { R, C, E, P, L, poly } from './escape-props.js?v=escape-12';
 
 const n = v => Math.round(v * 10) / 10;
 const EDGE = 'stroke="#1b1712" stroke-width="1.5"';

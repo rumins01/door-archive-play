@@ -1,13 +1,13 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
 // 그림체 기준은 2026-10-04 18시 공개판(사서의 방)입니다. 그라데이션과 평면 그림자만 쓰고, 질감 타일과 늘 흐르는 움직임은 쓰지 않습니다.
-import { check, cleanInput, freshState, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-11';
-import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-11';
-import { LOCK_FORMS, STAR_POINTS } from './escape-locks.js?v=escape-11';
-import { ICONS, icon } from './escape-icons.js?v=escape-11';
-import { sceneView, sceneZoom } from './escape-scenes.js?v=escape-11';
-import { clueMark } from './escape-clues.js?v=escape-11';
+import { check, cleanInput, freshState, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-12';
+import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-12';
+import { LOCK_FORMS, STAR_POINTS } from './escape-locks.js?v=escape-12';
+import { ICONS, icon } from './escape-icons.js?v=escape-12';
+import { sceneView, sceneZoom } from './escape-scenes.js?v=escape-12';
+import { clueMark } from './escape-clues.js?v=escape-12';
 
-import { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-names.js?v=escape-11';
+import { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-names.js?v=escape-12';
 export { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES };
 // 색을 구분하기 어려운 사람도 같은 색을 찾을 수 있게 색마다 무늬를 함께 씁니다.
 const PATTERN = { red: 'dots', blue: 'lines', green: 'diag', yellow: null };

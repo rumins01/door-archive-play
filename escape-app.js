@@ -4,14 +4,14 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-11';
-import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-11';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-11';
-import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-11';
-import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-11';
-import { GROWTH } from './escape-growth.js?v=escape-11';
+} from './escape-engine.js?v=escape-12';
+import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-12';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-12';
+import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-12';
+import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-12';
+import { GROWTH } from './escape-growth.js?v=escape-12';
 
-const VERSION = 'escape-11';
+const VERSION = 'escape-12';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
