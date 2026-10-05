@@ -4,14 +4,14 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-8';
-import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-8';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-8';
-import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-8';
-import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-8';
-import { GROWTH } from './escape-growth.js?v=escape-8';
+} from './escape-engine.js?v=escape-9';
+import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-9';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-9';
+import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-9';
+import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-9';
+import { GROWTH } from './escape-growth.js?v=escape-9';
 
-const VERSION = 'escape-8';
+const VERSION = 'escape-9';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -74,6 +74,16 @@ function swapArt(list, html) {
   const now = list.querySelectorAll('svg[data-layer]');
   if (next.length === now.length) now.forEach((el, i) => el.replaceWith(next[i]));
 }
+// 에피소드 표지 그림입니다. 12장을 같은 구도와 밝기로 따로 만들었습니다(DESIGN_v8.md). 받기 전이나 실패하면 첫 방 그림으로 그립니다.
+const coverReady = {};
+let coverJob = null;
+function loadCovers() {
+  if (!PLATES_ON) return Promise.resolve(false);
+  return (coverJob ??= fetch(`./plates/covers.json?v=${VERSION}`).then(res => (res.ok ? res.json() : {})).catch(() => ({}))
+    .then(list => Promise.all(Object.entries(list).map(async ([id, src]) => { if (await decodeImage(src)) coverReady[id] = src; })))
+    .then(() => Object.keys(coverReady).length > 0));
+}
+const coverArt = ep => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false" data-layer="cover"><image href="${coverReady[ep.id]}" x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice"/></svg>`;
 const coverOf = ep => { const first = roomById(ep.rooms.find(roomById)); if (!first) return null; return [first.id, ep.cover?.view && first.views[ep.cover.view] ? ep.cover.view : first.start]; };
 const NAV = { left: [0, NAV_TOP, 88, VIEW_H - NAV_TOP], right: [VIEW_W - 88, NAV_TOP, 88, VIEW_H - NAV_TOP], back: [128, NAV_TOP, 104, VIEW_H - NAV_TOP] };
 const NAV_LABEL = { left: '왼쪽으로 돌기', right: '오른쪽으로 돌기', back: '돌아가기' };
@@ -248,7 +258,7 @@ function episodeCard(ep) {
   const ready = st.built.length > 0;
   const first = st.built[0];
   const coverView = ep.cover?.view && first?.views[ep.cover.view] ? ep.cover.view : first?.start;
-  const cover = ready ? drawView(first, coverView, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true"><i>EPISODE ${ep.id}</i><small>준비 중</small></span>`;
+  const cover = ready && coverReady[ep.id] ? coverArt(ep) : ready ? drawView(first, coverView, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true"><i>EPISODE ${ep.id}</i><small>준비 중</small></span>`;
   const done = ready && st.done === st.total;
   const mark = done ? `<span class="marks"><span class="status done">${icon('check', 16)}</span></span>` : '';
   const progressText = !ready ? '' : done ? '<span class="ok">완료</span>' : st.done ? `<span>${st.done}/${st.total} 탈출</span>` : '';
@@ -306,7 +316,7 @@ function renderHome() {
   const marks = order.filter(r => save.rooms[r.id]?.secret).length;
   app.innerHTML = `<main class="home" id="main">
     <header class="home-top"><h1 class="brand">${icon('door', 26)}<span>문 너머</span></h1><button class="icon-btn" data-act="guide" aria-label="조작 안내">${icon('help')}</button></header>
-    <section class="hero"><img src="assets/hero-library.webp" alt="" width="1200" height="900" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
+    <section class="hero"><img src="assets/hero-ep1.webp" alt="" width="1200" height="900" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
     <h2 class="list-title">에피소드 <span>탈출 ${done} / ${total}${marks ? ` · 책갈피 ${marks}` : ''}</span></h2>
     <ul class="episodes">${episodes.map(episodeCard).join('')}</ul>
   </main>`;
@@ -983,7 +993,8 @@ async function init() {
     // 첫 방의 판은 홈 표지에도 쓰므로 시작하자마자 받기 시작합니다. 화면은 기다리지 않고 SVG로 먼저 그리고,
     // 다 받았을 때 아직 홈이면 표지 그림만 바꿉니다(버튼과 초점은 그대로).
     // 에피소드 표지는 표지 시점 판 하나씩만 받고, 다 받으면 한 번에 바꿉니다.
-    void Promise.all(episodes.map(coverOf).filter(Boolean).map(([id, view]) => prepareView(id, view))).then(done => { if (done.some(Boolean) && !room) refreshHomeArt(); });
+    // 표지 그림을 먼저 받고, 표지 그림이 없는 에피소드만 첫 방의 판을 받습니다.
+    void loadCovers().then(() => Promise.all(episodes.filter(ep => !coverReady[ep.id]).map(coverOf).filter(Boolean).map(([id, view]) => prepareView(id, view)))).then(() => { if (!room) refreshHomeArt(); });
     onPause(() => { void persist(); });
     onBack(handleBack);
     addEventListener('hashchange', route);

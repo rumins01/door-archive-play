@@ -1,7 +1,7 @@
 // 광고를 언제 띄우고 결과를 어떻게 처리할지 정합니다. 숫자 설정은 escape-growth.js, AdMob 호출은 platform.js에 있습니다.
 // 판단 함수(roomAdDecision, hintAdDecision, hintUnlock)는 화면과 기기에 기대지 않아 테스트에서 바로 부를 수 있습니다.
-import { GROWTH } from './escape-growth.js?v=escape-8';
-import { adsAvailable, adsInit, adsPrepare, adsShow, adsPrivacyForm, platformName } from './platform.js?v=escape-8';
+import { GROWTH } from './escape-growth.js?v=escape-9';
+import { adsAvailable, adsInit, adsPrepare, adsShow, adsPrivacyForm, platformName } from './platform.js?v=escape-9';
 
 // 광고 기록은 게임 저장(beyond-the-door.v2)과 따로 둡니다. 게임 저장 형식을 바꾸지 않기 위해서입니다.
 export const GROWTH_KEY = 'beyond-the-door.growth.v1';
