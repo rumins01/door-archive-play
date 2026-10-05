@@ -1,12 +1,14 @@
 // 방탈출 장면과 아이템 그림입니다. 상태를 받아 SVG 문자열만 돌려주므로 브라우저, 앱, 테스트에서 같이 씁니다.
 // 그림체 기준은 2026-10-04 18시 공개판(사서의 방)입니다. 그라데이션과 평면 그림자만 쓰고, 질감 타일과 늘 흐르는 움직임은 쓰지 않습니다.
-import { check, cleanInput, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-6';
-import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-6';
+import { check, cleanInput, lockControls, lockIn, lockReady, SEQUENCE_LOCKS, VIEW_W, VIEW_H } from './escape-engine.js?v=escape-7';
+import { PROPS, ITEM_ART, MUTED } from './escape-props.js?v=escape-7';
+import { LOCK_FORMS, STAR_POINTS } from './escape-locks.js?v=escape-7';
+import { ICONS, icon } from './escape-icons.js?v=escape-7';
+import { sceneView, sceneZoom } from './escape-scenes.js?v=escape-7';
+import { clueMark } from './escape-clues.js?v=escape-7';
 
-export const COLORS = { red: '#b8483a', blue: '#3f6d9c', green: '#4d8757', yellow: '#d6ab3f' };
-export const COLOR_NAMES = { red: '빨강', blue: '파랑', green: '초록', yellow: '노랑' };
-export const DIRECTION_NAMES = { up: '위', right: '오른쪽', down: '아래', left: '왼쪽' };
-export const SYMBOL_NAMES = { sun: '해', moon: '달', star: '별', drop: '물방울', leaf: '잎', eye: '눈', key: '열쇠', crown: '왕관' };
+import { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-names.js?v=escape-7';
+export { COLORS, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES };
 // 색을 구분하기 어려운 사람도 같은 색을 찾을 수 있게 색마다 무늬를 함께 씁니다.
 const PATTERN = { red: 'dots', blue: 'lines', green: 'diag', yellow: null };
 const NUM_FONT = 'font-family="Georgia, \'Times New Roman\', serif"';
@@ -194,6 +196,7 @@ function glyph(name, x, y, s, color, extra = '') {
   if (name === 'eye') return P(`M${x - s * 1.1} ${y}Q${x} ${y - s} ${x + s * 1.1} ${y}Q${x} ${y + s} ${x - s * 1.1} ${y}Z`, 'none', `stroke="${color}" stroke-width="${s * .2}"`) + C(x, y, s * .38, color, extra);
   if (name === 'key') return C(x - s * .45, y, s * .45, 'none', `stroke="${color}" stroke-width="${s * .22}"`) + L(x, y, x + s, y, color, s * .22) + L(x + s * .7, y, x + s * .7, y + s * .4, color, s * .2) + L(x + s, y, x + s, y + s * .4, color, s * .2);
   if (name === 'crown') return P(`M${x - s} ${y + s * .6}L${x - s} ${y - s * .5}L${x - s * .45} ${y}L${x} ${y - s * .8}L${x + s * .45} ${y}L${x + s} ${y - s * .5}L${x + s} ${y + s * .6}Z`, color, extra);
+  if (ICONS[name]) return icon(name, x, y, s, color);
   return C(x, y, s * .6, color, extra);
 }
 
@@ -593,6 +596,9 @@ function lockArt(u, room, viewId, s) {
   if (lock.skin === 'custom' || (open && ['dial', 'color', 'direction'].includes(lock.type))) return '';
   if (room.art === 'kit' && (open || !lockReady(lock, s))) return '';
   const draft = open ? lock.answer : cleanInput(lock, s.drafts?.[id]);
+  // 모양(form)이 정해진 자물쇠는 escape-locks.js의 그림을 씁니다. 손으로 만든 방의 자물쇠는 아래 공통 모양 그대로입니다.
+  const F = lock.form ? LOCK_FORMS[lock.form] : null;
+  if (F) return F.draw(u, lock, draft, { glyph, arrow, swatch, shape, controls: lockControls(lock) });
   let out = '';
   if (lock.type === 'dial') {
     lock.at.forEach(([x, y], i) => {
@@ -821,6 +827,8 @@ function itemMark(u, m) {
   return E(m.x, rd(m.y + s * .36), rd(s * .34), rd(s * .07), '#000', 'opacity=".35"') + `<g transform="translate(${rd(m.x - s / 2)} ${rd(m.y - s / 2)}) scale(${rd(s / .64) / 100})">${f(u)}</g>`;
 }
 function kitMark(u, m) {
+  const own = clueMark(u, m, { glyph, arrow, swatch, shape, colors: COLORS });
+  if (own !== null && own !== undefined) return own;
   const ink = m.c ?? '#2a2118';
   switch (m.t) {
     case 'shape': return swatch(u, m.c, fill => shape(m.k ?? 'circle', m.x, m.y, m.s, fill, 'stroke="#1b1712" stroke-width="2"'));
@@ -853,7 +861,10 @@ function kitMark(u, m) {
 function kitView(u, room, viewId, is) {
   const v = room.views[viewId];
   const ok = conds => (conds ?? []).every(is);
-  let out = v.kind === 'wall' ? wallBase(u, { floor: 368, brick: room.brick }) : zoomBase(u, v.tone ?? 'wall');
+  // 장면(scene)이 있는 방은 이야기에 맞는 배경을, 없는 방은 예전 벽과 바닥을 그립니다.
+  const sc = room.scene;
+  let out = v.kind === 'wall' ? (sc ? sceneView(u, sc, ['north', 'east', 'south', 'west'].indexOf(viewId)) : wallBase(u, { floor: 368, brick: room.brick }))
+    : (sc ? sceneZoom(u, sc, v.tone) : zoomBase(u, v.tone ?? 'wall'));
   for (const p of v.props ?? []) {
     if (!ok(p.if) || !PROPS[p.kind]) continue;
     out += PROPS[p.kind](u, p.x, p.y, p.w, p.h, { on: p.on ? is(p.on) : false, empty: p.empty ? is(p.empty) : false, frost: p.frost ? is(p.frost) : false, tone: p.bloom && !is(p.bloom) ? undefined : p.tone, time: p.time, blank: p.blank });

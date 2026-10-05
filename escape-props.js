@@ -297,7 +297,249 @@ export const PROPS = {
     if (o.on) s = C(x + w / 2, y + h * .6, w * .45, K(u, 'glow')) + s;
     return s + R(x + w * .25, y + h * .12, w * .5, 6, K(u, 'brass'), 'rx="3"');
   },
+
+  // ── 장면마다 쓰는 바깥, 탈것, 시설 물건입니다.
+  mailbox(u, x, y, w, h, o) {
+    const by = y + h * .05, bh = h * .42;
+    let s = sh(x, y, w, h) + R(x + w / 2 - 4, by + bh, 8, h - bh - 4, '#2a2e2b') + R(x, by, w, bh, '#5a2a24', 'rx="6" stroke="#2a1412" stroke-width="2"') + R(x + 6, by + bh * .3, w - 12, 5, '#1b0e0c', 'rx="2"');
+    s += o.on ? R(x + 4, by + bh * .45, w - 8, bh * .5, '#120a08') + poly([[x + 4, by + bh * .95], [x + w - 4, by + bh * .95], [x + w - 1, by + bh * 1.2], [x + 1, by + bh * 1.2]], '#4a2420') : R(x + w - 7, by + 3, 3, 23, '#ac5a44') + R(x + w - 18, by + 3, 14, 9, '#ac5a44', 'rx="1"');
+    s += R(x + 5, by + 7, w - 10, bh - 12, 'none', 'rx="3" stroke="#8a4a3c" stroke-width="1"') + R(x + w / 2 - 5, by + bh - 8, 10, 3, K(u, 'brass'), 'rx="1"');
+    return s;
+  },
+  lamppost(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    return (o.on ? C(cx, y + 22, 46, K(u, 'glow')) : '') + sh(x, y, w, h) + R(cx - 3, y + 30, 6, h - 34, '#22262a') + R(cx - 9, y + h - 12, 18, 12, '#22262a') + poly([[cx - 14, y + 10], [cx + 14, y + 10], [cx + 10, y + 34], [cx - 10, y + 34]], o.on ? '#e8c98a' : '#2c3434', 'stroke="#141618" stroke-width="2"') + R(cx - 16, y + 4, 32, 7, '#22262a');
+  },
+  bench(u, x, y, w, h) {
+    return sh(x, y, w, h) + [x + 10, x + w - 16].map(a => R(a, y + 8, 6, h - 8, '#414844') + L(a + 3, y + h * .58, a - 3, y + h, '#414844', 4)).join('') + [0, 12].map(d => R(x, y + d, w, 9, K(u, 'woodl'), W)).join('') + poly([[x, y + h * .5], [x + w - 6, y + h * .5], [x + w, y + h * .65], [x + 4, y + h * .65]], K(u, 'woodl'), W) + R(x + 4, y + h * .65, w - 4, 5, '#5a442c');
+  },
+  well(u, x, y, w, h, o) {
+    const t = y + h * .45;
+    let s = sh(x, y, w, h) + L(x + 10, t, x + 10, y, '#3a2b1b', 6) + L(x + w - 10, t, x + w - 10, y, '#3a2b1b', 6) + poly([[x + 2, y + 16], [x + w / 2, y + 1], [x + w - 2, y + 16]], '#62472d', W) + L(x + 10, y + 18, x + w - 10, y + 18, '#5a442c', 4);
+    s += L(x + w / 2, y + 18, x + w / 2, o.on ? y + 34 : t + 6, '#8d7350', 1.5) + (o.on ? R(x + w / 2 - 9, y + 34, 18, 16, '#5a442c') : '');
+    s += R(x, t, w, h - (t - y), '#4a4540', 'stroke="#2a2622" stroke-width="2"') + E(x + w / 2, t, w / 2, 8, '#15120f', 'stroke="#5d564e" stroke-width="3"');
+    for (let i = 0; i < 3; i++) s += L(x, t + 14 + i * 14, x + w, t + 14 + i * 14, '#2a2622', 1.5);
+    return s;
+  },
+  signpost(u, x, y, w, h) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + R(cx - 4, y, 8, h, '#3a2b1d') + poly([[x, y + 14], [x + w - 10, y + 14], [x + w, y + 26], [x + w - 10, y + 38], [x, y + 38]], K(u, 'woodl'), W) + poly([[x + w, y + 50], [x + 10, y + 50], [x, y + 62], [x + 10, y + 74], [x + w, y + 74]], K(u, 'wood'), W);
+  },
+  noticeboard(u, x, y, w, h) {
+    let s = sh(x, y, w, h) + R(x + 8, y + h * .6, 6, h * .4, '#3a2b1b') + R(x + w - 14, y + h * .6, 6, h * .4, '#3a2b1b') + R(x, y, w, h * .66, '#5a4632', W) + poly([[x + 2, y + 8], [x + w / 2, y], [x + w - 2, y + 8]], '#62472d');
+    s += R(x + 10, y + 10, w * .38, h * .4, K(u, 'paper'), `transform="rotate(-3 ${x + 30} ${y + 30})"`) + R(x + w * .52, y + 16, w * .36, h * .32, '#d6c9a6') + C(x + w * .29, y + 14, 3, '#9e3b30') + C(x + w * .7, y + 20, 3, '#9e3b30');
+    return s;
+  },
+  tent(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    let s = sh(x, y, w, h) + poly([[x, y + h], [cx, y], [x + w, y + h]], '#4a4a36', 'stroke="#262618" stroke-width="2"') + L(cx, y, cx, y + h, '#262618', 1.5);
+    s += o.on ? poly([[cx - 22, y + h], [cx, y + h * .35], [cx + 22, y + h]], '#14140c') + poly([[cx, y + h * .35], [cx + 22, y + h], [cx + 38, y + h * .82]], '#5a5a42') : poly([[cx - 22, y + h], [cx, y + h * .35], [cx + 22, y + h]], '#3a3a2a');
+    return s + L(x - 10, y + h, x + 6, y + h - 4, '#8d7350', 1.5) + L(x + w + 10, y + h, x + w - 6, y + h - 4, '#8d7350', 1.5);
+  },
+  campfire(u, x, y, w, h, o) {
+    const cx = x + w / 2, b = y + h;
+    let s = (o.on ? C(cx, b - h * .5, w * .46, K(u, 'glow')) : '') + [[-1, 1], [1, -1]].map(([a, c]) => L(cx - 26 * a, b - 4, cx + 26 * a, b - 16, '#4a3624', 8, 'stroke-linecap="round"')).join('');
+    for (let i = 0; i < 7; i++) s += E(cx + Math.cos(i * .9) * (w * .36), b - 8 + Math.sin(i * .9) * 3, 8, 5, '#4a4540');
+    if (o.on) s += poly([[cx - 16, b - 8], [cx - 6, y + h * .1], [cx, b - h * .35], [cx + 8, y], [cx + 16, b - 8]], '#c9783a', 'opacity=".9"');
+    return s;
+  },
+  anchor(u, x, y, w, h) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + C(cx, y + 10, 8, 'none', 'stroke="#777e7c" stroke-width="5"') + R(cx - 4, y + 18, 8, h - 24, '#626967') + R(cx - w * .35, y + 30, w * .7, 7, '#626967') + P(`M${r(x + 7)} ${r(y + h * .68)}Q${r(x + 8)} ${r(y + h)} ${r(cx)} ${r(y + h - 7)}Q${r(x + w - 8)} ${r(y + h)} ${r(x + w - 7)} ${r(y + h * .68)}`, 'none', 'stroke="#626967" stroke-width="7"') + poly([[x + 2, y + h * .6], [x + 20, y + h * .7], [x + 5, y + h * .82]], '#626967') + poly([[x + w - 2, y + h * .6], [x + w - 20, y + h * .7], [x + w - 5, y + h * .82]], '#626967');
+  },
+  buoy(u, x, y, w, h) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + L(cx, y, cx, y + 16, '#3a3f42', 3) + poly([[cx - 6, y + 16], [cx + 6, y + 16], [x + w, y + h - 10], [x, y + h - 10]], '#7a3a2e', 'stroke="#2a1412" stroke-width="2"') + R(x + w * .18, y + h * .5, w * .64, h * .14, '#cfc8b4', 'opacity=".85"') + R(x - 4, y + h - 12, w + 8, 12, '#2a2e2b', 'rx="4"');
+  },
+  boat(u, x, y, w, h) {
+    return sh(x, y, w, h) + P(`M${x} ${y + h * .2}H${x + w}Q${x + w - 10} ${y + h} ${x + w / 2} ${y + h}Q${x + 10} ${y + h} ${x} ${y + h * .2}Z`, '#4a3624', W) + R(x + 8, y + h * .2, w - 16, 5, '#5a442c') + L(x + w * .3, y + h * .3, x + w * .3, y + h * .8, '#2a1c10', 2) + L(x + w * .7, y + h * .3, x + w * .7, y + h * .8, '#2a1c10', 2) + L(x + 4, y + 5, x + w * .55, y + h * .65, '#8d7350', 3, 'stroke-linecap="round"') + poly([[x + 2, y + 3], [x + 8, y + 1], [x + 24, y + 14], [x + 19, y + 20]], '#a88a59') + E(x + w / 2, y + h * .23, w * .42, h * .14, '#251a11', W) + L(x + w * .32, y + h * .2, x + w * .32, y + h * .43, '#795639', 5) + L(x + w * .68, y + h * .2, x + w * .68, y + h * .43, '#795639', 5);
+  },
+  ticketmachine(u, x, y, w, h, o) {
+    return sh(x, y, w, h) + R(x, y, w, h, '#2b3133', S + ' rx="6"') + R(x + 8, y + 12, w - 16, h * .22, o.on ? '#4f6e52' : '#17201d', 'rx="3"') + R(x + w / 2 - 12, y + 20, 24, 12, '#b9b393', 'rx="2"') + L(x + w / 2 + 5, y + 22, x + w / 2 + 5, y + 30, '#625f4e', 1, 'stroke-dasharray="2 2"') + [0, 1, 2].map(i => C(x + 17 + i * 16, y + h * .43, 4, '#899180', 'stroke="#151b18" stroke-width="1"')).join('') + R(x + w - 16, y + h * .54, 5, 16, '#0b0c0b', 'rx="2"') + R(x + 10, y + h * .75, w - 20, h * .14, '#111815', 'rx="3"') + (o.on ? R(x + w / 2 - 9, y + h * .8, 18, 15, '#d8cfad', 'stroke="#6e6652" stroke-width="1"') : '');
+  },
+  vending(u, x, y, w, h, o) {
+    let s = sh(x, y, w, h) + R(x, y, w, h, '#3a2422', S + ' rx="5"') + R(x + 8, y + 10, w * .62, h * .62, o.on ? '#2e3a36' : '#141a1a', 'rx="3"');
+    for (let r0 = 0; r0 < 4; r0++) for (let c0 = 0; c0 < 3; c0++) s += R(x + 12 + c0 * (w * .2), y + 16 + r0 * (h * .14), w * .14, h * .09, ['#5a4a30', '#3d4a52', '#4a3a3a'][(r0 + c0) % 3], 'opacity=".85"');
+    return s + R(x + w * .74, y + 14, w * .18, h * .3, '#1d2224') + R(x + 10, y + h * .8, w - 20, h * .1, '#0b0c0b', 'rx="2"');
+  },
+  rock(u, x, y, w, h, o) {
+    const rx = x + (o.on ? w * .24 : 0), rw = x + w - rx;
+    return sh(x, y, w, h) + (o.on ? E(x + w * .25, y + h - 5, w * .2, 5, '#120f0c') : '') + P(`M${rx} ${y + h}Q${rx + 4} ${y + h * .3} ${rx + rw * .45} ${y + 2}Q${x + w - 2} ${y + h * .1} ${x + w - 2} ${y + h}Z`, '#4a4743', 'stroke="#2a2826" stroke-width="2"') + L(rx + rw * .3, y + h * .4, rx + rw * .5, y + h * .6, '#2a2826', 1.5);
+  },  statue(u, x, y, w, h) {
+    const cx = x + w / 2, ped = y + h * .55;
+    return sh(x, y, w, h) + R(x, ped, w, h - (ped - y), '#4a4743', 'stroke="#2a2826" stroke-width="2"') + R(x - 4, ped, w + 8, 8, '#5d5a54') + C(cx, y + h * .14, w * .2, '#6a665e') + P(`M${r(cx - w * .36)} ${r(ped)}Q${r(cx - w * .3)} ${r(y + h * .26)} ${r(cx)} ${r(y + h * .27)}Q${r(cx + w * .3)} ${r(y + h * .26)} ${r(cx + w * .36)} ${r(ped)}Z`, '#6a665e') + R(x + w * .2, ped + h * .14, w * .6, h * .1, '#8c7442', 'opacity=".6"');
+  },
+  sarcophagus(u, x, y, w, h, o) {
+    const cx = x + w / 2, top = y + 3, cy = top + 20;
+    const lid = (dx, ink) => P(`M${cx + dx - 16} ${top + 21}Q${cx + dx - 17} ${top} ${cx + dx} ${top}Q${cx + dx + 17} ${top} ${cx + dx + 16} ${top + 21}L${cx + dx + 23} ${top + 31}L${cx + dx + 15} ${y + h - 5}Q${cx + dx} ${y + h} ${cx + dx - 15} ${y + h - 5}L${cx + dx - 23} ${top + 31}Z`, ink, 'stroke="#3b3020" stroke-width="2"');
+    let s = sh(x, y, w, h) + lid(0, '#9a895f');
+    if (o.on) s += P(`M${cx - 12} ${top + 22}Q${cx - 13} ${top + 6} ${cx} ${top + 6}Q${cx + 13} ${top + 6} ${cx + 12} ${top + 22}L${cx + 18} ${top + 33}L${cx + 10} ${y + h - 8}H${cx - 10}L${cx - 18} ${top + 33}Z`, '#17130b') + lid(24, '#8a7953');
+    const dx = o.on ? 24 : 0;
+    s += poly([[cx + dx - 14, cy - 12], [cx + dx + 14, cy - 12], [cx + dx + 15, cy + 13], [cx + dx - 15, cy + 13]], '#4d625b', 'stroke="#b39b67" stroke-width="1.5"') + E(cx + dx, cy, 8, 11, '#c5ac77', 'stroke="#665232" stroke-width="1"') + C(cx + dx - 3, cy - 2, 1.3, '#302717') + C(cx + dx + 3, cy - 2, 1.3, '#302717') + L(cx + dx - 3, cy + 6, cx + dx + 3, cy + 6, '#665232', 1.3);
+    s += L(cx + dx - 12, cy + 18, cx + dx + 10, cy + 29, '#c5ac77', 3, 'stroke-linecap="round"') + L(cx + dx + 12, cy + 18, cx + dx - 10, cy + 29, '#c5ac77', 3, 'stroke-linecap="round"');
+    for (const yy of [cy + 37, cy + 45, cy + 53]) s += L(cx + dx - 7, yy, cx + dx + 7, yy, '#4d625b', 2);
+    return s;
+  }, mannequin(u, x, y, w, h) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + R(cx - 2, y + h * .62, 4, h * .36, '#3a2b1b') + E(cx, y + h - 2, w * .3, 4, '#3a2b1b') + C(cx, y + 10, 9, '#8d8676') + P(`M${cx - w * .42} ${y + h * .2}Q${cx} ${y + h * .12} ${cx + w * .42} ${y + h * .2}L${cx + w * .3} ${y + h * .4}Q${cx + w * .46} ${y + h * .55} ${cx + w * .3} ${y + h * .64}H${cx - w * .3}Q${cx - w * .46} ${y + h * .55} ${cx - w * .3} ${y + h * .4}Z`, '#cfc8b4', 'stroke="#6d6658" stroke-width="1.5"') + L(cx, y + h * .2, cx, y + h * .64, '#6d6658', 1, 'stroke-dasharray="3 3"');
+  },
+  easel(u, x, y, w, h) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + L(cx, y, x + 6, y + h, '#5a442c', 4) + L(cx, y, x + w - 6, y + h, '#5a442c', 4) + L(cx, y + 10, cx + 6, y + h, '#4a3624', 3) + R(x + 4, y + 14, w - 8, h * .48, '#d9cfb3', 'stroke="#5a442c" stroke-width="3"') + R(x - 2, y + h * .62, w + 4, 6, '#5a442c');
+  },
+  microscope(u, x, y, w, h) {
+    const cx = x + w * .45, cy = y + h * .3;
+    return sh(x, y, w, h) + E(x + w / 2, y + h - 5, w * .43, 5, '#59625d') + P(`M${x + w * .7} ${y + h - 8}Q${x + w * .95} ${y + h * .42} ${cx + 8} ${cy}`, 'none', 'stroke="#59625d" stroke-width="8"') + `<g transform="rotate(-20 ${r(cx)} ${r(cy)})">${R(cx - 6, y + 6, 12, h * .43, K(u, 'steel'), 'rx="3"')}${R(cx - 8, y + 1, 16, 7, '#1d2421', 'rx="2"')}${R(cx - 4, y + h * .49, 8, 9, '#a4aca4', 'rx="2"')}</g>` + C(x + w * .72, y + h * .4, 7, '#252c28', 'stroke="#8c958b" stroke-width="2"') + R(x + w * .2, y + h * .62, w * .5, 5, '#6e7770') + E(x + w * .43, y + h * .69, 6, 4, '#b6ae8a');
+  },
+  flasks(u, x, y, w, h, o) {
+    let s = sh(x, y, w, h) + R(x, y + h - 10, w, 10, K(u, 'woodl'), W);
+    [.18, .5, .82].forEach((k, i) => { const cx = x + w * k; s += P(`M${cx - 5} ${y + 6}H${cx + 5}V${y + h * .4}L${cx + 18} ${y + h - 10}H${cx - 18}L${cx - 5} ${y + h * .4}Z`, '#c9d6d3', 'opacity=".4" stroke="#8d958f" stroke-width="1.5"') + P(`M${cx - 12} ${y + h * .76}L${cx + 12} ${y + h * .76}L${cx + 18} ${y + h - 10}H${cx - 18}Z`, ['#46704f', '#8e3b30', '#3d5f80'][i], `opacity="${o.on ? .9 : .55}"`); });
+    return s;
+  },
+  helm(u, x, y, w, h) {
+    const cx = x + w / 2, cy = y + w * .5, rr = w * .34;
+    let s = sh(x, y, w, h) + R(cx - 8, cy, 16, h - (cy - y), '#3a2b1b') + C(cx, cy, rr, 'none', 'stroke="#6a4524" stroke-width="7"');
+    for (let i = 0; i < 8; i++) { const a = (i * Math.PI) / 4; s += L(cx, cy, cx + Math.cos(a) * (rr + 12), cy + Math.sin(a) * (rr + 12), '#6a4524', 4, 'stroke-linecap="round"'); }
+    return s + C(cx, cy, 8, K(u, 'brass'));
+  },
+  bigbell(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    return R(cx - 22, y, 44, 8, K(u, 'wood')) + (o.on ? C(cx, y + h * .6, w * .7, K(u, 'glow')) : '') + P(`M${cx} ${y + 8}Q${x + w - 6} ${y + 12} ${x + w - 8} ${y + h * .7}L${x + w} ${y + h - 6}H${x}L${x + 8} ${y + h * .7}Q${x + 6} ${y + 12} ${cx} ${y + 8}Z`, K(u, 'brass'), 'stroke="#5f4c2c" stroke-width="2"') + C(cx, y + h - 5, 5, '#5f4c2c') + L(x + 14, y + h * .72, x + w - 14, y + h * .72, '#5f4c2c', 1.5, 'opacity=".6"');
+  },
+  horn(u, x, y, w, h, o) {
+    return R(x + 4, y + h * .4, 10, h * .2, '#22262a') + poly([[x + 14, y + h * .36], [x + w, y], [x + w, y + h], [x + 14, y + h * .64]], o.on ? '#5a5f5c' : '#3a3f3c', 'stroke="#1b1e1c" stroke-width="2"') + E(x + w, y + h / 2, 6, h / 2, '#151817');
+  },
+  dish(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    return sh(x, y, w, h) + L(cx, y + h * .5, cx - 16, y + h, '#3a3f42', 5) + L(cx, y + h * .5, cx + 16, y + h, '#3a3f42', 5) + `<g transform="rotate(${o.on ? -30 : -12} ${r(cx)} ${r(y + h * .42)})">${P(`M${x + w * .1} ${y + h * .2}Q${cx} ${y + h * .78} ${x + w * .9} ${y + h * .2}Z`, '#8d938c', 'stroke="#3a3f42" stroke-width="2"')}${L(cx, y + h * .42, cx, y + h * .12, '#3a3f42', 2)}${C(cx, y + h * .1, 4, o.on ? '#9fe0a8' : '#3a3f42')}</g>`;
+  },
+  rack(u, x, y, w, h, o) {
+    let s = sh(x, y, w, h) + R(x, y, w, h, '#1d2224', S + ' rx="4"');
+    for (let i = 0; i < 7; i++) s += R(x + 6, y + 10 + i * (h - 20) / 7, w - 12, (h - 20) / 7 - 5, '#2b3133', 'rx="2"') + C(x + w - 14, y + 10 + i * (h - 20) / 7 + 6, 2.4, o.on ? '#9fe0a8' : (i % 3 ? '#3a403d' : '#8e3b30'));
+    return s;
+  },
+  projector(u, x, y, w, h, o) {
+    const ty = y + h * .3;
+    return (o.on ? poly([[x + w, ty + 16], [x + w + 140, ty - 40], [x + w + 140, ty + 80]], K(u, 'ray')) : '') + sh(x, y, w, h) + L(x + w / 2, ty + h * .3, x + 8, y + h, '#2a2e2b', 3) + L(x + w / 2, ty + h * .3, x + w - 8, y + h, '#2a2e2b', 3) + R(x + 6, ty, w - 12, h * .3, '#2b3133', S + ' rx="4"') + C(x + w * .3, ty - 10, 13, 'none', 'stroke="#3c4542" stroke-width="4"') + C(x + w * .62, ty - 10, 13, 'none', 'stroke="#3c4542" stroke-width="4"') + R(x + w - 10, ty + 8, 12, 14, '#59625d') + [x + w * .3, x + w * .62].map(cx => C(cx, ty - 10, 3, '#9ba39a') + [0, 120, 240].map(a => C(cx + Math.cos(a * Math.PI / 180) * 7, ty - 10 + Math.sin(a * Math.PI / 180) * 7, 2.5, '#17201b')).join('')).join('') + L(x + w * .3, ty + 1, x + w * .62, ty + 1, '#8b957f', 1.5) + E(x + w - 2, ty + 15, 3, 7, o.on ? '#cbbd91' : '#1a2420');
+  },
+  cart(u, x, y, w, h, o) {
+    return sh(x, y, w, h) + L(x + 14, y + h * .6, x + 14, y + h - 8, '#59625d', 5) + L(x + w - 14, y + h * .6, x + w - 14, y + h - 8, '#59625d', 5) + L(x + 14, y + h - 10, x + w - 14, y + h - 10, '#59625d', 3) + R(x, y + h * .1, w, h * .55, K(u, 'steel'), S + ' rx="3"') + (o.on ? R(x + 6, y + h * .1, w - 12, 8, '#0b0c0b') : R(x - 2, y + h * .05, w + 4, 8, '#4a5450', 'rx="2"')) + C(x + 14, y + h - 8, 8, '#1b1e1c') + C(x + w - 14, y + h - 8, 8, '#1b1e1c') + L(x + w, y + h * .2, x + w + 16, y, '#3a3f3c', 4);
+  },
+  fountain(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    let s = sh(x, y, w, h) + E(cx, y + h * .58, w / 2, 12, '#4a4743') + R(x, y + h * .58, w, h * .42, '#4a4743', 'stroke="#2a2826" stroke-width="2"') + E(cx, y + h * .58, w / 2 - 8, 8, o.on ? '#2d4a52' : '#1a1d1c') + R(cx - 6, y + h * .2, 12, h * .38, '#5d5a54') + E(cx, y + h * .2, 22, 6, '#5d5a54');
+    if (o.on) s += P(`M${cx} ${y + h * .18}Q${cx - 16} ${y} ${cx - 28} ${y + h * .52}`, 'none', 'stroke="#7fa0a8" stroke-width="2" opacity=".7"') + P(`M${cx} ${y + h * .18}Q${cx + 16} ${y} ${cx + 28} ${y + h * .52}`, 'none', 'stroke="#7fa0a8" stroke-width="2" opacity=".7"');
+    return s;
+  },
+  sled(u, x, y, w, h) {
+    let s = sh(x, y, w, h);
+    for (const dy of [-7, 0]) s += P(`M${x + 3} ${y + h - 6 + dy}H${x + w - 16}Q${x + w - 1} ${y + h - 6 + dy} ${x + w - 3} ${y + h * .38 + dy}`, 'none', 'stroke="#8a9389" stroke-width="3"');
+    s += R(x + 6, y + 5, w - 24, h * .32, K(u, 'woodl'), W) + [x + 16, x + w - 32].map(a => L(a, y + h * .4, a, y + h - 6, '#7b5e3a', 4)).join('');
+    for (let xx = x + 12; xx < x + w - 20; xx += 16) s += L(xx, y + 7, xx, y + h * .36, '#352719', 1.5);
+    return s;
+  },
+  tombstone(u, x, y, w, h) {
+    return sh(x, y, w, h) + P(`M${x} ${y + h}V${y + w / 2}A${w / 2} ${w / 2} 0 0 1 ${x + w} ${y + w / 2}V${y + h}Z`, '#4a4e4c', 'stroke="#262a28" stroke-width="2"') + L(x + w * .3, y + h * .4, x + w * .7, y + h * .4, '#2a2e2c', 2) + L(x + w * .3, y + h * .52, x + w * .6, y + h * .52, '#2a2e2c', 2) + E(x + w / 2, y + h, w * .7, 5, '#26301f');
+  },
+  organ(u, x, y, w, h) {
+    let s = sh(x, y, w, h) + R(x, y + h * .5, w, h * .5, K(u, 'wood'), W);
+    for (let i = 0; i < 9; i++) { const ph = h * (.3 + .2 * Math.sin((i / 8) * Math.PI)); s += R(x + 4 + i * (w - 8) / 9, y + h * .5 - ph, (w - 8) / 9 - 3, ph, K(u, 'brass'), 'rx="3"'); }
+    for (const ky of [y + h * .62, y + h * .74]) { const kw = (w - 16) / 14; s += R(x + 8, ky, w - 16, 10, '#e6dfcc'); for (let i = 1; i < 14; i++) s += L(x + 8 + i * kw, ky + 5, x + 8 + i * kw, ky + 10, '#625b4e', .7) + ([0, 3].includes(i % 7) ? '' : R(x + 8 + i * kw - 1.5, ky, 3, 6, '#171b18')); }
+    return s;
+  },
+  console(u, x, y, w, h, o) {
+    let s = sh(x, y, w, h) + poly([[x, y + h * .3], [x + w, y + h * .3], [x + w - 6, y + h], [x + 6, y + h]], '#2b3133', S) + R(x + 6, y, w - 12, h * .32, '#1b1e1c', 'rx="3"') + R(x + 12, y + 6, w - 24, h * .2, o.on ? '#2f5a44' : '#0f1414');
+    for (let i = 0; i < 6; i++) s += C(x + 16 + i * (w - 32) / 5, y + h * .5, 4, i % 2 ? '#7a2a1e' : '#c9a45a', `opacity="${o.on ? 1 : .5}"`);
+    return s;
+  },
+  phonebooth(u, x, y, w, h, o) {
+    return sh(x, y, w, h) + R(x, y, w, h, '#4a2420', 'stroke="#2a1412" stroke-width="2" rx="4"') + R(x + 8, y + 22, w - 16, h * .64, '#c9d6d3', 'opacity=".14"') + [.36, .52, .68].map(k => L(x + 8, y + h * k, x + w - 8, y + h * k, '#4a2420', 3)).join('') + R(x + 6, y + 6, w - 12, 10, o.on ? '#e8c98a' : '#2a1412') + R(x + w * .36, y + h * .27, w * .35, h * .25, '#3c4542', 'rx="3" stroke="#778079" stroke-width="1"') + R(x + w * .51, y + h * .29, w * .15, h * .08, '#b1b3a0', 'rx="1"') + P(`M${x + w * .41} ${y + h * .29}q-5 6 -1 20`, 'none', 'stroke="#111815" stroke-width="5" stroke-linecap="round"') + P(`M${x + w * .41} ${y + h * .4}q-5 12 4 20t-2 20`, 'none', 'stroke="#687269" stroke-width="1.2"') + L(x + w * .5, y + 22, x + w * .5, y + h * .87, '#4a2420', 3) + R(x + w * .8, y + h * .53, 3, 18, K(u, 'brass'), 'rx="1.5"');
+  },
+  scale(u, x, y, w, h, o) {
+    const cx = x + w / 2, tilt = o.on ? 0 : 10;
+    return sh(x, y, w, h) + R(cx - 4, y + 14, 8, h - 18, K(u, 'brass')) + E(cx, y + h - 4, w * .3, 6, K(u, 'brass')) + L(x + 6, y + 18 + tilt, x + w - 6, y + 18 - tilt, '#8c7442', 4) + [[x + 17, y + 18 + tilt], [x + w - 17, y + 18 - tilt]].map(([a, b]) => L(a, b, a - 10, b + 28, '#8c7442', 1) + L(a, b, a + 10, b + 28, '#8c7442', 1) + E(a, b + 30, 14, 5, K(u, 'brass'))).join('');
+  },
+  skirack(u, x, y, w, h) {
+    let s = sh(x, y, w, h) + R(x, y + h * .2, w, 8, K(u, 'wood')) + R(x, y + h - 14, w, 8, K(u, 'wood'));
+    for (let i = 0; i < 5; i++) { const xx = x + 8 + i * (w - 16) / 5, yy = y + (i % 2) * 8; s += R(xx, yy, 9, h - 8 - (i % 2) * 8, ['#795043', '#4d697b', '#68765a'][i % 3], 'rx="4.5"') + L(xx + 2, yy + 12, xx + 7, yy + 7, '#c0b79b', 1.5) + R(xx - 1, y + h * .5, 11, 17, '#262e28', 'rx="2"') + R(xx + 1, y + h * .51, 7, 4, '#a1a696', 'rx="1"'); }
+    return s;
+  },
+  jar(u, x, y, w, h, o) {
+    return sh(x, y, w, h) + P(`M${x + w * .25} ${y + 8}H${x + w * .75}Q${x + w + 4} ${y + h * .3} ${x + w * .9} ${y + h}H${x + w * .1}Q${x - 4} ${y + h * .3} ${x + w * .25} ${y + 8}Z`, '#5a4a3a', 'stroke="#2a2016" stroke-width="2"') + (o.on ? E(x + w / 2, y + 9, w * .25, 4, '#120d08') : R(x + w * .2, y, w * .6, 10, '#3a2b1b', 'rx="3"')) + L(x + w * .2, y + h * .5, x + w * .8, y + h * .5, '#2a2016', 1.5, 'opacity=".6"');
+  },
+  cauldron(u, x, y, w, h, o) {
+    const cx = x + w / 2;
+    return (o.on ? C(cx, y + h * .3, w * .5, K(u, 'glow')) : '') + sh(x, y, w, h) + P(`M${x} ${y + h * .2}H${x + w}Q${x + w} ${y + h * .9} ${cx} ${y + h * .9}Q${x} ${y + h * .9} ${x} ${y + h * .2}Z`, '#2a2e2b', 'stroke="#141615" stroke-width="2"') + E(cx, y + h * .2, w / 2, 7, o.on ? '#3a5a40' : '#141615') + L(x + 12, y + h * .88, x + 4, y + h, '#2a2e2b', 4) + L(x + w - 12, y + h * .88, x + w - 4, y + h, '#2a2e2b', 4);
+  },
+
+  // ── 출구입니다. on이면 열린 모습입니다.
+  gate(u, x, y, w, h, o) {
+    let s = R(x - 10, y - 10, 12, h + 10, '#2a2e30') + R(x + w - 2, y - 10, 12, h + 10, '#2a2e30') + C(x - 4, y - 14, 7, '#3a3f42') + C(x + w + 4, y - 14, 7, '#3a3f42');
+    if (o.on) {
+      s += R(x, y, w, h, K(u, 'hall')) + poly([[x, y + h], [x + w, y + h], [x + w + 60, 480], [x - 60, 480]], K(u, 'ray'));
+      for (let i = 0; i < 4; i++) s += L(x + 4 + i * 7, y + 4, x + 4 + i * 7, y + h, '#2a2e30', 4) + L(x + w - 4 - i * 7, y + 4, x + w - 4 - i * 7, y + h, '#2a2e30', 4);
+      return s;
+    }
+    s += R(x, y, w, h, '#0e1012', 'opacity=".55"');
+    for (let i = 0; i <= 8; i++) s += L(x + 4 + i * (w - 8) / 8, y + 6, x + 4 + i * (w - 8) / 8, y + h, '#2a2e30', 4);
+    return s + R(x, y + 18, w, 6, '#2a2e30') + R(x, y + h * .55, w, 6, '#2a2e30') + R(x + w / 2 - 12, y + h * .5, 24, 26, K(u, 'brass'), 'rx="3"') + C(x + w / 2, y + h * .5 + 13, 3, '#120d08');
+  },
+  hatch(u, x, y, w, h, o) {
+    if (o.on) {
+      let s = E(x + w / 2, y + h / 2, w / 2, h / 2, '#0b0907', 'stroke="#66553b" stroke-width="3"') + poly([[x + 5, y + h * .18], [x + w * .16, y - h * .85], [x + w * .84, y - h * .85], [x + w - 5, y + h * .18]], K(u, 'woodl'), W) + poly([[x + 18, y + h * .06], [x + w * .23, y - h * .64], [x + w * .77, y - h * .64], [x + w - 18, y + h * .06]], 'none', 'stroke="#3a2b1b" stroke-width="2"');
+      for (const side of [-1, 1]) s += L(x + w / 2 + side * w * .19, y + h * .28, x + w / 2 + side * w * .12, y + h * .88, '#8b7654', 3);
+      for (const k of [.36, .54, .72]) s += L(x + w / 2 - w * (.22 - k * .1), y + h * k, x + w / 2 + w * (.22 - k * .1), y + h * k, '#a58b60', 3);
+      return s;
+    }
+    return E(x + w / 2, y + h / 2 + 3, w / 2, h / 2, '#000', 'opacity=".4"') + E(x + w / 2, y + h / 2, w / 2, h / 2, K(u, 'woodl'), W) + L(x + 14, y + h / 2, x + w - 14, y + h / 2, '#3a2b1b', 2) + C(x + w / 2, y + h / 2, 6, K(u, 'brass'));
+  },
+  elevator(u, x, y, w, h, o) {
+    let s = R(x - 8, y - 22, w + 16, h + 22, '#3a3f42') + R(x + w / 2 - 22, y - 18, 44, 12, '#0f1414') + T(x + w / 2, y - 12, o.on ? '▲' : '·', 10, '#e0a24a');
+    if (o.on) return s + R(x, y, w, h, K(u, 'hall')) + R(x, y, 12, h, '#59625d') + R(x + w - 12, y, 12, h, '#59625d') + poly([[x, y + h], [x + w, y + h], [x + w + 50, 480], [x - 50, 480]], K(u, 'ray'));
+    return s + R(x, y, w / 2 - 1, h, K(u, 'steel'), S) + R(x + w / 2 + 1, y, w / 2 - 1, h, K(u, 'steel'), S) + R(x + w + 12, y + h * .45, 10, 22, '#1d2224', 'rx="2"') + C(x + w + 17, y + h * .45 + 11, 3, '#c9a45a');
+  },
+  ladder(u, x, y, w, h, o) {
+    let s = R(x - 30, y - 30, w + 60, 26, '#120e0a') + (o.on ? R(x - 26, y - 28, w + 52, 22, K(u, 'hall')) + C(x + w / 2, y - 10, 40, K(u, 'glow')) : R(x - 26, y - 28, w + 52, 22, K(u, 'woodl'), W) + C(x + w / 2, y - 17, 4, K(u, 'brass')));
+    s += R(x, y, 7, h, '#5a442c') + R(x + w - 7, y, 7, h, '#5a442c');
+    for (let k = y + 24; k < y + h - 10; k += 34) s += R(x + 5, k, w - 10, 6, '#6a4f33');
+    return s;
+  },
+  stonedoor(u, x, y, w, h, o) {
+    const dx = o.on ? w * .78 : 0;
+    let s = R(x - 10, y - 12, w + 20, h + 12, '#3e3a33') + R(x, y, w, h, o.on ? K(u, 'hall') : '#120f0c');
+    s += R(x + dx, y, w, h, '#57524a', 'stroke="#2a2622" stroke-width="2"') + C(x + dx + w / 2, y + h * .4, w * .24, 'none', 'stroke="#2a2622" stroke-width="3"') + C(x + dx + w / 2, y + h * .4, w * .1, 'none', 'stroke="#2a2622" stroke-width="2"');
+    return o.on ? s + poly([[x, y + h], [x + dx, y + h], [x + dx + 40, 480], [x - 40, 480]], K(u, 'ray')) : s;
+  },
+  sliding(u, x, y, w, h, o) {
+    let s = R(x - 8, y - 8, w + 16, h + 8, '#2a2117') + R(x, y, w, h, o.on ? K(u, 'hall') : '#120e0a');
+    const px = o.on ? x + w * .62 : x;
+    s += R(px, y, w, h, '#d9cfb3', 'opacity=".9" stroke="#2a2117" stroke-width="3"');
+    for (let k = 1; k < 4; k++) s += L(px + 3, y + k * h / 4, px + w - 3, y + k * h / 4, '#2a2117', 3);
+    s += L(px + w / 2, y + 3, px + w / 2, y + h - 3, '#2a2117', 3) + R(px + w - 14, y + h * .5, 6, 22, '#3a2b1d', 'rx="3"');
+    return s;
+  },
+  curtainexit(u, x, y, w, h, o) {
+    const half = o.on ? w * .22 : w / 2;
+    let s = R(x - 10, y - 14, w + 20, 14, K(u, 'brass')) + R(x, y, w, h, o.on ? K(u, 'hall') : '#1a0d0c');
+    for (const side of [0, 1]) {
+      const sx = side ? x + w - half : x;
+      s += R(sx, y, half, h, '#5a2a24');
+      for (let i = 1; i < 4; i++) s += L(sx + i * half / 4, y + 2, sx + i * half / 4 + (side ? -4 : 4), y + h, '#3a1a16', 4, 'opacity=".6"');
+    }
+    return o.on ? s + poly([[x + half, y + h], [x + w - half, y + h], [x + w - half + 50, 480], [x + half - 50, 480]], K(u, 'ray')) : s;
+  },
 };
+// 큰 확대 그림에서도 바깥 물건의 폭/높이와 작은 부속품을 함께 확대합니다.
+// 설계서의 조사 사각형은 그대로 두고, 원래 크기의 그림을 아래쪽 가운데에 맞춥니다.
+const FACILITY_SIZE = { mailbox: [56, 100], lamppost: [52, 210], bench: [104, 62], well: [92, 112], signpost: [84, 132], noticeboard: [100, 120], tent: [112, 100], campfire: [84, 64], anchor: [72, 104], buoy: [62, 92], boat: [108, 60], ticketmachine: [66, 132], vending: [84, 166], rock: [92, 72], statue: [72, 156], sarcophagus: [108, 92], mannequin: [62, 150], easel: [84, 134], microscope: [62, 82], flasks: [100, 72], helm: [92, 116], bigbell: [80, 96], horn: [90, 60], dish: [92, 112], rack: [72, 166], projector: [84, 104], cart: [100, 82], fountain: [108, 112], sled: [104, 62], tombstone: [62, 92], organ: [108, 152], console: [104, 104], phonebooth: [74, 184], scale: [92, 92], skirack: [104, 132], jar: [58, 82], cauldron: [92, 82] };
+for (const [kind, [nw, nh]] of Object.entries(FACILITY_SIZE)) {
+  const draw = PROPS[kind];
+  PROPS[kind] = (u, x, y, w, h, o = {}) => {
+    const scale = Math.min(w / nw, h / nh), dx = x + (w - nw * scale) / 2, dy = y + h - nh * scale;
+    const id = `${u}-fit-${kind}-${r(x)}-${r(y)}`;
+    return `<clipPath id="${id}">${R(x, y, w, h + 8, '#fff')}</clipPath><g clip-path="url(#${id})"><g transform="translate(${r(dx)} ${r(dy)}) scale(${scale})">${draw(u, 0, 0, nw, nh, o)}</g></g>`;
+  };
+}
 export const PROP_KINDS = Object.keys(PROPS);
 
 // 가방 물건 그림입니다. 64칸 안에 그리고, tone을 주면 같은 모양을 다른 색으로 칠합니다.

@@ -4,11 +4,11 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-6';
-import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-6';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-6';
+} from './escape-engine.js?v=escape-7';
+import { drawView, drawItem, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-7';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-7';
 
-const VERSION = 'escape-6';
+const VERSION = 'escape-7';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -181,7 +181,8 @@ function episodeCard(ep) {
   const st = episodeState(ep);
   const ready = st.built.length > 0;
   const first = st.built[0];
-  const cover = ready ? drawView(first, first.start, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true"><i>EPISODE ${ep.id}</i><small>준비 중</small></span>`;
+  const coverView = ep.cover?.view && first?.views[ep.cover.view] ? ep.cover.view : first?.start;
+  const cover = ready ? drawView(first, coverView, freshState(first)).replace('xMidYMid meet', 'xMidYMid slice') : `<span class="ep-blank" aria-hidden="true"><i>EPISODE ${ep.id}</i><small>준비 중</small></span>`;
   const done = ready && st.done === st.total;
   const mark = done ? `<span class="marks"><span class="status done">${icon('check', 16)}</span></span>` : '';
   const progressText = !ready ? '' : done ? '<span class="ok">완료</span>' : st.done ? `<span>${st.done}/${st.total} 탈출</span>` : '';
@@ -230,7 +231,6 @@ function renderHome() {
     <section class="hero"><img src="assets/archive.jpg" alt="" width="1536" height="1024" fetchpriority="high"><div class="hero-copy"><p class="hero-line">단서를 찾고, 물건을 합쳐, 문을 여세요.</p><button class="btn primary" data-act="open-room" data-id="${first.id}">${heroLabel} · ${e(first.title)} ${icon('right', 18)}</button></div></section>
     <h2 class="list-title">에피소드 <span>탈출 ${done} / ${total}${marks ? ` · 책갈피 ${marks}` : ''}</span></h2>
     <ul class="episodes">${episodes.map(episodeCard).join('')}</ul>
-    <p class="legacy"><a href="legacy.html">이전 버전 사건 기록 24개</a></p>
   </main>`;
   if (saveWarned) showSaveWarning();
 }
@@ -304,10 +304,11 @@ function lockButtons(id, lock, hint) {
   const draft = cleanInput(lock, s.drafts[id]);
   const buttons = lockControls(lock).map(c => {
     let label, data;
-    if (lock.type === 'color') { label = `${lock.label} ${c.index + 1}번, 지금 ${COLOR_NAMES[draft[c.index]] ?? draft[c.index]}`; data = `data-i="${c.index}"`; }
-    else if (lock.type === 'dial') { label = `${c.index + 1}번째 숫자 ${c.delta > 0 ? '올리기' : '내리기'}, 지금 ${draft[c.index]}`; data = `data-i="${c.index}" data-d="${c.delta}"`; }
-    else if (lock.type === 'switch') { label = `${c.index + 1}번 스위치, 지금 ${draft[c.index] ? '켜짐' : '꺼짐'}`; data = `data-i="${c.index}"`; }
-    else if (lock.type === 'rotate') { label = `${c.index + 1}번 타일 돌리기, 지금 ${DIRECTION_NAMES[draft[c.index]]}`; data = `data-i="${c.index}"`; }
+    const v = e(String(draft[c.index] ?? ''));
+    if (lock.type === 'color') { label = `${lock.label} ${c.index + 1}번, 지금 ${COLOR_NAMES[draft[c.index]] ?? SYMBOL_NAMES[draft[c.index]] ?? draft[c.index]}`; data = `data-i="${c.index}" data-v="${v}"`; }
+    else if (lock.type === 'dial') { label = `${c.index + 1}번째 숫자 ${c.delta > 0 ? '올리기' : '내리기'}, 지금 ${draft[c.index]}`; data = `data-i="${c.index}" data-d="${c.delta}" data-v="${v}"`; }
+    else if (lock.type === 'switch') { label = `${c.index + 1}번 스위치, 지금 ${draft[c.index] ? '켜짐' : '꺼짐'}`; data = `data-i="${c.index}" data-v="${v}"`; }
+    else if (lock.type === 'rotate') { label = `${c.index + 1}번 돌리기, 지금 ${DIRECTION_NAMES[draft[c.index]]}`; data = `data-i="${c.index}" data-v="${v}"`; }
     else if (lock.type === 'symbol') { label = `${SYMBOL_NAMES[c.sym] ?? c.sym} 누르기`; data = `data-sym="${e(c.sym)}"`; }
     else if (lock.type === 'keypad') { label = c.key === 'C' ? '모두 지우기' : c.key === '<' ? '하나 지우기' : c.key; data = `data-key="${c.key}"`; }
     else { label = `${DIRECTION_NAMES[c.dir]} 화살표`; data = `data-dir="${c.dir}"`; }

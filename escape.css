@@ -95,8 +95,6 @@ button.room-card:active{background:var(--raised)}
 .soon .meta{display:flex;align-items:center;gap:10px;font-size:13px}
 .soon .tag{flex:none;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--raised)}
 .thumb *,.photo *,.pin *,.recap-photo *,.ep-cover *{animation:none!important}
-.legacy{margin-top:28px;text-align:center}
-.legacy a{display:inline-block;min-height:44px;padding:12px;color:var(--muted);font-size:13px}
 
 /* 게임 화면: 장면이 화면 대부분을 차지하고, 위에 도구, 아래에 가방이 있습니다. */
 .game{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:#0a0b09}

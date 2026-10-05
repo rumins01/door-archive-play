@@ -44,6 +44,16 @@ export function lockControls(lock) {
     return [['up', 0, -PAD_GAP], ['right', PAD_GAP, 0], ['down', 0, PAD_GAP], ['left', -PAD_GAP, 0]]
       .map(([dir, dx, dy]) => ({ dir, x: x + dx - half, y: y + dy - half, w: CONTROL, h: CONTROL }));
   }
+  if (lock.type === 'keypad' && lock.layout === 'ring') {
+    // 전화 다이얼: 숫자 열 개를 원으로 두고, 지우기 두 개는 가운데 위아래에 둡니다.
+    const [x, y] = at[0] ?? [0, 0], R = 120;
+    const ring = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    return KEYPAD_KEYS.map(key => {
+      const i = ring.indexOf(key);
+      const [cx, cy] = i >= 0 ? [x + R * Math.sin(((i + .5) * Math.PI) / 5), y - R * Math.cos(((i + .5) * Math.PI) / 5)] : [x, key === 'C' ? y - 31 : y + 31];
+      return { key, x: Math.round(cx - half), y: Math.round(cy - half), w: CONTROL, h: CONTROL };
+    });
+  }
   if (lock.type === 'keypad') {
     const [x, y] = at[0] ?? [0, 0];
     return KEYPAD_KEYS.map((key, i) => ({ key, x: x + ((i % 3) - 1) * KEY_GAP - half, y: y + (Math.floor(i / 3) - 1.5) * KEY_GAP - half, w: CONTROL, h: CONTROL }));
@@ -411,7 +421,7 @@ export function validateRoom(input) {
     if (!views[lock.view] || views[lock.view].kind !== 'zoom') fail(`lock ${id} must live in a zoom view`);
     if (!LOCK_TYPES.includes(lock.type)) { fail(`lock ${id} has unknown type`); continue; }
     if (!Array.isArray(lock.answer) || !lock.answer.length) { fail(`lock ${id} needs answer`); continue; }
-    if (lock.type === 'symbol' && (!Array.isArray(lock.symbols) || lock.symbols.length < 2 || lock.symbols.length > 6 || new Set(lock.symbols).size !== lock.symbols.length)) fail(`lock ${id} needs 2-6 unique symbols`);
+    if (lock.type === 'symbol' && (!Array.isArray(lock.symbols) || lock.symbols.length < 2 || lock.symbols.length > 7 || new Set(lock.symbols).size !== lock.symbols.length)) fail(`lock ${id} needs 2-7 unique symbols`);
     if (lock.type === 'color' && (!Array.isArray(lock.palette) || lock.palette.length < 2)) fail(`lock ${id} needs palette`);
     if (!same(cleanInput(lock, lock.answer), lock.answer)) fail(`lock ${id} answer is outside its controls`);
     const sequence = SEQUENCE_LOCKS.includes(lock.type);
