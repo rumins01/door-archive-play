@@ -4,14 +4,14 @@ import {
   SAVE_KEY_V2, VIEW_W, VIEW_H, NAV_TOP, HINT_MAX, PIN_ZONE, ROTATIONS, SEQUENCE_LOCKS, freshState, tap, combine, inputLock, move, jump,
   activeGoal, requestHint, hintsUsed, recoverSave, hotspotsIn, viewAlt, lockIn, lockReady, lockControls, cleanInput, takePhoto,
   needsAutoPhoto, markSeen, progress, episodeOf, roomUnlocked,
-} from './escape-engine.js?v=escape-10';
-import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-10';
-import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-10';
-import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-10';
-import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-10';
-import { GROWTH } from './escape-growth.js?v=escape-10';
+} from './escape-engine.js?v=escape-11';
+import { drawView, drawItem, setPlates, COLOR_NAMES, DIRECTION_NAMES, SYMBOL_NAMES } from './escape-art.js?v=escape-11';
+import { loadText, saveText, onPause, onBack, buzz, share } from './platform.js?v=escape-11';
+import { createAnalytics, MILESTONES } from './escape-analytics.js?v=escape-11';
+import { createAds, recoverGrowth, GROWTH_KEY } from './escape-ads.js?v=escape-11';
+import { GROWTH } from './escape-growth.js?v=escape-11';
 
-const VERSION = 'escape-10';
+const VERSION = 'escape-11';
 const app = document.querySelector('#app');
 const sheet = document.querySelector('#sheet');
 const live = document.querySelector('#live');
@@ -240,7 +240,9 @@ function hintFocus() {
 
 // 방 목록: 에피소드를 두 칸씩 카드로 놓습니다. 에피소드의 첫 화는 다른 에피소드와 관계없이 바로 시작할 수 있고,
 // 같은 에피소드 안에서만 앞 화를 탈출해야 다음 화가 열립니다.
-const starRange = (lo, hi) => `<span class="stars" role="img" aria-label="난이도 5점 만점에 ${lo === hi ? lo : `${lo}~${hi}`}점">${Array.from({ length: 5 }, (_, i) => `<i class="${i < lo ? 'on' : i < hi ? 'part' : ''}">★</i>`).join('')}</span>`;
+// 에피소드는 화마다 난이도가 오르므로(예: 1화 2, 마지막 화 5) 별 다섯 개로 한 점수처럼 보이지 않게 '★ 2–5' 범위로 적습니다.
+// 예전에는 낮은 쪽만 진하게 칠해, 마지막 화가 5인 에피소드도 별 1~2개짜리 쉬운 에피소드처럼 보였습니다.
+const starRange = (lo, hi) => `<span class="stars range" role="img" aria-label="난이도 5점 만점에 ${lo === hi ? lo : `${lo}~${hi}`}점"><i class="on">★</i><span>난이도 ${lo === hi ? lo : `${lo}–${hi}`}</span></span>`;
 function episodeState(ep) {
   const built = ep.rooms.map(roomById).filter(Boolean);
   const done = ep.rooms.filter(id => cleared(id)).length;
