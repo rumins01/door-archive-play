@@ -24,6 +24,7 @@ svg{display:block}
 .stars i{font-style:normal;color:rgba(236,233,223,.2)}
 .stars i.on{color:var(--accent)}
 .stars i.part{color:rgba(215,183,123,.45)}
+.stars i.half{background:linear-gradient(90deg,var(--accent) 50%,rgba(236,233,223,.2) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stars.range{gap:4px;align-items:center;font-size:12px;letter-spacing:0}
 .stars.range span{color:var(--muted);font-variant-numeric:tabular-nums}
 

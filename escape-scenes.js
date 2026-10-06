@@ -1,6 +1,6 @@
 // 장면 배경입니다. 방 설계서의 scene 값으로 벽 또는 하늘, 바닥, 배경 요소를 조합해 그립니다.
 // 그림체는 18시 기준판과 같습니다. 평면 그라데이션과 얇은 선만 쓰고, 움직임과 질감 타일은 쓰지 않습니다.
-import { R, C, E, P, L, poly, r } from './escape-props.js?v=escape-13';
+import { R, C, E, P, L, poly, r } from './escape-props.js?v=escape-14';
 
 export const FLOOR = 368;
 const grad = (id, [a, b], attrs = 'x2="0" y2="1"') => `<linearGradient id="${id}" ${attrs}><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
